@@ -1,0 +1,52 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Notifications">
+    <method name="CloseNotification">
+      <arg name="id" type="u" direction="in"/>
+    </method>
+    <method name="GetCapabilities">
+      <arg type="as" direction="out"/>
+    </method>
+    <method name="GetServerInformation">
+      <arg type="s" direction="out"/>
+      <arg name="name" type="s" direction="out"/>
+      <arg name="vender" type="s" direction="out"/>
+      <arg name="version" type="s" direction="out"/>
+    </method>
+    <method name="Notify">
+      <arg type="u" direction="out"/>
+      <arg type="s" direction="in"/>
+      <arg name="replacesId" type="u" direction="in"/>
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="in"/>
+      <arg type="as" direction="in"/>
+      <arg type="a{sv}" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In6" value="QVariantMap"/>
+      <arg type="i" direction="in"/>
+    </method>
+    <method name="GetAllRecords">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="GetRecordById">
+      <arg type="s" direction="out"/>
+      <arg name="id" type="s" direction="in"/>
+    </method>
+    <method name="GetRecordsFromId">
+      <arg type="s" direction="out"/>
+      <arg name="rowCount" type="i" direction="in"/>
+      <arg name="offsetId" type="s" direction="in"/>
+    </method>
+    <method name="RemoveRecord">
+      <arg name="id" type="s" direction="in"/>
+    </method>
+    <method name="ClearRecords">
+    </method>
+    <signal name="ActionInvoked">
+    </signal>
+    <signal name="NotificationClosed">
+    </signal>
+    <signal name="RecordAdded">
+    </signal>
+  </interface>
+</node>

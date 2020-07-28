@@ -1,0 +1,27 @@
+Source: ukui-notifycation
+Section: x11
+Priority: optional
+Maintainer: Kylin Team <team+kylin@tracker.debian.org>
+Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
+Build-Depends: debhelper-compat (= 12),
+               libglib2.0-dev,
+               qtbase5-dev,
+               libqt5svg5-dev,
+               qttools5-dev-tools,
+	       libgsettings-qt-dev,
+	       libdconf-dev,
+               libx11-dev,
+Standards-Version: 4.5.0
+Rules-Requires-Root: no
+Homepage: https://github.com/ukui/ukui-notifycation.git
+Vcs-Git: https://github.com/ukui/ukui-notifycation.git
+Vcs-Browser: https://github.com/ukui/ukui-notifycation
+
+Package: ukui-notifycation
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: parallels toolbox for UKUI
+ The ukui-notifycation is mainly used in the desktop operating system.
+ Receive notifications sent by the notify interface in DBUS, 
+ and display the received notifications from the upper right corner of the screen;
