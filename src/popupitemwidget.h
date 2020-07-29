@@ -15,19 +15,26 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
+#include <QPushButton>
 #include "notifyreceiveinfo.h"
 #include "adaptscreeninfo.h"
+#include "toptransparentwidget.h"
+
 class popupItemWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit popupItemWidget(QWidget *parent = nullptr, notifyReceiveInfo *entryInfo=0);
     void setEntryData(notifyReceiveInfo *entryInfo);
+    topTransparentWidget *m_pTopTransparentWidget;
+    QPushButton *m_pCloseButton;
+
 signals:
 
 private:
     void initUiLayout();                                    // 初始化UI
     void initLeftUiLayout();                                // 初始化右边UI布局
+    void initTopLevelWidget();                              // 初始化顶层窗口
     void initTimer();                                       // 初始化显示时长定时器
     void setWidgetAttribute();                              // 设置窗口属性
     void initWidgetAnimations();                            // 初始化显示和消失动画
@@ -56,8 +63,9 @@ private:
     QHBoxLayout *m_pMainHBoxLayout;
     QVBoxLayout *m_pLeftVBoxLayout;
 
-    notifyReceiveInfo *m_pentryInfo;
-    adaptScreenInfo   *m_pSreenInfo;
+
+    notifyReceiveInfo    *m_pentryInfo;
+    adaptScreenInfo      *m_pSreenInfo;
     QLabel *m_pIconLabel;
     QLabel *m_pTextBodyLabel;
     QLabel *m_pSummaryLabel;
@@ -68,9 +76,11 @@ private:
     QTimer     *m_poutTimer = nullptr;
     QTimer     *m_quitTimer;
     QWidget    *m_pInfoAreaWidget;
+
 private slots:
     void ShowTimeoutSlots();
     void OutAnimationFinishSlots();
+    void MoveAnimationValueChangeSltos(const QVariant &value);
 };
 
 #endif // POPUPITEMWIDGET_H

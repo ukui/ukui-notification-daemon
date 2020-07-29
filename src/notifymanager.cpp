@@ -70,16 +70,15 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               this);
     if (!m_currentNotify.isNull() && replacesId != 0 && (m_currentNotify->id() == QString::number(replacesId)
                                       || m_currentNotify->replacesId() == QString::number(replacesId))) {
-        qDebug() << "是否进入此处1";
         m_pEntryWidget->setEntryData(notifyInfo);
         m_currentNotify->deleteLater();
         m_currentNotify = notifyInfo;
     } else {
         m_entities.enqueue(notifyInfo);
     }
-
-    if (!m_pEntryWidget->isVisible())
+    if (!m_pEntryWidget->m_pTopTransparentWidget->isVisible()) {
         consumeEntities();
+    }
 }
 
 QString notifyManager::GetAllRecords()
@@ -135,14 +134,14 @@ void notifyManager::consumeEntities()
 
 void notifyManager::popupItemWidgetExpired(int Id)
 {
-    m_pEntryWidget->setVisible(false);
+    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
     Q_EMIT NotificationClosed(Id, notifyManager::Expired);
     consumeEntities();
 }
 
 void notifyManager::popupItemWidgetDismissed(int Id)
 {
-    m_pEntryWidget->setVisible(false);
+    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
     Q_EMIT NotificationClosed(Id, notifyManager::Dismissed);
 
     consumeEntities();
@@ -155,7 +154,7 @@ void notifyManager::popupItemWidgetReplacedByOther(int Id)
 
 void notifyManager::popupItemWidgetActionInvoked(uint Id, QString reason)
 {
-    m_pEntryWidget->setVisible(false);
+    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
     Q_EMIT ActionInvoked(Id, reason);
     Q_EMIT NotificationClosed(Id, notifyManager::Closed);
     consumeEntities();

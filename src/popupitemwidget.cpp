@@ -7,6 +7,7 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 , m_pSummaryLabel(new QLabel())
                                 , m_pTextBodyLabel(new QLabel())
                                 , m_pSreenInfo(new adaptScreenInfo())
+                                , m_pCloseButton(new QPushButton(this))
 {
     /* 设置窗口属性 */
     setWidgetAttribute();
@@ -16,6 +17,9 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
 
     /* 初始化整体UI */
     initUiLayout();
+
+    /* 初始化顶层窗口 */
+    initTopLevelWidget();
 
     /* 初始化定时器 */
     initTimer();
@@ -35,8 +39,9 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     m_poutTimer->stop();
     setWidgetDate();
     convertToImage(m_pentryInfo->appIcon());
-    this->move(m_pSreenInfo->m_screenWidth - this->width(), 0);
-    this->show();
+    m_pTopTransparentWidget->setWidgetPos(m_pSreenInfo->m_screenWidth - this->width(), 0);
+    m_pTopTransparentWidget->show();
+    m_pMoveAnimation->start();
     m_poutTimer->start();
     return;
 }
@@ -44,9 +49,14 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
 /* 初始化UI */
 void popupItemWidget::initUiLayout()
 {
+    QIcon closeButtonIcon = QIcon::fromTheme("window-close-symbolic");
+    m_pCloseButton->setIcon(closeButtonIcon);
+    m_pCloseButton->setIconSize(QSize(12, 12));
+    m_pCloseButton->setFixedSize(16, 16);
+    connect(m_pCloseButton, &QPushButton::clicked, this, [=](){
+        qDebug() << "哈哈哈哈哈哈哈哈哈哈哈哈";
+    });
     m_pIconLabel->setFixedSize(48, 48);
-
-//    m_pTextBodyLabel->setStyleSheet("QLabel{border: 1px solid rgba(255,255,0,1)}");
 
     m_pMainHBoxLayout = new QHBoxLayout();
     m_pMainHBoxLayout->setContentsMargins(0, 0, 0, 0);
@@ -58,7 +68,6 @@ void popupItemWidget::initUiLayout()
 
     this->setFixedSize(270, 110);
     this->setLayout(m_pMainHBoxLayout);
-    qDebug() << m_pSreenInfo->m_screenWidth << m_pSreenInfo->m_screenWidth - this->width();
 }
 
 /* 初始化右边UI部分布局 */
@@ -66,7 +75,6 @@ void popupItemWidget::initLeftUiLayout()
 {
     /* 存放文本信息Label */
     m_pTextBodyLabel->setFixedWidth(180);
-//    m_pTextBodyLabel->setFixedHeight(60);
     m_pTextBodyLabel->setMaximumHeight(60);
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
 //    m_pTextBodyLabel->setStyleSheet("QLabel{border: 1px solid rgba(255,255,0,1)}");
@@ -84,9 +92,17 @@ void popupItemWidget::initLeftUiLayout()
     m_pLeftVBoxLayout->setContentsMargins(0, 15, 0, 15);
     m_pLeftVBoxLayout->setSpacing(0);
 
+    m_pCloseButton->move(240, 10);
     m_pLeftVBoxLayout->addWidget(m_pSummaryLabel);
     m_pLeftVBoxLayout->addWidget(m_pTextBodyLabel);
     m_pInfoAreaWidget->setLayout(m_pLeftVBoxLayout);
+}
+
+void popupItemWidget::initTopLevelWidget()
+{
+    m_pTopTransparentWidget =  new topTransparentWidget();
+    m_pTopTransparentWidget->setWidgetLayout(this);
+    return;
 }
 
 /* 初始化显示时长定时器 */
@@ -117,12 +133,16 @@ void popupItemWidget::initWidgetAnimations()
     connect(m_pOutAnimation, &QPropertyAnimation::finished, this, &popupItemWidget::OutAnimationFinishSlots);
     m_pOutAnimation->setDuration(200);
     m_pOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    m_pOutAnimation->setStartValue(QRect(m_pSreenInfo->m_screenWidth - this->width(), 0, this->width(), 60));
-    m_pOutAnimation->setEndValue(QRect(m_pSreenInfo->m_screenWidth, 0, this->width(), 60));
+    m_pOutAnimation->setStartValue(QRect(0, 0, this->width(), 60));
+    m_pOutAnimation->setEndValue(QRect(this->width() + 10, 0, this->width(), 60));
+
 
     m_pMoveAnimation = new QPropertyAnimation(this, "geometry");
     m_pMoveAnimation->setDuration(300);
     m_pMoveAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    m_pMoveAnimation->setStartValue(QRect(this->width() + 10, 0, this->width(), 60));
+    m_pMoveAnimation->setEndValue(QRect(0, 0, this->width(), 60));
+    connect(m_pMoveAnimation, &QPropertyAnimation::valueChanged, this, &popupItemWidget::MoveAnimationValueChangeSltos);
 }
 
 /* 设置显示数据文本 */
@@ -187,7 +207,7 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
     */
     p.setBrush(opt.palette.color(QPalette::Base));
 //    p.setBrush(QBrush(QColor("#161617")));
-    p.setOpacity(0.7);
+    p.setOpacity(0.42);
     p.setPen(Qt::NoPen);
 
     p.setRenderHint(QPainter::Antialiasing);                        //反锯齿
@@ -199,6 +219,7 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
+    qDebug() << "LLLLLLLL";
     Q_EMIT dismissed(m_pentryInfo->id().toInt());
     m_poutTimer->stop();
     QWidget::mousePressEvent(event);
@@ -207,11 +228,10 @@ void popupItemWidget::mousePressEvent(QMouseEvent *event)
 
 void popupItemWidget::showEvent(QShowEvent *event)
 {
-    QTimer::singleShot(1, this, [=] {
+    QTimer::singleShot (1, this, [=] {
         qDebug() << "12312312w3";
         raise();
     });
-
     m_quitTimer->start();
     QWidget::showEvent(event);
     return;
@@ -226,6 +246,7 @@ void popupItemWidget::hideEvent(QHideEvent *event)
 
 void popupItemWidget::ShowTimeoutSlots()
 {
+    m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(1, 1, 1, 1)));
     m_pOutAnimation->start();
     qDebug() << "展示已超时";
 }
@@ -234,4 +255,11 @@ void popupItemWidget::OutAnimationFinishSlots()
 {
     Q_EMIT expired(m_pentryInfo->id().toInt());
     return;
+}
+
+void popupItemWidget::MoveAnimationValueChangeSltos(const QVariant &value)
+{
+    QRect Rect = value.value<QRect>();
+    int x = Rect.x();
+    m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(x, 0, 270, 110)));
 }

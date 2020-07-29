@@ -4,7 +4,8 @@ HEADERS += \
         $$PWD/popupitemwidget.h \
         $$PWD/notifications_adaptor.h \
         $$PWD/adaptscreeninfo.h\
-        $$PWD/notifications_interface.h
+        $$PWD/notifications_interface.h \
+        $$PWD/toptransparentwidget.h
 
 SOURCES += \
         $$PWD/notifymanager.cpp \
@@ -13,3 +14,4 @@ SOURCES += \
         $$PWD/notifications_adaptor.cpp \
         $$PWD/adaptscreeninfo.cpp \
         $$PWD/notifications_interface.cpp \
+        $$PWD/toptransparentwidget.cpp
