@@ -36,7 +36,7 @@ void adaptScreenInfo::initScreenSize()
         m_screenWidth = m_pDeskWgt->width() + m_nScreen_x;
         m_screenHeight = m_pDeskWgt->height() + m_nScreen_y;
     }
-    m_screenNum    = m_pDeskWgt->screenCount();
+//    m_screenNum    = m_pDeskWgt->screenCount();
     return;
 }
 

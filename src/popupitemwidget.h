@@ -27,13 +27,17 @@ public:
     explicit popupItemWidget(QWidget *parent = nullptr, notifyReceiveInfo *entryInfo=0);
     void setEntryData(notifyReceiveInfo *entryInfo);
     topTransparentWidget *m_pTopTransparentWidget;
-    QPushButton *m_pCloseButton;
+
 
 signals:
 
 private:
     void initUiLayout();                                    // 初始化UI
-    void initLeftUiLayout();                                // 初始化右边UI布局
+    void initIconWidgetlayout();                            // 初始化图标区域布局
+    void initInfoWidgetLayout();                            // 初始化中间UI布局
+    void initLabelSizeInfo();                               // 初始化所有label信息
+    void initOperationButton();                             // 初始化操作区按钮
+    void initCloseButtonWidget();                           // 初始化关闭按钮界面
     void initTopLevelWidget();                              // 初始化顶层窗口
     void initTimer();                                       // 初始化显示时长定时器
     void setWidgetAttribute();                              // 设置窗口属性
@@ -61,21 +65,32 @@ protected:
 
 private:
     QHBoxLayout *m_pMainHBoxLayout;
+    QHBoxLayout *m_pOperationButtonWidgetLayout;
+    QVBoxLayout *m_pIconWidgetLayout;
     QVBoxLayout *m_pLeftVBoxLayout;
-
+    QVBoxLayout *m_pCloseWidgetLayout;
 
     notifyReceiveInfo    *m_pentryInfo;
     adaptScreenInfo      *m_pSreenInfo;
-    QLabel *m_pIconLabel;
-    QLabel *m_pTextBodyLabel;
-    QLabel *m_pSummaryLabel;
 
-    QPropertyAnimation *m_pOutAnimation = nullptr;
-    QPropertyAnimation *m_pMoveAnimation = nullptr;
+    QLabel               *m_pIconLabel;
+    QLabel               *m_pTextBodyLabel;
+    QLabel               *m_pSummaryLabel;
 
-    QTimer     *m_poutTimer = nullptr;
-    QTimer     *m_quitTimer;
-    QWidget    *m_pInfoAreaWidget;
+    QPushButton          *m_pOperationButton1;
+    QPushButton          *m_pOperationButton2;
+    QPushButton          *m_pOperationButton3;
+    QPushButton          *m_pCloseButton;
+
+    QPropertyAnimation   *m_pOutAnimation = nullptr;
+    QPropertyAnimation   *m_pMoveAnimation = nullptr;
+
+    QTimer               *m_poutTimer = nullptr;
+    QTimer               *m_quitTimer;
+    QWidget              *m_pIconWidget;
+    QWidget              *m_pInfoAreaWidget;
+    QWidget              *m_pCloseButtonWidget;
+    QWidget              *m_pOperationWidget;
 
 private slots:
     void ShowTimeoutSlots();
