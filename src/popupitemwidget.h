@@ -16,6 +16,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QFont>
 #include "notifyreceiveinfo.h"
 #include "adaptscreeninfo.h"
 #include "toptransparentwidget.h"
@@ -43,7 +44,13 @@ private:
     void setWidgetAttribute();                              // 设置窗口属性
     void initWidgetAnimations();                            // 初始化显示和消失动画
     void setWidgetDate();                                   // 设置widget显示数据
+    bool containsMouse() const;                             // 判断鼠标是否在当前弹窗中
     void convertToImage(QString iconPath);                  // 将路径中的数据转换成图片
+
+    bool judgeSummaryExsit();                               // 判断消息的标题是否存在
+    bool judgeBodyExsit();                                  // 判断消息体是否存在
+    bool judgeIconExsit();                                  // 判断图标是否存在
+    bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
 
 
 Q_SIGNALS:
@@ -69,6 +76,8 @@ private:
     QVBoxLayout *m_pIconWidgetLayout;
     QVBoxLayout *m_pLeftVBoxLayout;
     QVBoxLayout *m_pCloseWidgetLayout;
+    QVBoxLayout *m_pSummaryLabelWidgetLayout;
+    QVBoxLayout *m_pBodyLabelWidgetLayout;
 
     notifyReceiveInfo    *m_pentryInfo;
     adaptScreenInfo      *m_pSreenInfo;
@@ -91,9 +100,13 @@ private:
     QWidget              *m_pInfoAreaWidget;
     QWidget              *m_pCloseButtonWidget;
     QWidget              *m_pOperationWidget;
+    QWidget              *m_pSummaryLabelWidget;
+    QWidget              *m_pBodyLabelWidget;
 
 private slots:
     void ShowTimeoutSlots();
+    void qiutAppTimerSlots();
+    void closeButtonSlots();
     void OutAnimationFinishSlots();
     void MoveAnimationValueChangeSltos(const QVariant &value);
 };
