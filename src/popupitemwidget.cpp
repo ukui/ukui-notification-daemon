@@ -94,9 +94,9 @@ void popupItemWidget::initIconWidgetlayout()
     m_pIconWidgetLayout->setSpacing(0);
     /* 初始化图标label大小 */
     m_pIconLabel->setFixedSize(16, 16);
-    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 15));
+    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 18));
     m_pIconWidgetLayout->addWidget(m_pIconLabel);
-    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 92, QSizePolicy::Expanding));
+    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 102, QSizePolicy::Expanding));
 //    m_pIconWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
     m_pIconWidget->setLayout(m_pIconWidgetLayout);
 }
@@ -161,7 +161,7 @@ void popupItemWidget::initLabelSizeInfo()
     m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
     m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
     m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
-//    m_pSummaryLabel->setStyleSheet("QLabel{border: 1px solid rgba(255,255,0,1)}");
+//    m_pSummaryLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 
     /* 存放文本信息Label */
     m_pBodyLabelWidget = new QWidget();
@@ -211,6 +211,7 @@ void popupItemWidget::initOperationButton()
     m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
     m_pOperationButtonWidgetLayout->addWidget(m_pOperationButton3);
     m_pOperationWidget->setLayout(m_pOperationButtonWidgetLayout);
+//    m_pOperationWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
 
 /* 初始化顶层透明窗口 */
@@ -290,7 +291,7 @@ void popupItemWidget::convertToImage(QString iconPath)
         const QUrl url(iconPath);
         iconUrl = url.isLocalFile() ? url.toLocalFile() : url.url();
 
-        const QIcon &icon = QIcon::fromTheme(iconPath, QIcon::fromTheme("unknown"));
+        const QIcon &icon = QIcon::fromTheme(iconPath, QIcon::fromTheme("dialog-information"));
         pixmap = icon.pixmap(QSize(45, 45));
         qDebug() << "是否进入图片处理";
     }
