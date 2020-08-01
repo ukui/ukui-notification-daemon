@@ -54,8 +54,10 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     m_poutTimer->stop();
     setWidgetDate();
     convertToImage(m_pentryInfo->appIcon());
+    judgeBodyExsit();
     judgeActionExsit();
     m_pTopTransparentWidget->setWidgetPos(m_pSreenInfo->m_screenWidth - this->width(), 0);
+    qDebug() << "顶层窗口大小" << m_pTopTransparentWidget->size();
     m_pTopTransparentWidget->show();
     m_pMoveAnimation->start();
     m_poutTimer->start();
@@ -66,12 +68,13 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
 /* 初始化整体UI布局 */
 void popupItemWidget::initUiLayout()
 {
+    this->setContentsMargins(0, 0, 0, 0);
     m_pMainHBoxLayout = new QHBoxLayout();
     m_pMainHBoxLayout->setContentsMargins(0, 0, 0, 0);
     m_pMainHBoxLayout->setSpacing(0);
-    this->setContentsMargins(0, 0, 0, 0);
+
     m_pMainHBoxLayout->addWidget(m_pIconWidget);
-    m_pMainHBoxLayout->addItem(new QSpacerItem(12, 20));
+    m_pMainHBoxLayout->addItem(new QSpacerItem(12, 0));
     m_pMainHBoxLayout->addWidget(m_pInfoAreaWidget);
     m_pMainHBoxLayout->addWidget(m_pCloseButtonWidget);
 
@@ -82,14 +85,19 @@ void popupItemWidget::initUiLayout()
 void popupItemWidget::initIconWidgetlayout()
 {
     m_pIconWidget = new QWidget();
-    m_pIconWidget->setFixedSize(28, 110);
+    m_pIconWidget->setFixedWidth(28);
+
     m_pIconWidget->setContentsMargins(0, 0, 0, 0);
 
     m_pIconWidgetLayout = new QVBoxLayout();
-    m_pIconWidgetLayout->setContentsMargins(12, 16, 0, 82);
+    m_pIconWidgetLayout->setContentsMargins(12, 0, 0, 0);
+    m_pIconWidgetLayout->setSpacing(0);
     /* 初始化图标label大小 */
     m_pIconLabel->setFixedSize(16, 16);
+    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 15));
     m_pIconWidgetLayout->addWidget(m_pIconLabel);
+    m_pIconWidgetLayout->addItem(new QSpacerItem(10, 92, QSizePolicy::Expanding));
+//    m_pIconWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
     m_pIconWidget->setLayout(m_pIconWidgetLayout);
 }
 
@@ -117,16 +125,19 @@ void popupItemWidget::initCloseButtonWidget()
     m_pCloseButtonWidget->setContentsMargins(0, 0, 0, 0);
     m_pCloseWidgetLayout = new QVBoxLayout();
     m_pCloseWidgetLayout->setSpacing(0);
-    m_pCloseWidgetLayout->setContentsMargins(0, 0, 12, 82);
+    m_pCloseWidgetLayout->setContentsMargins(0, 0, 12, 0);
 
     QIcon closeButtonIcon = QIcon::fromTheme("window-close-symbolic");
     m_pCloseButton->setIcon(closeButtonIcon);
     m_pCloseButton->setIconSize(QSize(12, 12));
     m_pCloseButton->setFixedSize(16, 16);
     connect(m_pCloseButton, &QPushButton::clicked, this, &popupItemWidget::closeButtonSlots);
+    m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 12));
     m_pCloseWidgetLayout->addWidget(m_pCloseButton);
+    m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 110, QSizePolicy::Expanding));
     m_pCloseButtonWidget->setLayout(m_pCloseWidgetLayout);
-    m_pCloseButtonWidget->setFixedSize(26, 110);
+    m_pCloseButtonWidget->setFixedWidth(26);
+//    m_pCloseButtonWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
 
 void popupItemWidget::initLabelSizeInfo()
@@ -167,7 +178,7 @@ void popupItemWidget::initLabelSizeInfo()
     m_pTextBodyLabel->setFixedWidth(180);
     m_pTextBodyLabel->setMaximumHeight(16);
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
-    m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 11));
+    m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 13));
     m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
 //    m_pTextBodyLabel->setStyleSheet("QLabel{border: 1px solid rgba(255,255,0,1)}");
@@ -191,7 +202,7 @@ void popupItemWidget::initOperationButton()
     m_pOperationWidget->setContentsMargins(0, 0, 0, 0);
     m_pOperationWidget->setFixedHeight(49);
     m_pOperationButtonWidgetLayout = new QHBoxLayout();
-    m_pOperationButtonWidgetLayout->setContentsMargins(0, 15, 0, 0);
+    m_pOperationButtonWidgetLayout->setContentsMargins(0, 12, 0, 0);
     m_pOperationButtonWidgetLayout->setSpacing(0);
 
     m_pOperationButtonWidgetLayout->addWidget(m_pOperationButton1);
@@ -300,6 +311,7 @@ void popupItemWidget::convertToImage(QString iconPath)
 bool popupItemWidget::judgeSummaryExsit()
 {
     if (m_pentryInfo->summary().isEmpty()) {
+        this->setFixedSize(372, 88);
         return false;
     } else {
         return true;
@@ -310,8 +322,12 @@ bool popupItemWidget::judgeSummaryExsit()
 bool popupItemWidget::judgeBodyExsit()
 {
     if (m_pentryInfo->body().isEmpty()) {
+        m_pBodyLabelWidget->setVisible(false);
+        this->setFixedSize(372, 108);
         return false;
     } else {
+        m_pBodyLabelWidget->setVisible(true);
+        this->setFixedSize(372, 134);
         return true;
     }
 }
@@ -331,7 +347,7 @@ bool popupItemWidget::judgeActionExsit()
 {
     if (m_pentryInfo->actions().isEmpty()) {
         m_pOperationWidget->setVisible(false);
-        this->setFixedSize(372, 82);
+        this->setFixedSize(372, 88);
         return false;
     } else {
         m_pOperationWidget->setVisible(true);
