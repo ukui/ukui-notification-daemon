@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=ukui-notification
+Name[zh_CN]=通知弹窗
+Comment=ukui-notification
+Exec=ukui-notification
+Terminal=false
+Type=Application
+#Categories=
+Keywords=UKUI;
+NoDisplay=true
+OnlyShowIn=UKUI;
+X-UKUI-Autostart-Phase=Application
+X-UKUI-Bugzilla-Bugzilla=UKUI
+X-UKUI-Bugzilla-Product=ukui-notification
+X-UKUI-Bugzilla-Component=ukui-notification
+X-MATE-Autostart-Phase=Applications
+X-KDE-autostart-after=panel
+X-UKUI-Autostart-Notify=true
+X-UKUI-Autostart-Delay=3
+X-UKUI-AutoRestart=true
+
+

@@ -2,7 +2,7 @@ include(src/src.pri)
 QT       += dbus svg sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET   = ukui-notifycation
+TARGET   = ukui-notification
 TEMPLATE = app
 CONFIG  += c++11
 #QMAKE_CXXFLAGS_RELEASE = -Od -ZI -MD
