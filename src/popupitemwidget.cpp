@@ -3,15 +3,24 @@
 popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 : QWidget(parent)
                                 , m_pentryInfo(entryInfo)
-                                , m_pIconLabel(new QLabel())
-                                , m_pSummaryLabel(new QLabel())
-                                , m_pTextBodyLabel(new QLabel())
-                                , m_pSreenInfo(new adaptScreenInfo())
-                                , m_pCloseButton(new QPushButton())
+                                , m_pIconLabel(new QLabel)
+                                , m_pSummaryLabel(new QLabel)
+                                , m_pTextBodyLabel(new QLabel)
+                                , m_pSreenInfo(new adaptScreenInfo)
+                                , m_pCloseButton(new QPushButton)
                                 , m_pOperationButton1(new QPushButton)
                                 , m_pOperationButton2(new QPushButton)
                                 , m_pOperationButton3(new QPushButton)
 {
+//    m_pentryInfo = entryInfo;
+//    m_pIconLabel = new QLabel();
+//    m_pSummaryLabel = new QLabel();
+//    m_pTextBodyLabel = new QLabel();
+//    m_pSreenInfo = new adaptScreenInfo();
+//    m_pCloseButton = new QPushButton();
+//    m_pOperationButton1 = new QPushButton();
+//    m_pOperationButton2 = new QPushButton();
+//    m_pOperationButton3 = new QPushButton();
     /* 设置窗口属性 */
     setWidgetAttribute();
 
@@ -57,11 +66,9 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     judgeBodyExsit();
     judgeActionExsit();
     m_pTopTransparentWidget->setWidgetPos(m_pSreenInfo->m_screenWidth - this->width(), 0);
-    qDebug() << "顶层窗口大小" << m_pTopTransparentWidget->size();
     m_pTopTransparentWidget->show();
     m_pMoveAnimation->start();
     m_poutTimer->start();
-    qDebug() << "当前窗口大小" << this->width() << this->height();
     return;
 }
 

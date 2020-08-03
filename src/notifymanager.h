@@ -59,7 +59,7 @@ private:
     void registerAsService();
     void consumeEntities();
 private:
-    popupItemWidget              *m_pEntryWidget;
+    popupItemWidget              *m_pEntryWidget = nullptr;
     QPointer<notifyReceiveInfo>   m_currentNotify;
     QQueue<notifyReceiveInfo *>   m_entities;             //用来存放当前数据，保存到队列中去，多有多条消息时，一条一条数据显示
 private slots:

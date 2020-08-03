@@ -31,7 +31,7 @@ notifyManager::~notifyManager()
 
 void notifyManager::CloseNotification(uint id)
 {
-
+    Q_UNUSED(id);
 }
 
 QStringList notifyManager::GetCapabilities()
@@ -79,6 +79,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     if (!m_pEntryWidget->m_pTopTransparentWidget->isVisible()) {
         consumeEntities();
     }
+    return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
 }
 
 QString notifyManager::GetAllRecords()
@@ -126,9 +127,7 @@ void notifyManager::consumeEntities()
         m_currentNotify = nullptr;
         return;
     }
-    qDebug() << "当前队内有多少个" << m_entities.count();
     m_currentNotify = m_entities.dequeue();
-    qDebug() << "当前队内中还保存了-----> " << m_entities.count();
     m_pEntryWidget->setEntryData(m_currentNotify);
 }
 

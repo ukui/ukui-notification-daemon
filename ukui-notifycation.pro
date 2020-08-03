@@ -5,7 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET   = ukui-notifycation
 TEMPLATE = app
 CONFIG  += c++11
-
+#QMAKE_CXXFLAGS_RELEASE = -Od -ZI -MD
+#QMAKE_LFLAGS_RELEASE = /DEBUG /INCREMENTAL:NO
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -22,15 +23,18 @@ SOURCES += \
 
 HEADERS += \
 
-
-
 #DBUS_ADAPTORS += org.freedesktop.Notifications.xml
 #DBUS_INTERFACES += org.freedesktop.Notifications.xml
 
-orgDBus.input = file/com.ukui.dde.freedesktop.Notification.service.in
-orgDBus.output = file/com.ukui.dde.freedesktop.Notification.service
+orgDBus.input = file/com.ukui.freedesktop.Notification.service.in
+orgDBus.output = file/com.ukui.freedesktop.Notification.service
+
+QMAKE_SUBSTITUTES += service orgDBus
+QMAKE_CLEAN       += $${orgDBus.output}
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+target.path = /usr/bin/
+dbus.path = /usr/share/dbus-1/system-services
+dbus.files += file/com.ukui.freedesktop.Notification.service
+INSTALLS += target dbus
+

@@ -29,7 +29,6 @@ public:
     void setEntryData(notifyReceiveInfo *entryInfo);
     topTransparentWidget *m_pTopTransparentWidget;
 
-
 signals:
 
 private:
@@ -71,37 +70,37 @@ protected:
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QHBoxLayout *m_pMainHBoxLayout;
-    QHBoxLayout *m_pOperationButtonWidgetLayout;
-    QVBoxLayout *m_pIconWidgetLayout;
-    QVBoxLayout *m_pLeftVBoxLayout;
-    QVBoxLayout *m_pCloseWidgetLayout;
-    QVBoxLayout *m_pSummaryLabelWidgetLayout;
-    QVBoxLayout *m_pBodyLabelWidgetLayout;
+    QHBoxLayout *m_pMainHBoxLayout = nullptr;
+    QHBoxLayout *m_pOperationButtonWidgetLayout = nullptr;
+    QVBoxLayout *m_pIconWidgetLayout = nullptr;
+    QVBoxLayout *m_pLeftVBoxLayout = nullptr;
+    QVBoxLayout *m_pCloseWidgetLayout = nullptr;
+    QVBoxLayout *m_pSummaryLabelWidgetLayout = nullptr;
+    QVBoxLayout *m_pBodyLabelWidgetLayout = nullptr;
 
-    notifyReceiveInfo    *m_pentryInfo;
-    adaptScreenInfo      *m_pSreenInfo;
+    notifyReceiveInfo    *m_pentryInfo = nullptr;
+    adaptScreenInfo      *m_pSreenInfo = nullptr;
 
-    QLabel               *m_pIconLabel;
-    QLabel               *m_pTextBodyLabel;
-    QLabel               *m_pSummaryLabel;
+    QLabel               *m_pIconLabel = nullptr;
+    QLabel               *m_pTextBodyLabel = nullptr;
+    QLabel               *m_pSummaryLabel = nullptr;
 
-    QPushButton          *m_pOperationButton1;
-    QPushButton          *m_pOperationButton2;
-    QPushButton          *m_pOperationButton3;
-    QPushButton          *m_pCloseButton;
+    QPushButton          *m_pOperationButton1 = nullptr;
+    QPushButton          *m_pOperationButton2 = nullptr;
+    QPushButton          *m_pOperationButton3 = nullptr;
+    QPushButton          *m_pCloseButton = nullptr;
 
     QPropertyAnimation   *m_pOutAnimation = nullptr;
     QPropertyAnimation   *m_pMoveAnimation = nullptr;
 
     QTimer               *m_poutTimer = nullptr;
-    QTimer               *m_quitTimer;
-    QWidget              *m_pIconWidget;
-    QWidget              *m_pInfoAreaWidget;
-    QWidget              *m_pCloseButtonWidget;
-    QWidget              *m_pOperationWidget;
-    QWidget              *m_pSummaryLabelWidget;
-    QWidget              *m_pBodyLabelWidget;
+    QTimer               *m_quitTimer = nullptr;
+    QWidget              *m_pIconWidget = nullptr;
+    QWidget              *m_pInfoAreaWidget = nullptr;
+    QWidget              *m_pCloseButtonWidget = nullptr;
+    QWidget              *m_pOperationWidget = nullptr;
+    QWidget              *m_pSummaryLabelWidget = nullptr;
+    QWidget              *m_pBodyLabelWidget = nullptr;
 
 private slots:
     void ShowTimeoutSlots();
