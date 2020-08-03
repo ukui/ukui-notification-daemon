@@ -17,6 +17,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFont>
+#include <QFontMetrics>
 #include "notifyreceiveinfo.h"
 #include "adaptscreeninfo.h"
 #include "toptransparentwidget.h"
@@ -45,11 +46,16 @@ private:
     void setWidgetDate();                                   // 设置widget显示数据
     bool containsMouse() const;                             // 判断鼠标是否在当前弹窗中
     void convertToImage(QString iconPath);                  // 将路径中的数据转换成图片
+    QString SetFormatBody(QString text, QLabel *label);     // 超过label长度，则显示...
+    QString judgeBlankLine(QStringList list);               // 判断第一行是否有空行
 
     bool judgeSummaryExsit();                               // 判断消息的标题是否存在
     bool judgeBodyExsit();                                  // 判断消息体是否存在
     bool judgeIconExsit();                                  // 判断图标是否存在
     bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
+
+    bool substringSposition(QString formatBody, QStringList list);
+
 
 
 Q_SIGNALS:

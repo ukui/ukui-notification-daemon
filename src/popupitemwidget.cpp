@@ -12,15 +12,6 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 , m_pOperationButton2(new QPushButton)
                                 , m_pOperationButton3(new QPushButton)
 {
-//    m_pentryInfo = entryInfo;
-//    m_pIconLabel = new QLabel();
-//    m_pSummaryLabel = new QLabel();
-//    m_pTextBodyLabel = new QLabel();
-//    m_pSreenInfo = new adaptScreenInfo();
-//    m_pCloseButton = new QPushButton();
-//    m_pOperationButton1 = new QPushButton();
-//    m_pOperationButton2 = new QPushButton();
-//    m_pOperationButton3 = new QPushButton();
     /* 设置窗口属性 */
     setWidgetAttribute();
 
@@ -161,7 +152,7 @@ void popupItemWidget::initLabelSizeInfo()
         summaryFont.setPixelSize(16);
         summaryFont.setFamily("Noto Sans CJK SC");
     });
-    m_pSummaryLabel->setFixedWidth(180);
+    m_pSummaryLabel->setFixedWidth(300);
     m_pSummaryLabel->setFixedHeight(20);
     m_pSummaryLabel->setAlignment(Qt::AlignVCenter);
 
@@ -182,7 +173,7 @@ void popupItemWidget::initLabelSizeInfo()
         bodyFont.setPixelSize(14);
         m_pTextBodyLabel->setFont(bodyFont);
     });
-    m_pTextBodyLabel->setFixedWidth(180);
+    m_pTextBodyLabel->setFixedWidth(300);
     m_pTextBodyLabel->setMaximumHeight(16);
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
     m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 13));
@@ -272,8 +263,8 @@ void popupItemWidget::initWidgetAnimations()
 /* 设置显示数据文本 */
 void popupItemWidget::setWidgetDate()
 {
-    m_pTextBodyLabel->setText(m_pentryInfo->body());
-    m_pSummaryLabel->setText(m_pentryInfo->summary());
+    m_pTextBodyLabel->setText(SetFormatBody(m_pentryInfo->body(), m_pTextBodyLabel));
+    m_pSummaryLabel->setText(SetFormatBody(m_pentryInfo->summary(), m_pSummaryLabel));
     qDebug() << "popupItemWidget---->body:" << m_pentryInfo->body() << "popupItemWidget---->summary: " << m_pentryInfo->summary()
              << "appname --->appname" << m_pentryInfo->appName();
     return;
@@ -313,6 +304,79 @@ void popupItemWidget::convertToImage(QString iconPath)
 
     m_pIconLabel->setPixmap(pixmap);
     return;
+}
+
+/* 设置...字样 */
+QString popupItemWidget::SetFormatBody(QString text, QLabel *label)
+{
+    QFontMetrics fontMetrics(label->font());
+    int LableWidth = label->width();
+    int fontSize = fontMetrics.width(text);
+    QString formatBody = text;
+    if(fontSize > (LableWidth - 10)) {
+        QStringList list = formatBody.split("\n");
+        if (list.size() >= 2) {
+            //当有几行时，只需要截取第一行就行，在第一行后面加...
+            // 判断第一行是否是空行
+            formatBody = judgeBlankLine(list);
+            formatBody = formatBody + "aa";
+            int oneFontSize = fontMetrics.width(formatBody);
+            if (oneFontSize > (LableWidth - 10)) {
+                formatBody = fontMetrics.elidedText(formatBody, Qt::ElideRight, LableWidth - 10);
+                return formatBody;
+            } else {
+                if (!substringSposition(formatBody, list)) {
+                    int oneFontSize = fontMetrics.width(formatBody);
+                    formatBody = fontMetrics.elidedText(formatBody, Qt::ElideRight, oneFontSize - 1);
+                    return formatBody;
+                }
+            }
+        } else {
+            //说明只存在一行，在最后面加...就行
+            formatBody = fontMetrics.elidedText(formatBody, Qt::ElideRight, LableWidth - 10);
+            return formatBody;
+        }
+    } else {
+        QStringList list = formatBody.split("\n");
+        if (list.size() >= 2) {
+            //取得当前的有字符串的子串
+            formatBody = judgeBlankLine(list);
+            formatBody = formatBody + "aa";
+            if (!substringSposition(formatBody, list)) {
+                int oneFontSize = fontMetrics.width(formatBody);
+                formatBody = fontMetrics.elidedText(formatBody, Qt::ElideRight, oneFontSize - 1);
+            }
+        }
+    }
+    return formatBody;
+}
+
+/* 去除掉空行，显示有字体的行 */
+QString popupItemWidget::judgeBlankLine(QStringList list)
+{
+    int tmp = list.count();
+    for (int i = 0; i < tmp; i++) {
+        QString dest = list.at(i);
+        dest = dest.trimmed();
+        if (dest.size() != 0) {
+           return list.at(i);
+        }
+    }
+    return list.at(0);
+}
+
+/* 判断当前子串位置，后面是否还有子串 */
+bool popupItemWidget::substringSposition(QString formatBody, QStringList list)
+{
+    int tmp = list.count();
+    for (int i = 0; i < tmp; i++) {
+        QString dest = list.at(i);
+        if (dest == formatBody && i == tmp - 1) {
+            qDebug() << "后面没有字串，返回true";
+            return true;
+        }
+    }
+    return false;
 }
 
 /* 判断消息的标题是否存在 */
