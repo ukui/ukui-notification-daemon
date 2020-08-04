@@ -31,7 +31,8 @@ notifyManager::~notifyManager()
 
 void notifyManager::CloseNotification(uint id)
 {
-    Q_UNUSED(id);
+    emit m_pEntryWidget->dismissed(id);
+    return;
 }
 
 QStringList notifyManager::GetCapabilities()
@@ -44,6 +45,7 @@ QStringList notifyManager::GetCapabilities()
 
 QString notifyManager::GetServerInformation(QString &name, QString &vender, QString &version)
 {
+    qDebug() << "真的进入了";
     name = QString("ukui-Notifications");
     vender = QString("ukui3.0");
     version = QString("1.0");
@@ -142,7 +144,6 @@ void notifyManager::popupItemWidgetDismissed(int Id)
 {
     m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
     Q_EMIT NotificationClosed(Id, notifyManager::Dismissed);
-
     consumeEntities();
 }
 

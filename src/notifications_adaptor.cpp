@@ -16,7 +16,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
-
+#include "notifymanager.h"
 /*
  * Implementation of adaptor class NotificationsAdaptor
  */
@@ -80,7 +80,7 @@ QString NotificationsAdaptor::GetRecordsFromId(int rowCount, const QString &offs
 QString NotificationsAdaptor::GetServerInformation(QString &name, QString &vender, QString &version)
 {
     // handle method call org.freedesktop.Notifications.GetServerInformation
-    //return static_cast<YourObjectType *>(parent())->GetServerInformation(name, vender, version);
+    return static_cast<notifyManager *>(parent())->GetServerInformation(name, vender, version);
 }
 
 uint NotificationsAdaptor::Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7)

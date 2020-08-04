@@ -26,6 +26,9 @@ HEADERS += \
 #DBUS_ADAPTORS += org.freedesktop.Notifications.xml
 #DBUS_INTERFACES += org.freedesktop.Notifications.xml
 
+desktopfile.files = src/data/ukui-notification-daemon.desktop
+desktopfile.path = /etc/xdg/autostart/
+
 orgDBus.input = file/com.ukui.freedesktop.Notification.service.in
 orgDBus.output = file/com.ukui.freedesktop.Notification.service
 
@@ -36,5 +39,5 @@ QMAKE_CLEAN       += $${orgDBus.output}
 target.path = /usr/bin/
 dbus.path = /usr/share/dbus-1/system-services
 dbus.files += file/com.ukui.freedesktop.Notification.service
-INSTALLS += target dbus
+INSTALLS += target dbus desktopfile
 
