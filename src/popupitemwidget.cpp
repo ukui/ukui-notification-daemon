@@ -423,8 +423,54 @@ bool popupItemWidget::judgeActionExsit()
         return false;
     } else {
         m_pOperationWidget->setVisible(true);
+        // 解析m_actions链表，读取动作字符串名称和显示给用户的展示字符串
+        processActions();
         this->setFixedSize(372, 134);
         return true;
+    }
+}
+
+/* 解析动作字符串链表，添加动作按钮 */
+void popupItemWidget::processActions()
+{
+    QStringList list = m_pentryInfo->actions();
+    // the "default" is identifier for the default action
+    if (list.contains("default")) {
+        const int index  = list.indexOf("default");
+        m_pDefaultAction = list[index];
+        // Default action does not need to be displayed, removed from the list
+        list.removeAt(index + 1);
+        list.removeAt(index);
+    }
+    qDebug() << "当前默认的字符串---->" << m_pDefaultAction;
+    qDebug() << "动作字符串链表---->" << list;
+    return;
+}
+
+/* 通过动作标识ID解析Map表， 通过Map表赋予按钮动作，执行跳转命令 */
+void popupItemWidget::actionMapParsingJump(QStringList list)
+{
+    QString id;
+
+    // Each even element in the list (starting at index 0) represents the
+    // identifier for the action. Each odd element in the list is the
+    // localized string that will be displayed to the user.
+    for (int i = 0; i != list.size(); ++i) {
+        if (i % 2 == 0) {
+            id = list[i];
+        } else {
+            QPushButton *button = new QPushButton(list[i]);
+            m_pListButton->append(button);
+
+            button->setFixedHeight(34);
+
+            connect(button, &QPushButton::clicked, this, [=] {
+                emit actionButtonClicked(id);
+            });
+
+            m_pOperationButtonWidgetLayout->addWidget(button, Qt::AlignRight);
+            m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
+        }
     }
 }
 
@@ -531,4 +577,24 @@ void popupItemWidget::MoveAnimationValueChangeSltos(const QVariant &value)
     QRect Rect = value.value<QRect>();
     int x = Rect.x();
     m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(x, 0, 270, 110)));
+}
+
+void popupItemWidget::onActionButtonClicked(const QString &actionId)
+{
+    QMap<QString, QVariant> hints = m_pentryInfo->hints();
+    QMap<QString, QVariant>::const_iterator i = hints.constBegin();
+    while (i != hints.constEnd()) {
+        QStringList args = i.value().toString().split(",");
+        if (!args.isEmpty()) {
+            QString cmd = args.first();
+            args.removeFirst();
+            if (i.key() == actionId) {
+                QProcess::startDetached(cmd, args);
+            }
+        }
+        ++i;
+    }
+
+    m_poutTimer->stop();
+    Q_EMIT actionInvoked(m_pentryInfo->id().toUInt(), actionId);
 }

@@ -45,7 +45,6 @@ QStringList notifyManager::GetCapabilities()
 
 QString notifyManager::GetServerInformation(QString &name, QString &vender, QString &version)
 {
-    qDebug() << "真的进入了";
     name = QString("ukui-Notifications");
     vender = QString("ukui3.0");
     version = QString("1.0");

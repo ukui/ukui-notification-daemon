@@ -18,6 +18,7 @@
 #include <QPushButton>
 #include <QFont>
 #include <QFontMetrics>
+#include <QProcess>
 #include "notifyreceiveinfo.h"
 #include "adaptscreeninfo.h"
 #include "toptransparentwidget.h"
@@ -28,9 +29,7 @@ class popupItemWidget : public QWidget
 public:
     explicit popupItemWidget(QWidget *parent = nullptr, notifyReceiveInfo *entryInfo=0);
     void setEntryData(notifyReceiveInfo *entryInfo);
-    topTransparentWidget *m_pTopTransparentWidget;
-
-signals:
+    topTransparentWidget *m_pTopTransparentWidget;  
 
 private:
     void initUiLayout();                                    // 初始化UI
@@ -54,6 +53,8 @@ private:
     bool judgeIconExsit();                                  // 判断图标是否存在
     bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
 
+    void processActions();                                  // 解析动作字符串链表，添加动作按钮
+    void actionMapParsingJump(QStringList list);                // 通过动作字符串解析Map表，赋予按钮跳转指令
     bool substringSposition(QString formatBody, QStringList list);
 
 
@@ -63,6 +64,7 @@ Q_SIGNALS:
     void dismissed(int);
     void replacedByOther(int);
     void actionInvoked(uint, QString);
+    void actionButtonClicked(QString id);
 
 public Q_SLOTS:
 //    void compositeChanged();
@@ -108,12 +110,17 @@ private:
     QWidget              *m_pSummaryLabelWidget = nullptr;
     QWidget              *m_pBodyLabelWidget = nullptr;
 
+    QString               m_pDefaultAction;
+    QList<QPushButton *> *m_pListButton;
+
+
 private slots:
     void ShowTimeoutSlots();
     void qiutAppTimerSlots();
     void closeButtonSlots();
     void OutAnimationFinishSlots();
     void MoveAnimationValueChangeSltos(const QVariant &value);
+    void onActionButtonClicked(const QString &actionId);
 };
 
 #endif // POPUPITEMWIDGET_H
