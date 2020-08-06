@@ -46,7 +46,7 @@ void topTransparentWidget::paintEvent(QPaintEvent *event)
     opt.rect.adjust(0,0,0,0);
     path.addRoundedRect(opt.rect,6,6);
     p.setRenderHint(QPainter::Antialiasing);                        //反锯齿
-    setProperty("blurRegion",QRegion(path.toFillPolygon().toPolygon()));
+//    setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     QWidget::paintEvent(event);
 }

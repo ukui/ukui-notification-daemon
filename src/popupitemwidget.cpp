@@ -576,7 +576,12 @@ void popupItemWidget::MoveAnimationValueChangeSltos(const QVariant &value)
 {
     QRect Rect = value.value<QRect>();
     int x = Rect.x();
-    m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(x, 0, 270, 110)));
+    m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(x, 0, 372, 110)));
+//    QStyleOption opt;
+//    opt.init(this);
+//    QPainterPath path;
+//    path.addRoundedRect(opt.rect,6,6);
+//    m_pTopTransparentWidget->setProperty("blurRegion",QRegion(path.toFillPolygon().toPolygon()));
 }
 
 void popupItemWidget::onActionButtonClicked(const QString &actionId)
