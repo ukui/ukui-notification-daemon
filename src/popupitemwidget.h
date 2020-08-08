@@ -54,7 +54,8 @@ private:
     bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
 
     void processActions();                                  // 解析动作字符串链表，添加动作按钮
-    void actionMapParsingJump(QStringList list);                // 通过动作字符串解析Map表，赋予按钮跳转指令
+    void actionMapParsingJump(QStringList list);            // 通过动作字符串解析Map表，赋予按钮跳转指令
+    void clearAllActionButton();                            // 删除掉所有动作按钮
     bool substringSposition(QString formatBody, QStringList list);
 
 
@@ -93,9 +94,6 @@ private:
     QLabel               *m_pTextBodyLabel = nullptr;
     QLabel               *m_pSummaryLabel = nullptr;
 
-    QPushButton          *m_pOperationButton1 = nullptr;
-    QPushButton          *m_pOperationButton2 = nullptr;
-    QPushButton          *m_pOperationButton3 = nullptr;
     QPushButton          *m_pCloseButton = nullptr;
 
     QPropertyAnimation   *m_pOutAnimation = nullptr;
@@ -111,7 +109,7 @@ private:
     QWidget              *m_pBodyLabelWidget = nullptr;
 
     QString               m_pDefaultAction;
-    QList<QPushButton *> *m_pListButton;
+    QList<QPushButton *> *m_pListButton = nullptr;
 
 
 private slots:

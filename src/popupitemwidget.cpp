@@ -8,9 +8,7 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 , m_pTextBodyLabel(new QLabel)
                                 , m_pSreenInfo(new adaptScreenInfo)
                                 , m_pCloseButton(new QPushButton)
-                                , m_pOperationButton1(new QPushButton)
-                                , m_pOperationButton2(new QPushButton)
-                                , m_pOperationButton3(new QPushButton)
+                                , m_pListButton(new QList<QPushButton *>)
 {
     /* 设置窗口属性 */
     setWidgetAttribute();
@@ -41,6 +39,9 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
 
     /* 初始化动画 */
     initWidgetAnimations();
+
+    /* 初始化信号连接 */
+    connect(this, &popupItemWidget::actionButtonClicked, this, &popupItemWidget::onActionButtonClicked);
 }
 
 /* 设置显示一行数据 */
@@ -184,30 +185,13 @@ void popupItemWidget::initLabelSizeInfo()
 
 void popupItemWidget::initOperationButton()
 {
-    m_pOperationButton1->setFixedHeight(34);
-    m_pOperationButton1->setMaximumWidth(120);
-    m_pOperationButton1->setText("试用版免责声明");
-
-    m_pOperationButton2->setFixedHeight(34);
-    m_pOperationButton2->setMaximumWidth(76);
-    m_pOperationButton2->setText("授权激活");
-
-    m_pOperationButton3->setFixedHeight(34);
-    m_pOperationButton3->setMaximumWidth(76);
-    m_pOperationButton3->setText("详细信息");
-
     m_pOperationWidget = new QWidget();
     m_pOperationWidget->setContentsMargins(0, 0, 0, 0);
     m_pOperationWidget->setFixedHeight(49);
     m_pOperationButtonWidgetLayout = new QHBoxLayout();
     m_pOperationButtonWidgetLayout->setContentsMargins(0, 12, 0, 0);
     m_pOperationButtonWidgetLayout->setSpacing(0);
-
-    m_pOperationButtonWidgetLayout->addWidget(m_pOperationButton1);
-    m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
-    m_pOperationButtonWidgetLayout->addWidget(m_pOperationButton2);
-    m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
-    m_pOperationButtonWidgetLayout->addWidget(m_pOperationButton3);
+    m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(372, 20, QSizePolicy::Expanding));
     m_pOperationWidget->setLayout(m_pOperationButtonWidgetLayout);
 //    m_pOperationWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
@@ -433,6 +417,7 @@ bool popupItemWidget::judgeActionExsit()
 /* 解析动作字符串链表，添加动作按钮 */
 void popupItemWidget::processActions()
 {
+    clearAllActionButton();
     QStringList list = m_pentryInfo->actions();
     // the "default" is identifier for the default action
     if (list.contains("default")) {
@@ -442,8 +427,7 @@ void popupItemWidget::processActions()
         list.removeAt(index + 1);
         list.removeAt(index);
     }
-    qDebug() << "当前默认的字符串---->" << m_pDefaultAction;
-    qDebug() << "动作字符串链表---->" << list;
+    actionMapParsingJump(list);
     return;
 }
 
@@ -464,7 +448,8 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
 
             button->setFixedHeight(34);
 
-            connect(button, &QPushButton::clicked, this, [=] {
+            connect(button, &QPushButton::clicked, this, [=](){
+                qDebug() << "点击进入这里" << id;
                 emit actionButtonClicked(id);
             });
 
@@ -472,6 +457,17 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
             m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
         }
     }
+}
+
+void popupItemWidget::clearAllActionButton()
+{
+    for (QPushButton *button : *m_pListButton) {
+        m_pOperationButtonWidgetLayout->removeWidget(button);
+        button->deleteLater();
+    }
+
+    m_pListButton->clear();
+    return;
 }
 
 /* 在通知弹窗上鼠标遗留一段时间后，退出notify */
@@ -589,7 +585,11 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
             QString cmd = args.first();
             args.removeFirst();
             if (i.key() == actionId) {
-                QProcess::startDetached(cmd, args);
+                if (QProcess::startDetached(cmd, args)) {
+                    qDebug() << "执行成功";
+                } else {
+                    qDebug() << "执行失败";
+                }
             }
         }
         ++i;
