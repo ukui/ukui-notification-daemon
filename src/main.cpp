@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
     notifyManager w;
     NotificationsAdaptor notifyAdaptor(&w);
+    w.m_pEntryWidget->m_pTopTransparentWidget->setProperty("useSystemStyleBlur", true);
     Q_UNUSED(notifyAdaptor);
     return a.exec();
 }
