@@ -454,7 +454,7 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
             });
 
             m_pOperationButtonWidgetLayout->addWidget(button, Qt::AlignRight);
-            m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(10, 5));
+            m_pOperationButtonWidgetLayout->setSpacing(10);
         }
     }
 }
