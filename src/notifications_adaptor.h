@@ -56,25 +56,8 @@ class NotificationsAdaptor: public QDBusAbstractAdaptor
 "      <annotation value=\"QVariantMap\" name=\"org.qtproject.QtDBus.QtTypeName.In6\"/>\n"
 "      <arg direction=\"in\" type=\"i\"/>\n"
 "    </method>\n"
-"    <method name=\"GetAllRecords\">\n"
-"      <arg direction=\"out\" type=\"s\"/>\n"
-"    </method>\n"
-"    <method name=\"GetRecordById\">\n"
-"      <arg direction=\"out\" type=\"s\"/>\n"
-"      <arg direction=\"in\" type=\"s\" name=\"id\"/>\n"
-"    </method>\n"
-"    <method name=\"GetRecordsFromId\">\n"
-"      <arg direction=\"out\" type=\"s\"/>\n"
-"      <arg direction=\"in\" type=\"i\" name=\"rowCount\"/>\n"
-"      <arg direction=\"in\" type=\"s\" name=\"offsetId\"/>\n"
-"    </method>\n"
-"    <method name=\"RemoveRecord\">\n"
-"      <arg direction=\"in\" type=\"s\" name=\"id\"/>\n"
-"    </method>\n"
-"    <method name=\"ClearRecords\"/>\n"
 "    <signal name=\"ActionInvoked\"/>\n"
 "    <signal name=\"NotificationClosed\"/>\n"
-"    <signal name=\"RecordAdded\"/>\n"
 "  </interface>\n"
         "")
 public:
@@ -83,19 +66,14 @@ public:
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
-    void ClearRecords();
     void CloseNotification(uint id);
-    QString GetAllRecords();
     QStringList GetCapabilities();
-    QString GetRecordById(const QString &id);
-    QString GetRecordsFromId(int rowCount, const QString &offsetId);
     QString GetServerInformation(QString &name, QString &vender, QString &version);
     uint Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7);
-    void RemoveRecord(const QString &id);
+
 Q_SIGNALS: // SIGNALS
     void ActionInvoked();
     void NotificationClosed();
-    void RecordAdded();
 };
 
 #endif

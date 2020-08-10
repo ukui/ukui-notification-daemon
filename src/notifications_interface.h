@@ -36,11 +36,6 @@ public:
     ~OrgFreedesktopNotificationsInterface();
 
 public Q_SLOTS: // METHODS
-    inline QDBusPendingReply<> ClearRecords()
-    {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QStringLiteral("ClearRecords"), argumentList);
-    }
 
     inline QDBusPendingReply<> CloseNotification(uint id)
     {
@@ -49,30 +44,10 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QStringLiteral("CloseNotification"), argumentList);
     }
 
-    inline QDBusPendingReply<QString> GetAllRecords()
-    {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QStringLiteral("GetAllRecords"), argumentList);
-    }
-
     inline QDBusPendingReply<QStringList> GetCapabilities()
     {
         QList<QVariant> argumentList;
         return asyncCallWithArgumentList(QStringLiteral("GetCapabilities"), argumentList);
-    }
-
-    inline QDBusPendingReply<QString> GetRecordById(const QString &id)
-    {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(id);
-        return asyncCallWithArgumentList(QStringLiteral("GetRecordById"), argumentList);
-    }
-
-    inline QDBusPendingReply<QString> GetRecordsFromId(int rowCount, const QString &offsetId)
-    {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(rowCount) << QVariant::fromValue(offsetId);
-        return asyncCallWithArgumentList(QStringLiteral("GetRecordsFromId"), argumentList);
     }
 
     inline QDBusPendingReply<QString, QString, QString, QString> GetServerInformation()
@@ -99,17 +74,9 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QStringLiteral("Notify"), argumentList);
     }
 
-    inline QDBusPendingReply<> RemoveRecord(const QString &id)
-    {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(id);
-        return asyncCallWithArgumentList(QStringLiteral("RemoveRecord"), argumentList);
-    }
-
 Q_SIGNALS: // SIGNALS
     void ActionInvoked();
     void NotificationClosed();
-    void RecordAdded();
 };
 
 namespace org {

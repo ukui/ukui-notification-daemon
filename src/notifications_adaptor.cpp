@@ -33,24 +33,10 @@ NotificationsAdaptor::~NotificationsAdaptor()
     // destructor
 }
 
-void NotificationsAdaptor::ClearRecords()
-{
-    // handle method call org.freedesktop.Notifications.ClearRecords
-    QMetaObject::invokeMethod(parent(), "ClearRecords");
-}
-
 void NotificationsAdaptor::CloseNotification(uint id)
 {
     // handle method call org.freedesktop.Notifications.CloseNotification
     QMetaObject::invokeMethod(parent(), "CloseNotification", Q_ARG(uint, id));
-}
-
-QString NotificationsAdaptor::GetAllRecords()
-{
-    // handle method call org.freedesktop.Notifications.GetAllRecords
-    QString out0;
-    QMetaObject::invokeMethod(parent(), "GetAllRecords", Q_RETURN_ARG(QString, out0));
-    return out0;
 }
 
 QStringList NotificationsAdaptor::GetCapabilities()
@@ -58,22 +44,6 @@ QStringList NotificationsAdaptor::GetCapabilities()
     // handle method call org.freedesktop.Notifications.GetCapabilities
     QStringList out0;
     QMetaObject::invokeMethod(parent(), "GetCapabilities", Q_RETURN_ARG(QStringList, out0));
-    return out0;
-}
-
-QString NotificationsAdaptor::GetRecordById(const QString &id)
-{
-    // handle method call org.freedesktop.Notifications.GetRecordById
-    QString out0;
-    QMetaObject::invokeMethod(parent(), "GetRecordById", Q_RETURN_ARG(QString, out0), Q_ARG(QString, id));
-    return out0;
-}
-
-QString NotificationsAdaptor::GetRecordsFromId(int rowCount, const QString &offsetId)
-{
-    // handle method call org.freedesktop.Notifications.GetRecordsFromId
-    QString out0;
-    QMetaObject::invokeMethod(parent(), "GetRecordsFromId", Q_RETURN_ARG(QString, out0), Q_ARG(int, rowCount), Q_ARG(QString, offsetId));
     return out0;
 }
 
@@ -90,10 +60,3 @@ uint NotificationsAdaptor::Notify(const QString &in0, uint replacesId, const QSt
     QMetaObject::invokeMethod(parent(), "Notify", Q_RETURN_ARG(uint, out0), Q_ARG(QString, in0), Q_ARG(uint, replacesId), Q_ARG(QString, in2), Q_ARG(QString, in3), Q_ARG(QString, in4), Q_ARG(QStringList, in5), Q_ARG(QVariantMap, in6), Q_ARG(int, in7));
     return out0;
 }
-
-void NotificationsAdaptor::RemoveRecord(const QString &id)
-{
-    // handle method call org.freedesktop.Notifications.RemoveRecord
-    QMetaObject::invokeMethod(parent(), "RemoveRecord", Q_ARG(QString, id));
-}
-

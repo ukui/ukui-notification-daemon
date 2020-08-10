@@ -83,31 +83,6 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
 }
 
-QString notifyManager::GetAllRecords()
-{
-
-}
-
-QString notifyManager::GetRecordById(const QString &id)
-{
-
-}
-
-QString notifyManager::GetRecordsFromId(int rowCount, const QString &offsetId)
-{
-
-}
-
-void notifyManager::RemoveRecord(const QString &id)
-{
-
-}
-
-void notifyManager::ClearRecords()
-{
-
-}
-
 void notifyManager::registerAsService()
 {
     QDBusConnection connection = QDBusConnection::sessionBus();

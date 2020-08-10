@@ -1,3 +1,21 @@
+ukui-notification (1.1.1-0006) v100; urgency=medium
+
+  * Add Actively open the ground glass（添加主动开启毛玻璃） 
+  * Fix bug The frosted glass failed to close when hiding the animation(隐藏动画时，毛玻璃关闭失败的Bug修复)
+  * Add Action Parsing, and the application
+  * Fix bug When there are a lot of messages, operating area(当有很多条消息时，操作区域UI重叠)
+  * Add 4k adapter(增加4K适配)
+  * Modify dbus server（修改dbus服务端接口，获取notify服务端的基本信息
+  * Add desktop file install(增加desktop文件和安装)
+  * Add delcer Action and Action map
+  * Add ElidedText deal with
+  * Add ukui-notification-daemon.desktop
+  * Modify ukui-notification-daemon project rename
+  * Add install com.ukui.dde.freedesktop.Notification.service.in(增加安装.service文件)
+  * Add variable init(增加变量初始化)
+
+ -- liushanwen <liushanwen@kylinos.cn>  Sun, 09 Aug 2020 11:10:36 +0800
+
 ukui-notification (1.1.1-0004) v100; urgency=medium
 
   * 12312312312312312144444444

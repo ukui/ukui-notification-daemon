@@ -49,12 +49,6 @@ public Q_SLOTS:
     // new notify will be received by this slot
     uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
 
-    // Extra DBus APIs
-    QString GetAllRecords();
-    QString GetRecordById(const QString &id);
-    QString GetRecordsFromId(int rowCount, const QString &offsetId);
-    void RemoveRecord(const QString &id);
-    void ClearRecords();
 private:
     void registerAsService();
     void consumeEntities();
