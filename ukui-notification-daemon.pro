@@ -2,7 +2,7 @@ include(src/src.pri)
 QT       += dbus svg sql core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET   = ukui-notification
+TARGET   = ukui-notifications
 TEMPLATE = app
 CONFIG  += c++11
 #QMAKE_CXXFLAGS_RELEASE = -Od -ZI -MD
@@ -25,6 +25,10 @@ SOURCES += \
 
 HEADERS += \
 
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+
 #DBUS_ADAPTORS += org.freedesktop.Notifications.xml
 #DBUS_INTERFACES += org.freedesktop.Notifications.xml
 
@@ -38,8 +42,10 @@ QMAKE_SUBSTITUTES += service orgDBus
 QMAKE_CLEAN       += $${orgDBus.output}
 
 # Default rules for deployment.
-target.path = /usr/bin/
-dbus.path = /usr/share/dbus-1/system-services
+target.path = $${PREFIX}/lib/ukui-notifications
+dbus.path = /usr/share/dbus-1/services
 dbus.files += file/com.ukui.freedesktop.Notification.service
 INSTALLS += target dbus desktopfile
 
+#target.path = $${PREFIX}/bin
+#INSTALLS += target

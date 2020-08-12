@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef POPUPITEMWIDGET_H
 #define POPUPITEMWIDGET_H
 
@@ -20,8 +37,7 @@
 #include <QFontMetrics>
 #include <QProcess>
 #include "notifyreceiveinfo.h"
-#include "adaptscreeninfo.h"
-#include "toptransparentwidget.h"
+//#include "toptransparentwidget.h"
 
 class popupItemWidget : public QWidget
 {
@@ -29,7 +45,9 @@ class popupItemWidget : public QWidget
 public:
     explicit popupItemWidget(QWidget *parent = nullptr, notifyReceiveInfo *entryInfo=0);
     void setEntryData(notifyReceiveInfo *entryInfo);
-    topTransparentWidget *m_pTopTransparentWidget;  
+    notifyReceiveInfo    *m_pentryInfo = nullptr;
+    QPropertyAnimation   *m_pOutAnimation = nullptr;
+    QTimer               *m_poutTimer = nullptr;
 
 private:
     void initUiLayout();                                    // 初始化UI
@@ -38,7 +56,6 @@ private:
     void initLabelSizeInfo();                               // 初始化所有label信息
     void initOperationButton();                             // 初始化操作区按钮
     void initCloseButtonWidget();                           // 初始化关闭按钮界面
-    void initTopLevelWidget();                              // 初始化顶层窗口
     void initTimer();                                       // 初始化显示时长定时器
     void setWidgetAttribute();                              // 设置窗口属性
     void initWidgetAnimations();                            // 初始化显示和消失动画
@@ -61,11 +78,12 @@ private:
 
 
 Q_SIGNALS:
-    void expired(int);
-    void dismissed(int);
-    void replacedByOther(int);
-    void actionInvoked(uint, QString);
+    void mouseMissed(QWidget *w, int id);
+    void timeOutMissed(QWidget *w, int id);
+    void clickedMissed(QWidget *w, int id);
+    void actionInvokedMissed(QWidget *w, int id, QString actionId);
     void actionButtonClicked(QString id);
+    void timeout(QWidget *w);
 
 public Q_SLOTS:
 //    void compositeChanged();
@@ -87,19 +105,15 @@ private:
     QVBoxLayout *m_pSummaryLabelWidgetLayout = nullptr;
     QVBoxLayout *m_pBodyLabelWidgetLayout = nullptr;
 
-    notifyReceiveInfo    *m_pentryInfo = nullptr;
-    adaptScreenInfo      *m_pSreenInfo = nullptr;
-
     QLabel               *m_pIconLabel = nullptr;
     QLabel               *m_pTextBodyLabel = nullptr;
     QLabel               *m_pSummaryLabel = nullptr;
 
     QPushButton          *m_pCloseButton = nullptr;
 
-    QPropertyAnimation   *m_pOutAnimation = nullptr;
+
     QPropertyAnimation   *m_pMoveAnimation = nullptr;
 
-    QTimer               *m_poutTimer = nullptr;
     QTimer               *m_quitTimer = nullptr;
     QWidget              *m_pIconWidget = nullptr;
     QWidget              *m_pInfoAreaWidget = nullptr;
@@ -117,7 +131,6 @@ private slots:
     void qiutAppTimerSlots();
     void closeButtonSlots();
     void OutAnimationFinishSlots();
-    void MoveAnimationValueChangeSltos(const QVariant &value);
     void onActionButtonClicked(const QString &actionId);
 };
 

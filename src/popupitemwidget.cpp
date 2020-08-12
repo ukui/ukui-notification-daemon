@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "popupitemwidget.h"
 
 popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
@@ -6,7 +23,6 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 , m_pIconLabel(new QLabel)
                                 , m_pSummaryLabel(new QLabel)
                                 , m_pTextBodyLabel(new QLabel)
-                                , m_pSreenInfo(new adaptScreenInfo)
                                 , m_pCloseButton(new QPushButton)
                                 , m_pListButton(new QList<QPushButton *>)
 {
@@ -31,9 +47,6 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
     /* 初始化整体UI */
     initUiLayout();
 
-    /* 初始化顶层窗口 */
-    initTopLevelWidget();
-
     /* 初始化定时器 */
     initTimer();
 
@@ -57,9 +70,7 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     convertToImage(m_pentryInfo->appIcon());
     judgeBodyExsit();
     judgeActionExsit();
-    m_pTopTransparentWidget->setWidgetPos(m_pSreenInfo->m_screenWidth - this->width(), 0);
-    m_pTopTransparentWidget->show();
-    m_pMoveAnimation->start();
+//    m_pMoveAnimation->start();
     m_poutTimer->start();
     return;
 }
@@ -196,19 +207,10 @@ void popupItemWidget::initOperationButton()
 //    m_pOperationWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
 
-/* 初始化顶层透明窗口 */
-void popupItemWidget::initTopLevelWidget()
-{
-    m_pTopTransparentWidget =  new topTransparentWidget();
-    m_pTopTransparentWidget->setWidgetLayout(this);
-    return;
-}
-
 /* 初始化显示时长定时器 */
 void popupItemWidget::initTimer()
 {
     m_poutTimer = new QTimer();
-    m_poutTimer->setInterval(3000);
     m_poutTimer->setSingleShot(true);
     connect(m_poutTimer, &QTimer::timeout, this, &popupItemWidget::ShowTimeoutSlots);
 
@@ -233,15 +235,14 @@ void popupItemWidget::initWidgetAnimations()
     connect(m_pOutAnimation, &QPropertyAnimation::finished, this, &popupItemWidget::OutAnimationFinishSlots);
     m_pOutAnimation->setDuration(200);
     m_pOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    m_pOutAnimation->setStartValue(QRect(0, 0, this->width(), 60));
-    m_pOutAnimation->setEndValue(QRect(this->width() + 10, 0, this->width(), 60));
+//    m_pOutAnimation->setStartValue(QRect(0, 0, this->width(), 60));
+//    m_pOutAnimation->setEndValue(QRect(this->width() + 10, 0, this->width(), 60));
 
     m_pMoveAnimation = new QPropertyAnimation(this, "geometry");
     m_pMoveAnimation->setDuration(300);
     m_pMoveAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    m_pMoveAnimation->setStartValue(QRect(this->width() + 10, 0, this->width(), 60));
+    m_pMoveAnimation->setStartValue(QRect(this->width() - 1, 0, this->width(), 60));
     m_pMoveAnimation->setEndValue(QRect(0, 0, this->width(), 60));
-    connect(m_pMoveAnimation, &QPropertyAnimation::valueChanged, this, &popupItemWidget::MoveAnimationValueChangeSltos);
 }
 
 /* 设置显示数据文本 */
@@ -509,8 +510,8 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << "LLLLLLLL";
-    Q_EMIT dismissed(m_pentryInfo->id().toInt());
     m_poutTimer->stop();
+    emit mouseMissed(this, m_pentryInfo->id().toInt());
     QWidget::mousePressEvent(event);
     return;
 }
@@ -542,8 +543,8 @@ void popupItemWidget::ShowTimeoutSlots()
         m_poutTimer->stop();
         m_poutTimer->start();
     } else {
-        m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(1, 1, 1, 1)));
-        m_pOutAnimation->start();
+//        m_pOutAnimation->start();
+        emit timeout(this);
         qDebug() << "展示已超时";
     }
 }
@@ -557,27 +558,15 @@ void popupItemWidget::qiutAppTimerSlots()
 void popupItemWidget::closeButtonSlots()
 {
     qDebug() << "点击关闭槽函数";
-    Q_EMIT dismissed(m_pentryInfo->id().toInt());
+    emit clickedMissed(this, m_pentryInfo->id().toInt());
     m_poutTimer->stop();
     return;
 }
 
 void popupItemWidget::OutAnimationFinishSlots()
 {
-    Q_EMIT expired(m_pentryInfo->id().toInt());
+    emit timeOutMissed(this, m_pentryInfo->id().toInt());
     return;
-}
-
-void popupItemWidget::MoveAnimationValueChangeSltos(const QVariant &value)
-{
-    QRect Rect = value.value<QRect>();
-    int x = Rect.x();
-    m_pTopTransparentWidget->setProperty("blurRegion", QRegion(QRect(x, 0, 372, 110)));
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainterPath path;
-//    path.addRoundedRect(opt.rect,6,6);
-//    m_pTopTransparentWidget->setProperty("blurRegion",QRegion(path.toFillPolygon().toPolygon()));
 }
 
 void popupItemWidget::onActionButtonClicked(const QString &actionId)
@@ -601,5 +590,5 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
     }
 
     m_poutTimer->stop();
-    Q_EMIT actionInvoked(m_pentryInfo->id().toUInt(), actionId);
+    emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), actionId);
 }

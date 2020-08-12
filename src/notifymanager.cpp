@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "notifymanager.h"
 
 static QString removeHTML(const QString &source)
@@ -9,7 +26,6 @@ static QString removeHTML(const QString &source)
             textString += xml.text();
         }
     }
-
     return textString.isEmpty() ? source : textString;
 }
 
@@ -17,10 +33,9 @@ notifyManager::notifyManager(QObject *parent)
     : QObject(parent)
 {
     m_pEntryWidget = new popupItemWidget();
-    connect(m_pEntryWidget, &popupItemWidget::expired, this, &notifyManager::popupItemWidgetExpired);
-    connect(m_pEntryWidget, &popupItemWidget::dismissed, this, &notifyManager::popupItemWidgetDismissed);
-    connect(m_pEntryWidget, &popupItemWidget::replacedByOther, this, &notifyManager::popupItemWidgetReplacedByOther);
-    connect(m_pEntryWidget, &popupItemWidget::actionInvoked, this, &notifyManager::popupItemWidgetActionInvoked);
+    m_pTopWidget   = new topTransparentWidget();
+    connect(m_pTopWidget, &topTransparentWidget::dismissed, this, &notifyManager::popupItemWidgetDismissed);
+    connect(m_pTopWidget, &topTransparentWidget::actionInvoked, this, &notifyManager::popupItemWidgetActionInvoked);
     registerAsService();
 }
 
@@ -31,7 +46,7 @@ notifyManager::~notifyManager()
 
 void notifyManager::CloseNotification(uint id)
 {
-    emit m_pEntryWidget->dismissed(id);
+    emit m_pTopWidget->closePopupWidget(id);
     return;
 }
 
@@ -69,17 +84,9 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               QString::number(replacesId),
                                                               QString::number(expireTimeout),
                                                               this);
-    if (!m_currentNotify.isNull() && replacesId != 0 && (m_currentNotify->id() == QString::number(replacesId)
-                                      || m_currentNotify->replacesId() == QString::number(replacesId))) {
-        m_pEntryWidget->setEntryData(notifyInfo);
-        m_currentNotify->deleteLater();
-        m_currentNotify = notifyInfo;
-    } else {
-        m_entities.enqueue(notifyInfo);
-    }
-    if (!m_pEntryWidget->m_pTopTransparentWidget->isVisible()) {
-        consumeEntities();
-    }
+    m_pTopWidget->AddPopupItemWidget(notifyInfo);
+    if (!m_pTopWidget->isVisible())
+        m_pTopWidget->show();
     return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
 }
 
@@ -107,30 +114,16 @@ void notifyManager::consumeEntities()
     m_pEntryWidget->setEntryData(m_currentNotify);
 }
 
-void notifyManager::popupItemWidgetExpired(int Id)
-{
-    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
-    Q_EMIT NotificationClosed(Id, notifyManager::Expired);
-    consumeEntities();
-}
-
 void notifyManager::popupItemWidgetDismissed(int Id)
 {
-    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
-    Q_EMIT NotificationClosed(Id, notifyManager::Dismissed);
-    consumeEntities();
-}
-
-void notifyManager::popupItemWidgetReplacedByOther(int Id)
-{
-    Q_EMIT NotificationClosed(Id, notifyManager::Unknown);
+    emit NotificationClosed(Id, notifyManager::Dismissed);
+    return;
 }
 
 void notifyManager::popupItemWidgetActionInvoked(uint Id, QString reason)
 {
-    m_pEntryWidget->m_pTopTransparentWidget->setVisible(false);
-    Q_EMIT ActionInvoked(Id, reason);
-    Q_EMIT NotificationClosed(Id, notifyManager::Closed);
-    consumeEntities();
+    emit ActionInvoked(Id, reason);
+    emit NotificationClosed(Id, notifyManager::Closed);
+    return;
 }
 
