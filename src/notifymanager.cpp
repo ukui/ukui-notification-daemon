@@ -84,9 +84,18 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               QString::number(replacesId),
                                                               QString::number(expireTimeout),
                                                               this);
-    m_pTopWidget->AddPopupItemWidget(notifyInfo);
-    if (!m_pTopWidget->isVisible())
-        m_pTopWidget->show();
+    m_model = readShowModel();
+    // 单弹窗模式
+    if (m_model == MODEL_SINGLE) {
+        m_entities.enqueue(notifyInfo);
+        if (!m_pTopWidget->isVisible())
+            consumeEntities();
+    } else {
+        // 多弹窗模式
+        m_pTopWidget->AddPopupItemWidget(notifyInfo);
+        if (!m_pTopWidget->isVisible())
+            m_pTopWidget->show();
+    }
     return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
 }
 
@@ -108,15 +117,49 @@ void notifyManager::consumeEntities()
 
     if (m_entities.isEmpty()) {
         m_currentNotify = nullptr;
+        qApp->quit();
         return;
     }
+    qDebug() << "是否进入此处";
     m_currentNotify = m_entities.dequeue();
-    m_pEntryWidget->setEntryData(m_currentNotify);
+    m_pTopWidget->AddPopupItemWidget(m_currentNotify);
+    if (!m_pTopWidget->isVisible())
+        m_pTopWidget->show();
+}
+
+void notifyManager::nextShowAction()
+{
+    if (m_model == MODEL_SINGLE) {
+        if (!m_pTopWidget->isVisible())
+            consumeEntities();
+    } else {
+        if (0 == m_pTopWidget->popWidgetqueue.count()) {
+            qApp->quit();
+        }
+    }
+    return;
+}
+
+QString notifyManager::readShowModel()
+{
+    qDebug() << "当前路径" << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString fileName = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.config/notification.conf";
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "文件打开出错";
+        return nullptr;
+    }
+    QString model = file.read(32);
+    QStringList modelList = model.split("=");
+    model = modelList[1];
+    qDebug() << "读取文本数据---->" << model << modelList;
+    return model;
 }
 
 void notifyManager::popupItemWidgetDismissed(int Id)
 {
     emit NotificationClosed(Id, notifyManager::Dismissed);
+    nextShowAction();
     return;
 }
 
@@ -124,6 +167,7 @@ void notifyManager::popupItemWidgetActionInvoked(uint Id, QString reason)
 {
     emit ActionInvoked(Id, reason);
     emit NotificationClosed(Id, notifyManager::Closed);
+    nextShowAction();
     return;
 }
 

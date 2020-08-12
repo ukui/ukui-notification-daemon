@@ -565,6 +565,7 @@ void popupItemWidget::closeButtonSlots()
 
 void popupItemWidget::OutAnimationFinishSlots()
 {
+    this->hide();
     emit timeOutMissed(this, m_pentryInfo->id().toInt());
     return;
 }

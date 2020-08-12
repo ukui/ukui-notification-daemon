@@ -86,7 +86,6 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
 
     m_pMainLayout->addWidget(popw);
     popw->setGeometry(0, 0, popw->width(), popw->height());
-    qDebug() << "累加高" << m_ListWidgetHeight;
     this->update();
     return;
 }
@@ -109,7 +108,6 @@ void topTransparentWidget::exitPopupWidget(QWidget *w)
     this->setFixedHeight(m_ListWidgetHeight);
     if (0 == popWidgetqueue.count()) {
         this->hide();
-        qApp->quit();
         return;
     }
     this->update();

@@ -28,9 +28,14 @@
 #include <QDateTime>
 #include <QXmlStreamReader>
 #include <QDesktopWidget>
+#include <QStandardPaths>
+#include <QFile>
 #include "notifyreceiveinfo.h"
 #include "popupitemwidget.h"
 #include "toptransparentwidget.h"
+
+#define  MODEL_SINGLE "single\n"
+
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
 
@@ -66,10 +71,13 @@ public Q_SLOTS:
 private:
     void registerAsService();
     void consumeEntities();
-private:
+    void nextShowAction();
+    QString readShowModel();
 
+private:
     QPointer<notifyReceiveInfo>   m_currentNotify;
     QQueue<notifyReceiveInfo *>   m_entities;             //用来存放当前数据，保存到队列中去，多有多条消息时，一条一条数据显示
+    QString m_model;
 private slots:
     void popupItemWidgetDismissed(int Id);
     void popupItemWidgetActionInvoked(uint Id, QString reason);
