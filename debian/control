@@ -1,9 +1,9 @@
-Source: ukui-notification
+Source: ukui-notification-daemon
 Section: x11
 Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: debhelper-compat (= 13),
                libglib2.0-dev,
                qtbase5-dev,
                libqt5svg5-dev,
@@ -17,11 +17,17 @@ Homepage: https://github.com/ukui/ukui-notification-daemon.git
 Vcs-Git: https://github.com/ukui/ukui-notification-daemon.git
 Vcs-Browser: https://github.com/ukui/ukui-notification-daemon
 
-Package: ukui-notification
+Package: ukui-notification-daemon
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends}
-Description: parallels toolbox for UKUI
- The ukui-notification is mainly used in the desktop operating system.
- Receive notifications sent by the notify interface in DBUS, 
- and display the received notifications from the upper right corner of the screen;
+Description: daemon to display passive popup notifications
+ ukui-notification-daemon displays passive popup notifications, as per
+ the Desktop Notifications Specification.
+ .
+ The Desktop Notifications Specification provides a standard way of
+ doing passive popup notifications on the Linux desktop. These are
+ designed to notify the user of something without interrupting their
+ work with a dialog box that they must close.  Passive popups can
+ automatically disappear after a short period of time, as per the
+ Desktop Notifications spec.

@@ -1,4 +1,4 @@
-# ukui-sidebar
+# ukui-notification
 
 ![build](https://github.com/ukui/ukui-sidebar/workflows/Check%20build/badge.svg?branch=master)
 
