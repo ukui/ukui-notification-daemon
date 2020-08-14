@@ -54,10 +54,10 @@ QStringList NotificationsAdaptor::GetCapabilities()
     return out0;
 }
 
-QString NotificationsAdaptor::GetServerInformation(QString &name, QString &vender, QString &version)
+QString NotificationsAdaptor::GetServerInformation(QString &name, QString &vendor, QString &version)
 {
     // handle method call org.freedesktop.Notifications.GetServerInformation
-    return static_cast<notifyManager *>(parent())->GetServerInformation(name, vender, version);
+    return static_cast<notifyManager *>(parent())->GetServerInformation(name, vendor, version);
 }
 
 uint NotificationsAdaptor::Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7)

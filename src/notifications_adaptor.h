@@ -47,7 +47,7 @@ class NotificationsAdaptor: public QDBusAbstractAdaptor
 "    <method name=\"GetServerInformation\">\n"
 "      <arg direction=\"out\" type=\"s\"/>\n"
 "      <arg direction=\"out\" type=\"s\" name=\"name\"/>\n"
-"      <arg direction=\"out\" type=\"s\" name=\"vender\"/>\n"
+"      <arg direction=\"out\" type=\"s\" name=\"vendor\"/>\n"
 "      <arg direction=\"out\" type=\"s\" name=\"version\"/>\n"
 "    </method>\n"
 "    <method name=\"Notify\">\n"
@@ -74,7 +74,7 @@ public: // PROPERTIES
 public Q_SLOTS: // METHODS
     void CloseNotification(uint id);
     QStringList GetCapabilities();
-    QString GetServerInformation(QString &name, QString &vender, QString &version);
+    QString GetServerInformation(QString &name, QString &vendor, QString &version);
     uint Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7);
 
 Q_SIGNALS: // SIGNALS

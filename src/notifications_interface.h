@@ -69,13 +69,13 @@ public Q_SLOTS: // METHODS
         QList<QVariant> argumentList;
         return asyncCallWithArgumentList(QStringLiteral("GetServerInformation"), argumentList);
     }
-    inline QDBusReply<QString> GetServerInformation(QString &name, QString &vender, QString &version)
+    inline QDBusReply<QString> GetServerInformation(QString &name, QString &vendor, QString &version)
     {
         QList<QVariant> argumentList;
         QDBusMessage reply = callWithArgumentList(QDBus::Block, QStringLiteral("GetServerInformation"), argumentList);
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             name = qdbus_cast<QString>(reply.arguments().at(1));
-            vender = qdbus_cast<QString>(reply.arguments().at(2));
+            vendor = qdbus_cast<QString>(reply.arguments().at(2));
             version = qdbus_cast<QString>(reply.arguments().at(3));
         }
         return reply;
