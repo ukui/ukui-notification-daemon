@@ -21,17 +21,14 @@ isEmpty(PREFIX){
 #DBUS_ADAPTORS += org.freedesktop.Notifications.xml
 #DBUS_INTERFACES += org.freedesktop.Notifications.xml
 
-desktopfile.files = src/data/ukui-notification-daemon.desktop
-desktopfile.path = /etc/xdg/autostart/
-
-orgDBus.input = file/com.ukui.freedesktop.Notification.service.in
-orgDBus.output = file/com.ukui.freedesktop.Notification.service
-
-QMAKE_SUBSTITUTES += service orgDBus
+orgDBus.input = file/org.ukui.freedesktop.Notification.service.in
+orgDBus.output = file/org.ukui.freedesktop.Notification.service
+QMAKE_SUBSTITUTES += orgDBus
 QMAKE_CLEAN       += $${orgDBus.output}
 
 # Default rules for deployment.
-target.path = $${PREFIX}/lib/ukui-notifications
+dbus.files += file/org.ukui.freedesktop.Notification.service
 dbus.path = /usr/share/dbus-1/services
-dbus.files += file/com.ukui.freedesktop.Notification.service
-INSTALLS += target dbus desktopfile
+
+target.path = $${PREFIX}/lib/ukui-notification-daemon
+INSTALLS += target dbus
