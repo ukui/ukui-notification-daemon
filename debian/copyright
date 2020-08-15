@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: ukui-sidebar
+Upstream-Name: ukui-notification-daemon
 Upstream-Contact: liushanwen@kylinos.cn
-Source: https://github.com/ukui/ukui-notifycation
+Source: https://github.com/ukui/ukui-notification-daemon
 
 Files: *
 Copyright: 2020, Tianjin KYLIN Information Technology Co., Ltd.

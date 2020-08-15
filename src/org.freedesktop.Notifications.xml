@@ -10,7 +10,7 @@
     <method name="GetServerInformation">
       <arg type="s" direction="out"/>
       <arg name="name" type="s" direction="out"/>
-      <arg name="vender" type="s" direction="out"/>
+      <arg name="vendor" type="s" direction="out"/>
       <arg name="version" type="s" direction="out"/>
     </method>
     <method name="Notify">

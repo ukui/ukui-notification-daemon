@@ -61,10 +61,10 @@ QStringList notifyManager::GetCapabilities()
     return result;
 }
 
-QString notifyManager::GetServerInformation(QString &name, QString &vender, QString &version)
+QString notifyManager::GetServerInformation(QString &name, QString &vendor, QString &version)
 {
     name = QString("ukui-Notifications");
-    vender = QString("ukui3.0");
+    vendor = QString("ukui3.0");
     version = QString("1.0");
 
     return QString("1.0");

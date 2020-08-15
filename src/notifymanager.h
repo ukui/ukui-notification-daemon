@@ -63,7 +63,7 @@ public Q_SLOTS:
     // Standard Notifications dbus implementation
     void CloseNotification(uint id);
     QStringList GetCapabilities();
-    QString GetServerInformation(QString &name, QString &vender, QString &version);
+    QString GetServerInformation(QString &name, QString &vendor, QString &version);
     // new notify will be received by this slot
     uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
 
