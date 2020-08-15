@@ -107,7 +107,6 @@ void popupItemWidget::initIconWidgetlayout()
     m_pIconWidgetLayout->addItem(new QSpacerItem(10, 18));
     m_pIconWidgetLayout->addWidget(m_pIconLabel);
     m_pIconWidgetLayout->addItem(new QSpacerItem(10, 102, QSizePolicy::Expanding));
-//    m_pIconWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
     m_pIconWidget->setLayout(m_pIconWidgetLayout);
 }
 
@@ -116,7 +115,6 @@ void popupItemWidget::initInfoWidgetLayout()
 {
     m_pInfoAreaWidget = new QWidget();
     m_pInfoAreaWidget->setContentsMargins(0, 0, 0, 0);
-//    m_pInfoAreaWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
     m_pLeftVBoxLayout = new QVBoxLayout();
     m_pLeftVBoxLayout->setContentsMargins(0, 0, 0, 0);
     m_pLeftVBoxLayout->setSpacing(0);
@@ -147,7 +145,6 @@ void popupItemWidget::initCloseButtonWidget()
     m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 110, QSizePolicy::Expanding));
     m_pCloseButtonWidget->setLayout(m_pCloseWidgetLayout);
     m_pCloseButtonWidget->setFixedWidth(26);
-//    m_pCloseButtonWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
 
 void popupItemWidget::initLabelSizeInfo()
@@ -171,7 +168,6 @@ void popupItemWidget::initLabelSizeInfo()
     m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
     m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
     m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
-//    m_pSummaryLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 
     /* 存放文本信息Label */
     m_pBodyLabelWidget = new QWidget();
@@ -191,7 +187,6 @@ void popupItemWidget::initLabelSizeInfo()
     m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 13));
     m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
-//    m_pTextBodyLabel->setStyleSheet("QLabel{border: 1px solid rgba(255,255,0,1)}");
 }
 
 void popupItemWidget::initOperationButton()
@@ -204,7 +199,6 @@ void popupItemWidget::initOperationButton()
     m_pOperationButtonWidgetLayout->setSpacing(0);
     m_pOperationButtonWidgetLayout->addItem(new QSpacerItem(372, 20, QSizePolicy::Expanding));
     m_pOperationWidget->setLayout(m_pOperationButtonWidgetLayout);
-//    m_pOperationWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,255,0,1)}");
 }
 
 /* 初始化显示时长定时器 */
@@ -235,8 +229,6 @@ void popupItemWidget::initWidgetAnimations()
     connect(m_pOutAnimation, &QPropertyAnimation::finished, this, &popupItemWidget::OutAnimationFinishSlots);
     m_pOutAnimation->setDuration(200);
     m_pOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
-//    m_pOutAnimation->setStartValue(QRect(0, 0, this->width(), 60));
-//    m_pOutAnimation->setEndValue(QRect(this->width() + 10, 0, this->width(), 60));
 
     m_pMoveAnimation = new QPropertyAnimation(this, "geometry");
     m_pMoveAnimation->setDuration(300);
@@ -250,8 +242,6 @@ void popupItemWidget::setWidgetDate()
 {
     m_pTextBodyLabel->setText(SetFormatBody(m_pentryInfo->body(), m_pTextBodyLabel));
     m_pSummaryLabel->setText(SetFormatBody(m_pentryInfo->summary(), m_pSummaryLabel));
-    qDebug() << "popupItemWidget---->body:" << m_pentryInfo->body() << "popupItemWidget---->summary: " << m_pentryInfo->summary()
-             << "appname --->appname" << m_pentryInfo->appName();
     return;
 }
 
@@ -276,7 +266,6 @@ void popupItemWidget::convertToImage(QString iconPath)
 
         const QIcon &icon = QIcon::fromTheme(iconPath, QIcon::fromTheme("dialog-information"));
         pixmap = icon.pixmap(QSize(45, 45));
-        qDebug() << "是否进入图片处理";
     }
 
     if (!pixmap.isNull()) {
@@ -357,7 +346,6 @@ bool popupItemWidget::substringSposition(QString formatBody, QStringList list)
     for (int i = 0; i < tmp; i++) {
         QString dest = list.at(i);
         if (dest == formatBody && i == tmp - 1) {
-            qDebug() << "后面没有字串，返回true";
             return true;
         }
     }
@@ -450,7 +438,6 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
             button->setFixedHeight(34);
 
             connect(button, &QPushButton::clicked, this, [=](){
-                qDebug() << "点击进入这里" << id;
                 emit actionButtonClicked(id);
             });
 
@@ -509,9 +496,9 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "LLLLLLLL";
-    m_poutTimer->stop();
+    this->hide();
     emit mouseMissed(this, m_pentryInfo->id().toInt());
+    m_poutTimer->stop();
     QWidget::mousePressEvent(event);
     return;
 }
@@ -519,7 +506,6 @@ void popupItemWidget::mousePressEvent(QMouseEvent *event)
 void popupItemWidget::showEvent(QShowEvent *event)
 {
     QTimer::singleShot (1, this, [=] {
-        qDebug() << "123123123";
         raise();
     });
     m_quitTimer->start();
@@ -529,7 +515,7 @@ void popupItemWidget::showEvent(QShowEvent *event)
 
 void popupItemWidget::hideEvent(QHideEvent *event)
 {
-    qDebug() << "已隐藏, 停止计时";
+//    qDebug() << "已隐藏, 停止计时";
     m_quitTimer->stop();
     QWidget::hideEvent(event);
     return;
@@ -558,6 +544,7 @@ void popupItemWidget::qiutAppTimerSlots()
 void popupItemWidget::closeButtonSlots()
 {
     qDebug() << "点击关闭槽函数";
+    this->hide();
     emit clickedMissed(this, m_pentryInfo->id().toInt());
     m_poutTimer->stop();
     return;
@@ -580,6 +567,7 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
             QString cmd = args.first();
             args.removeFirst();
             if (i.key() == actionId) {
+                QProcess::startDetached(cmd, args);
                 if (QProcess::startDetached(cmd, args)) {
                     qDebug() << "执行成功";
                 } else {

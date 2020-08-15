@@ -16,7 +16,7 @@
  */
 
 #include "notifymanager.h"
-
+QString extern_model;
 static QString removeHTML(const QString &source)
 {
     QXmlStreamReader xml(source);
@@ -34,6 +34,7 @@ notifyManager::notifyManager(QObject *parent)
 {
     m_pEntryWidget = new popupItemWidget();
     m_pTopWidget   = new topTransparentWidget();
+    m_psqlInfoData = new sqlInfoData();
     connect(m_pTopWidget, &topTransparentWidget::dismissed, this, &notifyManager::popupItemWidgetDismissed);
     connect(m_pTopWidget, &topTransparentWidget::actionInvoked, this, &notifyManager::popupItemWidgetActionInvoked);
     registerAsService();
@@ -47,6 +48,8 @@ notifyManager::~notifyManager()
 void notifyManager::CloseNotification(uint id)
 {
     emit m_pTopWidget->closePopupWidget(id);
+    emit NotificationClosed(id, notifyManager::Closed);
+    nextShowAction();
     return;
 }
 
@@ -84,14 +87,15 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               QString::number(replacesId),
                                                               QString::number(expireTimeout),
                                                               this);
-    m_model = readShowModel();
-    // 单弹窗模式
-    if (m_model == MODEL_SINGLE) {
-        m_entities.enqueue(notifyInfo);
+    m_psqlInfoData->addOne(notifyInfo);
+    extern_model = readShowModel();
+
+    // 单弹窗模式 多弹窗模式
+    if (extern_model == MODEL_SINGLE) {
+        m_pTopWidget->addEntryInfo(notifyInfo);
         if (!m_pTopWidget->isVisible())
-            consumeEntities();
+            m_pTopWidget->consumeEntities();
     } else {
-        // 多弹窗模式
         m_pTopWidget->AddPopupItemWidget(notifyInfo);
         if (!m_pTopWidget->isVisible())
             m_pTopWidget->show();
@@ -108,32 +112,14 @@ void notifyManager::registerAsService()
     connection.registerObject(NotificationsDBusPath, this);
 }
 
-void notifyManager::consumeEntities()
-{
-    if (!m_currentNotify.isNull()) {
-        m_currentNotify->deleteLater();
-        m_currentNotify = nullptr;
-    }
-
-    if (m_entities.isEmpty()) {
-        m_currentNotify = nullptr;
-        qApp->quit();
-        return;
-    }
-    qDebug() << "是否进入此处";
-    m_currentNotify = m_entities.dequeue();
-    m_pTopWidget->AddPopupItemWidget(m_currentNotify);
-    if (!m_pTopWidget->isVisible())
-        m_pTopWidget->show();
-}
-
 void notifyManager::nextShowAction()
 {
-    if (m_model == MODEL_SINGLE) {
-        if (!m_pTopWidget->isVisible())
-            consumeEntities();
+    if (extern_model == MODEL_SINGLE) {
+        if (!m_pTopWidget->isVisible()) {
+            m_pTopWidget->consumeEntities();
+        }
     } else {
-        if (0 == m_pTopWidget->popWidgetqueue.count()) {
+        if (1 == m_pTopWidget->popWidgetqueue.count()) {
             qApp->quit();
         }
     }
@@ -142,7 +128,6 @@ void notifyManager::nextShowAction()
 
 QString notifyManager::readShowModel()
 {
-    qDebug() << "当前路径" << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     QString fileName = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.config/notification.conf";
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -152,7 +137,6 @@ QString notifyManager::readShowModel()
     QString model = file.read(32);
     QStringList modelList = model.split("=");
     model = modelList[1];
-    qDebug() << "读取文本数据---->" << model << modelList;
     return model;
 }
 

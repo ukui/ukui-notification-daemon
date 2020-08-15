@@ -89,8 +89,8 @@ public Q_SLOTS: // METHODS
     }
 
 Q_SIGNALS: // SIGNALS
-    void ActionInvoked();
-    void NotificationClosed();
+    void ActionInvoked(uint in0, const QString &in1);
+    void NotificationClosed(uint in0, uint in1);
 };
 
 namespace org {

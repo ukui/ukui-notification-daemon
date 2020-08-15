@@ -78,8 +78,8 @@ public Q_SLOTS: // METHODS
     uint Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7);
 
 Q_SIGNALS: // SIGNALS
-    void ActionInvoked();
-    void NotificationClosed();
+    void ActionInvoked(uint in0, const QString &in1);
+    void NotificationClosed(uint in0, uint in1);
 };
 
 #endif

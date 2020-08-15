@@ -37,9 +37,6 @@ notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
     m_replacesId(replacesId),
     m_timeout(timeout)
 {
-    qDebug() << "当前app图标名字" << m_appIcon;
-    qDebug() << "当前app名字" << m_appName;
-    qDebug() << "当前Id" << m_id;
 }
 
 notifyReceiveInfo::notifyReceiveInfo(const notifyReceiveInfo &notify) :

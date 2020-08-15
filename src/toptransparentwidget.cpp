@@ -17,6 +17,7 @@
 
 #include "toptransparentwidget.h"
 #include "notifyreceiveinfo.h"
+extern QString extern_model;
 topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 {
     m_pMainLayout = new QVBoxLayout();
@@ -76,7 +77,9 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
     connect(popw, &popupItemWidget::actionInvokedMissed, this, &topTransparentWidget::actionInvokedMissedSlots);
 
     popw->setEntryData(entryInfo);
+
     popWidgetqueue.append(popw);
+
     if (popWidgetqueue.count() == 1)
         m_ListWidgetHeight += popw->height();
     else
@@ -97,7 +100,7 @@ void topTransparentWidget::setWidgetLayout(QWidget *widget)
     return;
 }
 
-/* 影藏超时的widget弹窗界面 */
+/* 隐藏超时的widget弹窗界面 */
 void topTransparentWidget::exitPopupWidget(QWidget *w)
 {
     popupItemWidget* popw = dynamic_cast<popupItemWidget *>(w);
@@ -107,11 +110,37 @@ void topTransparentWidget::exitPopupWidget(QWidget *w)
     delete popw->m_pentryInfo;
     this->setFixedHeight(m_ListWidgetHeight);
     if (0 == popWidgetqueue.count()) {
+        qDebug() << "113";
         this->hide();
         return;
     }
     this->update();
     return;
+}
+
+void topTransparentWidget::addEntryInfo(notifyReceiveInfo *entryInfo)
+{
+    m_entities.enqueue(entryInfo);
+    return;
+}
+
+void topTransparentWidget::consumeEntities()
+{
+    if (!m_currentNotify.isNull()) {
+        m_currentNotify->deleteLater();
+        m_currentNotify = nullptr;
+    }
+
+    if (m_entities.isEmpty()) {
+        m_currentNotify = nullptr;
+        qApp->quit();
+        return;
+    }
+
+    m_currentNotify = m_entities.dequeue();
+    AddPopupItemWidget(m_currentNotify);
+    if (!this->isVisible())
+        this->show();
 }
 
 // hash表插入
@@ -192,6 +221,7 @@ void topTransparentWidget::clickedMissedSlots(QWidget *w, int id)
 
 void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, int id, QString actionId)
 {
+    w->hide();
     exitPopupWidget(w);
     emit actionInvoked(id, actionId);
     return;
@@ -226,7 +256,6 @@ void topTransparentWidget::moveAllpopWidgetSiteAccordId(int Id)
 
         siteHeight = siteHeight - popWidgetqueue.at(i)->height() - 5;
         if (Id == popWidgetqueue.at(i)->m_pentryInfo->replacesId().toInt()) {
-            qDebug() << "找到当前Widget";
             popWidgetqueue.at(i)->m_pOutAnimation->setStartValue(popWidgetqueue[i]->geometry());
             popWidgetqueue.at(i)->m_pOutAnimation->setEndValue(QRect(this->width() + 10, popWidgetqueue[i]->geometry().y(), this->width(), 88));
             popWidgetqueue.at(i)->m_pOutAnimation->start();

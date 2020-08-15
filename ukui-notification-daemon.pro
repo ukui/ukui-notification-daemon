@@ -29,8 +29,8 @@ isEmpty(PREFIX){
     PREFIX = /usr
 }
 
-#DBUS_ADAPTORS += org.freedesktop.Notifications.xml
-#DBUS_INTERFACES += org.freedesktop.Notifications.xml
+#DBUS_ADAPTORS += ./src/org.freedesktop.Notifications.xml
+#DBUS_INTERFACES += ./src/org.freedesktop.Notifications.xml
 
 desktopfile.files = src/data/ukui-notification-daemon.desktop
 desktopfile.path = /etc/xdg/autostart/

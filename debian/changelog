@@ -1,3 +1,13 @@
+ukui-notification (1.1.1-0007) v100; urgency=medium
+
+  * Fix bug When there are a lot of messages, operating area
+  * Add 4k adapter
+  * Detele Part of the code
+  * From a single window frame to play the logic(从单一弹框到多弹窗逻辑修改)
+  * Add the pattern choice, a single play mode and multiple window mode(添加模式选择，单个弹窗模式和多个弹窗模式)
+
+ -- liushanwen <liushanwen@kylinos.cn>  Thu, 13 Aug 2020 09:38:00 +0800
+
 ukui-notification (1.1.1-0006) v100; urgency=medium
 
   * Add Actively open the ground glass（添加主动开启毛玻璃） 

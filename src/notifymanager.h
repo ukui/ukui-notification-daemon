@@ -23,7 +23,6 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDebug>
-#include <QPointer>
 #include <QQueue>
 #include <QDateTime>
 #include <QXmlStreamReader>
@@ -33,6 +32,7 @@
 #include "notifyreceiveinfo.h"
 #include "popupitemwidget.h"
 #include "toptransparentwidget.h"
+#include "sqlinfodata.h"
 
 #define  MODEL_SINGLE "single\n"
 
@@ -53,8 +53,7 @@ public:
 
     notifyManager(QObject *parent = nullptr);
     ~notifyManager();
-    popupItemWidget              *m_pEntryWidget = nullptr;
-    topTransparentWidget         *m_pTopWidget = nullptr;
+
 Q_SIGNALS:
     // Standard Notifications dbus implementation
     void ActionInvoked(uint, const QString &);
@@ -68,16 +67,18 @@ public Q_SLOTS:
     // new notify will be received by this slot
     uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
 
+public:
+    popupItemWidget              *m_pEntryWidget = nullptr;
+    topTransparentWidget         *m_pTopWidget = nullptr;
 private:
     void registerAsService();
-    void consumeEntities();
     void nextShowAction();
     QString readShowModel();
 
 private:
-    QPointer<notifyReceiveInfo>   m_currentNotify;
-    QQueue<notifyReceiveInfo *>   m_entities;             //用来存放当前数据，保存到队列中去，多有多条消息时，一条一条数据显示
     QString m_model;
+    sqlInfoData *m_psqlInfoData;
+
 private slots:
     void popupItemWidgetDismissed(int Id);
     void popupItemWidgetActionInvoked(uint Id, QString reason);

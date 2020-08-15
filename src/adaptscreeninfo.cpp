@@ -53,7 +53,6 @@ void adaptScreenInfo::initScreenSize()
         m_screenWidth = m_pDeskWgt->width() + m_nScreen_x;
         m_screenHeight = m_pDeskWgt->height() + m_nScreen_y;
     }
-//    m_screenNum    = m_pDeskWgt->screenCount();
     return;
 }
 
@@ -62,7 +61,6 @@ void adaptScreenInfo::InitializeHomeScreenGeometry()
 {
     QList<QScreen*> screen = QGuiApplication::screens();
     int count = m_pDeskWgt->screenCount();
-    qDebug() << "当前屏幕数量" << count;
     if (count > 1) {
         m_nScreen_x = screen[0]->geometry().x();
         m_nScreen_y = screen[0]->geometry().y();
@@ -78,7 +76,6 @@ void adaptScreenInfo::InitializeHomeScreenGeometry()
 void adaptScreenInfo::onResolutionChanged(const QRect argc)
 {
     Q_UNUSED(argc);
-    qDebug() << "屏幕分辨率发生变化";
     initScreenSize();                               //获取屏幕可用高度区域
     InitializeHomeScreenGeometry();
     return;
@@ -87,7 +84,6 @@ void adaptScreenInfo::onResolutionChanged(const QRect argc)
 /* 主屏发生变化槽函数 */
 void adaptScreenInfo::primaryScreenChangedSlot()
 {
-    qDebug() << "主屏发生变化";
     InitializeHomeScreenGeometry();
     initScreenSize();
     return;
@@ -97,7 +93,6 @@ void adaptScreenInfo::primaryScreenChangedSlot()
 void adaptScreenInfo::screenCountChangedSlots(int count)
 {
     Q_UNUSED(count);
-    qDebug() << "屏幕数量发生变化";
     InitializeHomeScreenGeometry();
     initScreenSize();
     return;

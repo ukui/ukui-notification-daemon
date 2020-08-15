@@ -26,6 +26,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QQueue>
+#include <QPointer>
 #include "popupitemwidget.h"
 #include "adaptscreeninfo.h"
 class topTransparentWidget : public QWidget
@@ -39,6 +40,8 @@ public:
     void AddPopupItemWidget(notifyReceiveInfo *entryInfo);
     void setWidgetLayout(QWidget *widget);
     void exitPopupWidget(QWidget *w);
+    void addEntryInfo(notifyReceiveInfo *entryInfo);
+    void consumeEntities();
 
     //hash插入，查找， 删除
     void deleteHashInsert(popupItemWidget* key, QListWidgetItem* value);
@@ -51,6 +54,8 @@ public:
 
     QHash<popupItemWidget*, QListWidgetItem*>   deleteHash;
     QList<popupItemWidget*>                     popWidgetqueue;
+    QPointer<notifyReceiveInfo>                 m_currentNotify;
+    QQueue<notifyReceiveInfo *>                 m_entities;                       //用来存放当前数据，保存到队列中去，当有多条消息时，一条一条数据显示
 
 protected:
     void paintEvent(QPaintEvent *event);
