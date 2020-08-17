@@ -70,7 +70,6 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     convertToImage(m_pentryInfo->appIcon());
     judgeBodyExsit();
     judgeActionExsit();
-//    m_pMoveAnimation->start();
     m_poutTimer->start();
     return;
 }
@@ -410,7 +409,7 @@ void popupItemWidget::processActions()
     QStringList list = m_pentryInfo->actions();
     // the "default" is identifier for the default action
     if (list.contains("default")) {
-        const int index  = list.indexOf("default");
+        const int index  = list.indexOf("default"); // For the default action
         m_pDefaultAction = list[index];
         // Default action does not need to be displayed, removed from the list
         list.removeAt(index + 1);
@@ -496,8 +495,14 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
-    this->hide();
-    emit mouseMissed(this, m_pentryInfo->id().toInt());
+    if (!m_pDefaultAction.isEmpty()) {
+        emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), m_pDefaultAction);
+        m_pDefaultAction.clear();
+    } else {
+        this->hide();
+        emit mouseMissed(this, m_pentryInfo->id().toInt());
+    }
+
     m_poutTimer->stop();
     QWidget::mousePressEvent(event);
     return;
@@ -529,7 +534,6 @@ void popupItemWidget::ShowTimeoutSlots()
         m_poutTimer->stop();
         m_poutTimer->start();
     } else {
-//        m_pOutAnimation->start();
         emit timeout(this);
         qDebug() << "展示已超时";
     }
