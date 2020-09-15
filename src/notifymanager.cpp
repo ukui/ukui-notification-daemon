@@ -16,7 +16,6 @@
  */
 
 #include "notifymanager.h"
-QString extern_model;
 static QString removeHTML(const QString &source)
 {
     QXmlStreamReader xml(source);
@@ -38,6 +37,7 @@ notifyManager::notifyManager(QObject *parent)
     connect(m_pTopWidget, &topTransparentWidget::dismissed, this, &notifyManager::popupItemWidgetDismissed);
     connect(m_pTopWidget, &topTransparentWidget::actionInvoked, this, &notifyManager::popupItemWidgetActionInvoked);
     registerAsService();
+    initGsettingValue();
 }
 
 notifyManager::~notifyManager()
@@ -81,6 +81,10 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
              << "actions:" << actions << "hints:" << hints << "expireTimeout:" << expireTimeout;
 #endif
 
+    if (m_bNodisturbMode) {
+        qDebug() << "免打扰模式，直接f返回";
+        return 0;
+    }
     notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString(), appIcon,
                                                               summary, removeHTML(body), actions, hints,
                                                               QString::number(QDateTime::currentMSecsSinceEpoch()),
@@ -88,10 +92,9 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               QString::number(expireTimeout),
                                                               this);
     m_psqlInfoData->addOne(notifyInfo);
-    extern_model = readShowModel();
 
     // 单弹窗模式 多弹窗模式
-    if (extern_model == MODEL_SINGLE) {
+    if (m_bPopupWidgetModeStatus) {
         m_pTopWidget->addEntryInfo(notifyInfo);
         if (!m_pTopWidget->isVisible())
             m_pTopWidget->consumeEntities();
@@ -114,7 +117,7 @@ void notifyManager::registerAsService()
 
 void notifyManager::nextShowAction()
 {
-    if (extern_model == MODEL_SINGLE) {
+    if (m_bPopupWidgetModeStatus) {
         if (!m_pTopWidget->isVisible()) {
             m_pTopWidget->consumeEntities();
         }
@@ -126,18 +129,37 @@ void notifyManager::nextShowAction()
     return;
 }
 
-QString notifyManager::readShowModel()
+void notifyManager::initGsettingValue()
 {
-    QString fileName = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.config/notification.conf";
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug() << "文件打开出错";
-        return nullptr;
+    // 设置是否弹窗
+    const QByteArray id(UKUI_VOLUME_BRIGHTNESS_GSETTING_ID);
+    if (QGSettings::isSchemaInstalled(id)) {
+        m_pCloseNotifyGsetting = new QGSettings(id);
+        connect(m_pCloseNotifyGsetting, &QGSettings::changed, this, [=](QString key) {
+            if (key == KYLIN_DISTURB_GSETTING_VALUE_NOTIFYCLOSE) {
+                m_bNodisturbMode = m_pCloseNotifyGsetting->get(KYLIN_DISTURB_GSETTING_VALUE_NOTIFYCLOSE).toBool();
+            }
+        });
     }
-    QString model = file.read(32);
-    QStringList modelList = model.split("=");
-    model = modelList[1];
-    return model;
+
+    if (m_pCloseNotifyGsetting != nullptr && m_pCloseNotifyGsetting->keys().contains(KYLIN_DISTURB_GSETTING_VALUE_NOTIFYCLOSE))
+        m_bNodisturbMode = m_pCloseNotifyGsetting->get(KYLIN_DISTURB_GSETTING_VALUE_NOTIFYCLOSE).toBool();
+
+    // 设置弹窗模式gsetting值
+    const QByteArray id_2(UKUI_NOTIFICATION_DEMO_GSETTING_ID);
+    if (QGSettings::isSchemaInstalled(id)) {
+        m_pPopupWidgetModeGsetting = new QGSettings(id_2);
+        connect(m_pPopupWidgetModeGsetting, &QGSettings::changed, this, [=](QString key) {
+           if (key == KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY) {
+               m_bPopupWidgetModeStatus = m_pPopupWidgetModeGsetting->get(KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY).toBool();
+           }
+        });
+    }
+
+    if (m_pPopupWidgetModeGsetting != nullptr && m_pPopupWidgetModeGsetting->keys().contains(KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY))
+        m_bPopupWidgetModeStatus = m_pPopupWidgetModeGsetting->get(KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY).toBool();
+
+    return;
 }
 
 void notifyManager::popupItemWidgetDismissed(int Id)

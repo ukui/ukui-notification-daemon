@@ -17,7 +17,7 @@
 
 #include "toptransparentwidget.h"
 #include "notifyreceiveinfo.h"
-extern QString extern_model;
+
 topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 {
     m_pMainLayout = new QVBoxLayout();

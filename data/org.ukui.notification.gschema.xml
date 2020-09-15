@@ -1,0 +1,9 @@
+<schemalist gettext-domain="ukui-notification-demo">
+     <schema id="org.ukui.notification.demo"  path="/org/ukui/notification/demo/">
+        <key name="popupwindowmode" type="b">
+            <default>false</default>
+            <summary>popup window mode</summary>
+            <description>Switch between single popover and multiple popover</description>
+        </key>
+    </schema>
+</schemalist>

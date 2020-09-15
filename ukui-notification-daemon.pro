@@ -4,10 +4,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET   = ukui-notifications
 TEMPLATE = app
-CONFIG  += c++11
+CONFIG  += c++11 link_pkgconfig
 
 DEFINES += QT_DEPRECATED_WARNINGS
 LIBS += -lX11 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+
+PKGCONFIG  += gsettings-qt
 
 SOURCES += \
         src/main.cpp
@@ -30,5 +32,8 @@ QMAKE_CLEAN       += $${orgDBus.output}
 dbus.files += file/org.ukui.freedesktop.Notification.service
 dbus.path = /usr/share/dbus-1/services
 
+schemes.files += data/org.ukui.notification.gschema.xml
+schemes.path = /usr/share/glib-2.0/schemas/
+
 target.path = $${PREFIX}/lib/ukui-notification-daemon
-INSTALLS += target dbus
+INSTALLS += target dbus schemes

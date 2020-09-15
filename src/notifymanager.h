@@ -29,12 +29,19 @@
 #include <QDesktopWidget>
 #include <QStandardPaths>
 #include <QFile>
+#include <QGSettings>
 #include "notifyreceiveinfo.h"
 #include "popupitemwidget.h"
 #include "toptransparentwidget.h"
 #include "sqlinfodata.h"
 
 #define  MODEL_SINGLE "single\n"
+
+#define UKUI_VOLUME_BRIGHTNESS_GSETTING_ID          "org.ukui.quick-operation.panel"
+#define KYLIN_DISTURB_GSETTING_VALUE_NOTIFYCLOSE    "disturbmodenotifyclose"
+
+#define UKUI_NOTIFICATION_DEMO_GSETTING_ID          "org.ukui.notification.demo"
+#define KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY      "popupwindowmode"
 
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
@@ -70,10 +77,15 @@ public Q_SLOTS:
 public:
     popupItemWidget              *m_pEntryWidget = nullptr;
     topTransparentWidget         *m_pTopWidget = nullptr;
+    QGSettings                   *m_pCloseNotifyGsetting = nullptr;
+    QGSettings                   *m_pPopupWidgetModeGsetting = nullptr;
+    bool                         m_bPopupWidgetModeStatus;
+    bool                         m_bNodisturbMode;
+
 private:
     void registerAsService();
     void nextShowAction();
-    QString readShowModel();
+    void initGsettingValue();
 
 private:
     QString m_model;
