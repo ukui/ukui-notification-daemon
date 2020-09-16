@@ -161,10 +161,10 @@ void popupItemWidget::initLabelSizeInfo()
         summaryFont.setFamily("Noto Sans CJK SC");
     });
     m_pSummaryLabel->setFixedWidth(300);
-    m_pSummaryLabel->setFixedHeight(20);
+    m_pSummaryLabel->setFixedHeight(16);
     m_pSummaryLabel->setAlignment(Qt::AlignVCenter);
 
-    m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+    m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 20));
     m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
     m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
 
@@ -183,7 +183,7 @@ void popupItemWidget::initLabelSizeInfo()
     m_pTextBodyLabel->setFixedWidth(300);
     m_pTextBodyLabel->setMaximumHeight(16);
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
-    m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 13));
+    m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
     m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
 }
@@ -391,13 +391,11 @@ bool popupItemWidget::judgeActionExsit()
 {
     if (m_pentryInfo->actions().isEmpty()) {
         m_pOperationWidget->setVisible(false);
-        this->setFixedSize(372, 88);
+        this->setFixedSize(372, 82);
         return false;
     } else {
-        m_pOperationWidget->setVisible(true);
         // 解析m_actions链表，读取动作字符串名称和显示给用户的展示字符串
         processActions();
-        this->setFixedSize(372, 134);
         return true;
     }
 }
@@ -415,7 +413,14 @@ void popupItemWidget::processActions()
         list.removeAt(index + 1);
         list.removeAt(index);
     }
-    actionMapParsingJump(list);
+    if (list.size() == 0) {
+        m_pOperationWidget->setVisible(false);
+        this->setFixedSize(372, 88);
+    } else {
+        m_pOperationWidget->setVisible(true);
+        this->setFixedSize(372, 134);
+        actionMapParsingJump(list);
+    }
     return;
 }
 
@@ -427,6 +432,8 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
     // Each even element in the list (starting at index 0) represents the
     // identifier for the action. Each odd element in the list is the
     // localized string that will be displayed to the user.
+    qDebug() << "当前字符串链表大小" << list.size();
+
     for (int i = 0; i != list.size(); ++i) {
         if (i % 2 == 0) {
             id = list[i];
@@ -481,7 +488,7 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
     */
 //    p.setBrush(opt.palette.color(QPalette::Base));
     p.setBrush(QBrush(QColor("#131314")));
-    p.setOpacity(0.42);
+    p.setOpacity(0.7);
     p.setPen(Qt::NoPen);
     QPainterPath path;
     opt.rect.adjust(0,0,0,0);
