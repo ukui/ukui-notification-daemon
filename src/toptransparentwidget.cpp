@@ -110,7 +110,6 @@ void topTransparentWidget::exitPopupWidget(QWidget *w)
     delete popw->m_pentryInfo;
     this->setFixedHeight(m_ListWidgetHeight);
     if (0 == popWidgetqueue.count()) {
-        qDebug() << "113";
         this->hide();
         return;
     }

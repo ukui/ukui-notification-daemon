@@ -117,15 +117,10 @@ void notifyManager::registerAsService()
 
 void notifyManager::nextShowAction()
 {
-    if (m_bPopupWidgetModeStatus) {
-        if (!m_pTopWidget->isVisible()) {
-            m_pTopWidget->consumeEntities();
-        }
-    } else {
-        if (1 == m_pTopWidget->popWidgetqueue.count()) {
-            qApp->quit();
-        }
-    }
+    if (m_bPopupWidgetModeStatus && !m_pTopWidget->isVisible())
+        m_pTopWidget->consumeEntities();
+    else if (0 == m_pTopWidget->popWidgetqueue.count())
+        qApp->quit();
     return;
 }
 
