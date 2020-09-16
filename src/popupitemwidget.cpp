@@ -588,7 +588,6 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
         }
         ++i;
     }
-
     m_poutTimer->stop();
     emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), actionId);
 }

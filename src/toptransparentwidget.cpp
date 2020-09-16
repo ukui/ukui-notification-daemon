@@ -30,7 +30,7 @@ topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 
     connect(this, &topTransparentWidget::closePopupWidget, this, &topTransparentWidget::moveAllpopWidgetSiteAccordId);
 
-    setWidgetPos(m_pSreenInfo->m_screenWidth - 372, 0);
+    setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
     this->setFixedWidth(372);
     this->setLayout(m_pMainLayout);
     setWidgetFlag();
@@ -85,7 +85,6 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
     else
         m_ListWidgetHeight += popw->height() + 5;
     this->setFixedHeight(m_ListWidgetHeight);
-
 
     m_pMainLayout->addWidget(popw);
     popw->setGeometry(0, 0, popw->width(), popw->height());
