@@ -57,7 +57,6 @@ QStringList notifyManager::GetCapabilities()
 {
     QStringList result;
     result << "action-icons" << "actions" << "body" << "body-hyperlinks" << "body-markup";
-
     return result;
 }
 
@@ -66,7 +65,6 @@ QString notifyManager::GetServerInformation(QString &name, QString &vendor, QStr
     name = QString("ukui-Notifications");
     vendor = QString("ukui3.0");
     version = QString("1.0");
-
     return QString("1.0");
 }
 

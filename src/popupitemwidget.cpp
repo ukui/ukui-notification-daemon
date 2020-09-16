@@ -160,9 +160,17 @@ void popupItemWidget::initLabelSizeInfo()
         summaryFont.setPixelSize(16);
         summaryFont.setFamily("Noto Sans CJK SC");
     });
+    QPalette palette;
+    QColor color;
+    palette = m_pSummaryLabel->palette();
+    color = palette.text().color();
+    color.setAlphaF(0.91);
+    palette.setBrush(QPalette::WindowText, color);
+    m_pSummaryLabel->setPalette(palette);
+
     m_pSummaryLabel->setFixedWidth(300);
     m_pSummaryLabel->setFixedHeight(16);
-    m_pSummaryLabel->setAlignment(Qt::AlignVCenter);
+    m_pSummaryLabel->setAlignment(Qt::AlignVCenter);   
 
     m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 20));
     m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
@@ -182,7 +190,14 @@ void popupItemWidget::initLabelSizeInfo()
     });
     m_pTextBodyLabel->setFixedWidth(300);
     m_pTextBodyLabel->setMaximumHeight(16);
+
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
+    palette = m_pTextBodyLabel->palette();
+    color = palette.text().color();
+    color.setAlphaF(0.35);
+    palette.setBrush(QPalette::WindowText, color);
+    m_pTextBodyLabel->setPalette(palette);
+
     m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
     m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
@@ -486,8 +501,8 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
      * 白字体 --> 黑背景
      * 黑字体 --> 白字体
     */
-//    p.setBrush(opt.palette.color(QPalette::Base));
-    p.setBrush(QBrush(QColor("#131314")));
+    p.setBrush(opt.palette.color(QPalette::Base));
+//    p.setBrush(QBrush(QColor("#131314")));
     p.setOpacity(0.7);
     p.setPen(Qt::NoPen);
     QPainterPath path;
