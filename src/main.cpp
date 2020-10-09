@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-//    setenv("QT_QPA_PLATFORMTHEME", "ukui", true);       //设置主题环境变量
+    setenv("QT_QPA_PLATFORMTHEME", "ukui", true);       //设置主题环境变量
 
     QApplication a(argc, argv);
 
