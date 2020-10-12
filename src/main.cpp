@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     notifyManager w;
     NotificationsAdaptor notifyAdaptor(&w);
-    w.m_pTopWidget->setProperty("useSystemStyleBlur", true);
+    w.m_pTopWidget->setProperty("useSystemStyleBlur", false);
     Q_UNUSED(notifyAdaptor);
     return a.exec();
 }
