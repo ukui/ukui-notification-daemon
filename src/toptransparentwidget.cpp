@@ -75,7 +75,7 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
     connect(popw, &popupItemWidget::timeOutMissed, this, &topTransparentWidget::timeOutMissedSlots);
     connect(popw, &popupItemWidget::clickedMissed, this, &topTransparentWidget::clickedMissedSlots);
     connect(popw, &popupItemWidget::actionInvokedMissed, this, &topTransparentWidget::actionInvokedMissedSlots);
-
+    connect(popw, &popupItemWidget::animationAction, this, &topTransparentWidget::TransformGroundGlassAreaSlots);
     popw->setEntryData(entryInfo);
 
     popWidgetqueue.append(popw);
@@ -136,6 +136,7 @@ void topTransparentWidget::consumeEntities()
     }
 
     m_currentNotify = m_entities.dequeue();
+    this->setProperty("blurRegion", QRegion(QRect(0, 0, 372, this->height())));
     AddPopupItemWidget(m_currentNotify);
     if (!this->isVisible())
         this->show();
@@ -260,4 +261,13 @@ void topTransparentWidget::moveAllpopWidgetSiteAccordId(int Id)
         }
     }
     return;
+}
+
+void topTransparentWidget::TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w)
+{
+    if (popWidgetqueue.count() == 1) {
+        this->setProperty("blurRegion", QRegion(QRect(0, 0, 1, this->height() - w->height() + 1)));
+    } else {
+        this->setProperty("blurRegion", QRegion(QRect(0, 0, 372, this->height() - w->height())));
+    }
 }

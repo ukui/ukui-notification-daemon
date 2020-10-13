@@ -48,6 +48,7 @@ public:
     notifyReceiveInfo    *m_pentryInfo = nullptr;
     QPropertyAnimation   *m_pOutAnimation = nullptr;
     QTimer               *m_poutTimer = nullptr;
+    bool                  m_bActionSignals = true;
 
 private:
     void initUiLayout();                                    // 初始化UI
@@ -84,6 +85,7 @@ Q_SIGNALS:
     void actionInvokedMissed(QWidget *w, int id, QString actionId);
     void actionButtonClicked(QString id);
     void timeout(QWidget *w);
+    void animationAction(const QVariant &value, QWidget *w);
 
 public Q_SLOTS:
 //    void compositeChanged();

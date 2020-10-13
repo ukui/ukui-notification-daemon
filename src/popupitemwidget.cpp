@@ -241,6 +241,14 @@ void popupItemWidget::initWidgetAnimations()
 {
     m_pOutAnimation = new QPropertyAnimation(this, "geometry");
     connect(m_pOutAnimation, &QPropertyAnimation::finished, this, &popupItemWidget::OutAnimationFinishSlots);
+
+    connect(m_pOutAnimation, &QPropertyAnimation::valueChanged, this, [=](QVariant value) {
+        if (m_bActionSignals) {
+            emit animationAction(value, this);
+            m_bActionSignals = false;
+        }
+    });
+
     m_pOutAnimation->setDuration(200);
     m_pOutAnimation->setEasingCurve(QEasingCurve::OutCubic);
 

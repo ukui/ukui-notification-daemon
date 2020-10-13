@@ -75,6 +75,7 @@ private slots:
     void actionInvokedMissedSlots(QWidget *w, int id, QString actionId);
     void moveAllpopWidgetSite(QWidget *w);
     void moveAllpopWidgetSiteAccordId(int Id);
+    void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
 };
 
 #endif // TOPTRANSPARENTWIDGET_H
