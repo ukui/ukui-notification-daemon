@@ -17,6 +17,7 @@
 
 #include "toptransparentwidget.h"
 #include "notifyreceiveinfo.h"
+#include <QPainterPath>
 
 topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 {
