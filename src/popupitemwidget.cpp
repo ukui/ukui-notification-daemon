@@ -16,6 +16,7 @@
  */
 
 #include "popupitemwidget.h"
+#include <QPainterPath>
 
 popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
                                 : QWidget(parent)
