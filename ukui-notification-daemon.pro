@@ -2,7 +2,7 @@ include(src/src.pri)
 QT       += dbus svg sql core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET   = ukui-notification-daemon
+TARGET   = ukui-notifications
 TEMPLATE = app
 CONFIG  += c++11 link_pkgconfig
 
