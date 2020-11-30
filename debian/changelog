@@ -1,6 +1,7 @@
 ukui-notification-daemon (1.0.1-1) unstable; urgency=medium
 
-  * New upstream release. (Closes: #975149)
+  * New upstream release.
+    - Fix the build errors. (Closes: #975149)
 
  -- handsome_feng <jianfengli@ubuntukylin.com>  Sat, 28 Nov 2020 13:43:26 +0800
 
