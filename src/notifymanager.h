@@ -80,7 +80,7 @@ public:
     QGSettings                   *m_pCloseNotifyGsetting = nullptr;
     QGSettings                   *m_pPopupWidgetModeGsetting = nullptr;
     bool                         m_bPopupWidgetModeStatus;
-    bool                         m_bNodisturbMode;
+    bool                         m_bNodisturbMode = false;
 
 private:
     void registerAsService();
