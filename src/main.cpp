@@ -53,16 +53,16 @@ int main(int argc, char *argv[])
         #endif
     }
 
-    QStringList strlistHomePath = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
-    QString strLockPath = strlistHomePath.at(0) + "/.config/ukui-notifycation";
-
-    int fd = open(strLockPath.toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    QStringList homePath = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    int fd = open(QString(homePath.at(0) + \
+                  "/.config/ukui-notifications%1.lock").arg(getenv("DISPLAY")).toUtf8().data(), \
+                  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     if (fd < 0)
         exit(1);
 
     if (lockf(fd, F_TLOCK, 0)) {
-        syslog(LOG_ERR, "Can't lock single file, ukui-sidebar is already running!");
-        qDebug()<<"Can't lock single file, ukui-sidebar is already running!";
+        syslog(LOG_ERR, "Can't lock single file, ukui-notifications is already running!");
+        qDebug()<<"Can't lock single file, ukui-notifications is already running!";
         exit(0);
     }
 
