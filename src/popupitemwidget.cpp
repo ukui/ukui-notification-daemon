@@ -87,7 +87,6 @@ void popupItemWidget::initUiLayout()
     m_pMainHBoxLayout->addItem(new QSpacerItem(12, 0));
     m_pMainHBoxLayout->addWidget(m_pInfoAreaWidget);
     m_pMainHBoxLayout->addWidget(m_pCloseButtonWidget);
-
     this->setFixedSize(372, 134);
     this->setLayout(m_pMainHBoxLayout);
 }
@@ -170,10 +169,10 @@ void popupItemWidget::initLabelSizeInfo()
     m_pSummaryLabel->setPalette(palette);
 
     m_pSummaryLabel->setFixedWidth(300);
-    m_pSummaryLabel->setFixedHeight(16);
+    m_pSummaryLabel->setFixedHeight(18);
     m_pSummaryLabel->setAlignment(Qt::AlignVCenter);   
 
-    m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 20));
+    m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
     m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
     m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
 
