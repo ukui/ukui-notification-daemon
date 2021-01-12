@@ -29,9 +29,12 @@ topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 
     m_pSreenInfo = new adaptScreenInfo();
 
-    connect(this, &topTransparentWidget::closePopupWidget, this, &topTransparentWidget::moveAllpopWidgetSiteAccordId);
+    connect(this, &topTransparentWidget::closePopupWidget, \
+            this, &topTransparentWidget::moveAllpopWidgetSiteAccordId);
 
-    setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
+    initPanelSite();
+    setNotifyPopWidgetSite();
+
     this->setFixedWidth(372);
     this->setLayout(m_pMainLayout);
     setWidgetFlag();
@@ -77,19 +80,29 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
     connect(popw, &popupItemWidget::clickedMissed, this, &topTransparentWidget::clickedMissedSlots);
     connect(popw, &popupItemWidget::actionInvokedMissed, this, &topTransparentWidget::actionInvokedMissedSlots);
     connect(popw, &popupItemWidget::animationAction, this, &topTransparentWidget::TransformGroundGlassAreaSlots);
+    connect(popw->m_pOutAnimation, &QPropertyAnimation::finished, \
+            this, &topTransparentWidget::addWaittingPopupWidgetSlots);
     popw->setEntryData(entryInfo);
-
     popWidgetqueue.append(popw);
 
-    if (popWidgetqueue.count() == 1)
+    if (popWidgetqueue.count() == 1) {
         m_ListWidgetHeight += popw->height();
-    else
-        m_ListWidgetHeight += popw->height() + 5;
-    this->setFixedHeight(m_ListWidgetHeight);
-
-    m_pMainLayout->addWidget(popw);
-    popw->setGeometry(0, 0, popw->width(), popw->height());
-    this->update();
+        this->setFixedHeight(m_ListWidgetHeight);
+        m_pMainLayout->addWidget(popw);
+        popw->setGeometry(0, 0, popw->width(), popw->height());
+        this->update();
+    } else
+        if (m_ListWidgetHeight < m_pSreenInfo->m_screenHeight - 134) {
+            m_ListWidgetHeight += popw->height() + 5;
+            this->setFixedHeight(m_ListWidgetHeight);
+            m_pMainLayout->addWidget(popw);
+            popw->setGeometry(0, 0, popw->width(), popw->height());
+            this->update();
+        } else {
+            m_pWaitingQueue.append(entryInfo);
+            popWidgetqueue.removeAt(popWidgetqueue.count() - 1);
+            delete popw;
+        }
     return;
 }
 
@@ -141,6 +154,59 @@ void topTransparentWidget::consumeEntities()
     AddPopupItemWidget(m_currentNotify);
     if (!this->isVisible())
         this->show();
+}
+
+// 初始化任务栏gsetting
+void topTransparentWidget::initPanelSite()
+{
+    /* 链接任务栏dgsetting接口 */
+    if(QGSettings::isSchemaInstalled(UKUI_PANEL_SETTING))
+        m_pPanelSetting = new QGSettings(UKUI_PANEL_SETTING);
+
+    if (m_pPanelSetting != nullptr) {
+        connect(m_pPanelSetting, &QGSettings::changed, this, &topTransparentWidget::panelSiteSlots);
+        QStringList keys = m_pPanelSetting->keys();
+
+        /* 获取任务栏位置 */
+        if (keys.contains("panelposition")) {
+            m_ipanelPosition = m_pPanelSetting->get("panelposition").toInt();
+        }
+
+        /* 获取任务栏高度 */
+        if (keys.contains("panelsize")) {
+            m_ipanelHeight = m_pPanelSetting->get("panelsize").toInt();
+        }
+    }
+}
+
+/* 设置任务栏的位置 */
+void topTransparentWidget::setNotifyPopWidgetSite()
+{
+    switch (m_ipanelPosition) {
+        case topTransparentWidget::PanelDown:
+            {
+                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
+            }
+            break;
+        case topTransparentWidget::PanelUp:
+            {
+                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5 + m_ipanelHeight);             // 获取任务栏高度
+            }
+            break;
+        case topTransparentWidget::PanelLeft:
+            {
+                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
+            }
+            break;
+        case topTransparentWidget::PanelRight:
+            {
+                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8 - m_ipanelHeight, 5);
+            }
+            break;
+        default:
+            break;
+    }
+    return;
 }
 
 // hash表插入
@@ -271,4 +337,23 @@ void topTransparentWidget::TransformGroundGlassAreaSlots(const QVariant &value, 
     } else {
         this->setProperty("blurRegion", QRegion(QRect(0, 0, 372, this->height() - w->height())));
     }
+}
+
+void topTransparentWidget::addWaittingPopupWidgetSlots()
+{
+    if (m_pWaitingQueue.count() != 0) {
+        AddPopupItemWidget(m_pWaitingQueue.at(0));
+        m_pWaitingQueue.removeAt(0);
+    }
+    return;
+}
+
+void topTransparentWidget::panelSiteSlots(QString key)
+{
+    if (key == "panelposition" || key == "panelsize") {
+        m_ipanelPosition = m_pPanelSetting->get("panelposition").toInt();
+        m_ipanelHeight   = m_pPanelSetting->get("panelsize").toInt();
+        setNotifyPopWidgetSite();
+    }
+    return;
 }

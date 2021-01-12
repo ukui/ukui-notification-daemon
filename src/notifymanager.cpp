@@ -92,6 +92,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     m_psqlInfoData->addOne(notifyInfo);
 
     // 单弹窗模式 多弹窗模式
+    qDebug() << "2312312312" << m_bPopupWidgetModeStatus;
     if (m_bPopupWidgetModeStatus) {
         m_pTopWidget->addEntryInfo(notifyInfo);
         if (!m_pTopWidget->isVisible())
@@ -140,7 +141,7 @@ void notifyManager::initGsettingValue()
 
     // 设置弹窗模式gsetting值
     const QByteArray id_2(UKUI_NOTIFICATION_DEMO_GSETTING_ID);
-    if (QGSettings::isSchemaInstalled(id)) {
+    if (QGSettings::isSchemaInstalled(id_2)) {
         m_pPopupWidgetModeGsetting = new QGSettings(id_2);
         connect(m_pPopupWidgetModeGsetting, &QGSettings::changed, this, [=](QString key) {
            if (key == KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY) {

@@ -27,8 +27,12 @@
 #include <QListWidgetItem>
 #include <QQueue>
 #include <QPointer>
+#include <QGSettings>
 #include "popupitemwidget.h"
 #include "adaptscreeninfo.h"
+
+#define UKUI_PANEL_SETTING "org.ukui.panel.settings"
+
 class topTransparentWidget : public QWidget
 {
     Q_OBJECT
@@ -42,11 +46,20 @@ public:
     void exitPopupWidget(QWidget *w);
     void addEntryInfo(notifyReceiveInfo *entryInfo);
     void consumeEntities();
+    void initPanelSite();
+    void setNotifyPopWidgetSite();
 
     //hash插入，查找， 删除
     void deleteHashInsert(popupItemWidget* key, QListWidgetItem* value);
     void deleteHashRemove(popupItemWidget* key);
     QListWidgetItem* deleteHashSearch(popupItemWidget* key);
+
+    enum PanelStatePosition {
+        PanelDown = 0,
+        PanelUp,
+        PanelLeft,
+        PanelRight
+    };
 
     QListWidget                                *m_pMainListWidget;
     adaptScreenInfo                            *m_pSreenInfo = nullptr;
@@ -56,6 +69,9 @@ public:
     QList<popupItemWidget*>                     popWidgetqueue;
     QPointer<notifyReceiveInfo>                 m_currentNotify;
     QQueue<notifyReceiveInfo *>                 m_entities;                       //用来存放当前数据，保存到队列中去，当有多条消息时，一条一条数据显示
+    QList<notifyReceiveInfo*>                   m_pWaitingQueue;
+    int                                         m_ipanelPosition = 0;
+    int                                         m_ipanelHeight = 46;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -66,7 +82,8 @@ signals:
     void actionInvoked(uint, QString);
 
 private:
-    QVBoxLayout *m_pMainLayout;
+    QVBoxLayout                 *m_pMainLayout;
+    QGSettings                  *m_pPanelSetting = nullptr;
 
 private slots:
     void mouseMissedSlots(QWidget *w, int id);
@@ -76,6 +93,8 @@ private slots:
     void moveAllpopWidgetSite(QWidget *w);
     void moveAllpopWidgetSiteAccordId(int Id);
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
+    void addWaittingPopupWidgetSlots();
+    void panelSiteSlots(QString key);
 };
 
 #endif // TOPTRANSPARENTWIDGET_H
