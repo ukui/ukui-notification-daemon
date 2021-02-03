@@ -72,7 +72,11 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
         m_ListWidgetHeight = 0;
     }
 
-    popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1));
+    if (entryInfo->actions().count() != 0) {
+        popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1) + 7*1000);
+    } else {
+        popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1));
+    }
 
     connect(popw, &popupItemWidget::timeout, this, &topTransparentWidget::moveAllpopWidgetSite);
     connect(popw, &popupItemWidget::mouseMissed, this, &topTransparentWidget::mouseMissedSlots);

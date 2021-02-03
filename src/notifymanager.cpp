@@ -31,7 +31,6 @@ static QString removeHTML(const QString &source)
 notifyManager::notifyManager(QObject *parent)
     : QObject(parent)
 {
-    m_pEntryWidget = new popupItemWidget();
     m_pTopWidget   = new topTransparentWidget();
     m_psqlInfoData = new sqlInfoData();
     connect(m_pTopWidget, &topTransparentWidget::dismissed, this, &notifyManager::popupItemWidgetDismissed);
@@ -92,7 +91,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     m_psqlInfoData->addOne(notifyInfo);
 
     // 单弹窗模式 多弹窗模式
-    qDebug() << "2312312312" << m_bPopupWidgetModeStatus;
+    qDebug() << "弹窗模式" << m_bPopupWidgetModeStatus;
     if (m_bPopupWidgetModeStatus) {
         m_pTopWidget->addEntryInfo(notifyInfo);
         if (!m_pTopWidget->isVisible())
