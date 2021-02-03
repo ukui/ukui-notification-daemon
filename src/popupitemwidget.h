@@ -36,6 +36,7 @@
 #include <QFont>
 #include <QFontMetrics>
 #include <QProcess>
+#include <QGSettings>
 #include "notifyreceiveinfo.h"
 //#include "toptransparentwidget.h"
 
@@ -60,6 +61,7 @@ private:
     void initTimer();                                       // 初始化显示时长定时器
     void setWidgetAttribute();                              // 设置窗口属性
     void initWidgetAnimations();                            // 初始化显示和消失动画
+    void setWidgetFontSpace();
     void setWidgetDate();                                   // 设置widget显示数据
     bool containsMouse() const;                             // 判断鼠标是否在当前弹窗中
     void convertToImage(QString iconPath);                  // 将路径中的数据转换成图片
@@ -126,7 +128,8 @@ private:
 
     QString               m_pDefaultAction;
     QList<QPushButton *> *m_pListButton = nullptr;
-
+    QGSettings           *m_pFontStyleGsetting;
+    int                   m_iStyleFontSize;
 
 private slots:
     void ShowTimeoutSlots();

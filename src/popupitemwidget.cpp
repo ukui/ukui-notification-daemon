@@ -150,16 +150,13 @@ void popupItemWidget::initLabelSizeInfo()
 {
     /* 存放标题Label */
     m_pSummaryLabelWidget = new QWidget();
+
     m_pSummaryLabelWidget->setContentsMargins(0, 0, 0, 0);
+//    m_pSummaryLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,0,0,1);}");
     m_pSummaryLabelWidgetLayout = new QVBoxLayout();
     m_pSummaryLabelWidgetLayout->setContentsMargins(0, 0, 0, 0);
     m_pSummaryLabelWidgetLayout->setSpacing(0);
 
-    QTimer::singleShot(1, m_pSummaryLabel, [=]() {
-        QFont summaryFont = m_pSummaryLabel->font();
-        summaryFont.setPixelSize(16);
-        summaryFont.setFamily("Noto Sans CJK SC");
-    });
     QPalette palette;
     QColor color;
     palette = m_pSummaryLabel->palette();
@@ -167,14 +164,9 @@ void popupItemWidget::initLabelSizeInfo()
     color.setAlphaF(0.91);
     palette.setBrush(QPalette::WindowText, color);
     m_pSummaryLabel->setPalette(palette);
-
     m_pSummaryLabel->setFixedWidth(300);
-    m_pSummaryLabel->setFixedHeight(18);
-    m_pSummaryLabel->setAlignment(Qt::AlignVCenter);   
+    m_pSummaryLabel->setAlignment(Qt::AlignVCenter);
 
-    m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
-    m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
-    m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
 
     /* 存放文本信息Label */
     m_pBodyLabelWidget = new QWidget();
@@ -183,13 +175,8 @@ void popupItemWidget::initLabelSizeInfo()
     m_pBodyLabelWidgetLayout = new QVBoxLayout();
     m_pBodyLabelWidgetLayout->setContentsMargins(0, 0, 0, 0);
     m_pBodyLabelWidgetLayout->setSpacing(0);
-    QTimer::singleShot(1, m_pTextBodyLabel, [=]() {
-        QFont bodyFont = m_pTextBodyLabel->font();
-        bodyFont.setPixelSize(14);
-        m_pTextBodyLabel->setFont(bodyFont);
-    });
+
     m_pTextBodyLabel->setFixedWidth(300);
-    m_pTextBodyLabel->setMaximumHeight(16);
 
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
     palette = m_pTextBodyLabel->palette();
@@ -198,8 +185,10 @@ void popupItemWidget::initLabelSizeInfo()
     palette.setBrush(QPalette::WindowText, color);
     m_pTextBodyLabel->setPalette(palette);
 
-    m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
-    m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    // 根据字体大小来设置间距改变布局
+    setWidgetFontSpace();
+
+    m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
 }
 
@@ -256,6 +245,63 @@ void popupItemWidget::initWidgetAnimations()
     m_pMoveAnimation->setEasingCurve(QEasingCurve::OutCubic);
     m_pMoveAnimation->setStartValue(QRect(this->width() - 1, 0, this->width(), 60));
     m_pMoveAnimation->setEndValue(QRect(0, 0, this->width(), 60));
+}
+
+/* 根据字体大小设置控件之间的间距 */
+void popupItemWidget::setWidgetFontSpace()
+{
+    const QByteArray id("org.ukui.style");
+    if (QGSettings::isSchemaInstalled(id)) {
+        m_pFontStyleGsetting = new QGSettings(id);
+        m_iStyleFontSize = m_pFontStyleGsetting->get("system-font-size").toInt();
+    }
+
+    if (m_iStyleFontSize == 11 || m_iStyleFontSize == 12) {
+        QTimer::singleShot(1, m_pSummaryLabel, [=]() {
+            QFont summaryFont = m_pSummaryLabel->font();
+            summaryFont.setPixelSize(16);
+            summaryFont.setFamily("Noto Sans CJK SC");
+            m_pSummaryLabel->setFont(summaryFont);
+        });
+        QTimer::singleShot(1, m_pTextBodyLabel, [=]() {
+            QFont bodyFont = m_pTextBodyLabel->font();
+            bodyFont.setPixelSize(14);
+            m_pTextBodyLabel->setFont(bodyFont);
+        });
+        m_pSummaryLabelWidget->setFixedHeight(34);
+        m_pSummaryLabel->setFixedHeight(18);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
+
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    }  else if (m_iStyleFontSize == 13) {
+        m_pSummaryLabelWidget->setFixedHeight(36);
+        m_pSummaryLabel->setFixedHeight(20);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
+
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    } else if (m_iStyleFontSize == 14) {
+        m_pSummaryLabelWidget->setFixedHeight(38);
+        m_pSummaryLabel->setFixedHeight(22);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
+
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    } else if (m_iStyleFontSize == 15 || m_iStyleFontSize == 16) {
+        m_pSummaryLabelWidget->setFixedHeight(40);
+        m_pSummaryLabel->setFixedHeight(24);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
+
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(1, 6, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 6, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    }
+    return;
 }
 
 /* 设置显示数据文本 */
