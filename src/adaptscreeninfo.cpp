@@ -21,7 +21,6 @@ adaptScreenInfo::adaptScreenInfo(QObject *parent) : QObject(parent)
 {
     m_pDeskWgt = QApplication::desktop();
     InitializeHomeScreenGeometry();
-    initScreenSize();
     connect(QApplication::primaryScreen(), &QScreen::geometryChanged, this, &adaptScreenInfo::onResolutionChanged);
     connect(m_pDeskWgt, &QDesktopWidget::primaryScreenChanged, this, &adaptScreenInfo::primaryScreenChangedSlot);
     connect(m_pDeskWgt, &QDesktopWidget::screenCountChanged, this, &adaptScreenInfo::screenCountChangedSlots);
@@ -59,17 +58,82 @@ void adaptScreenInfo::initScreenSize()
 /* 初始化主屏坐标 */
 void adaptScreenInfo::InitializeHomeScreenGeometry()
 {
-    QList<QScreen*> screen = QGuiApplication::screens();
-    int count = m_pDeskWgt->screenCount();
-    if (count > 1) {
-        m_nScreen_x = screen[0]->geometry().x();
-        m_nScreen_y = screen[0]->geometry().y();
+    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
+    if (ArchDiff == ENV_WAYLAND) {
+        if (!initHuaWeiDbus()) {
+            initOsDbusScreen();     // 当dbus有延迟时，会获取到的信息为0，则重新从系统上获取
+            initScreenSize();
+        }
+    } else if (ArchDiff == ENV_X11) {
+        initOsDbusScreen(); // 初始化坐标
+        initScreenSize();   // 初始化屏幕宽度
+    }
+    return;
+}
+
+// 初始化华为990dbus接口
+bool adaptScreenInfo::initHuaWeiDbus()
+{
+    m_pDbusXrandInter = new QDBusInterface(DBUS_NAME,
+                                         DBUS_PATH,
+                                         DBUS_INTERFACE,
+                                         QDBusConnection::sessionBus());
+
+    connect(m_pDbusXrandInter, SIGNAL(screenPrimaryChanged(int,int,int,int)),
+            this, SLOT(priScreenChanged(int,int,int,int)));
+    m_nScreen_x = getScreenGeometry("x");
+    m_nScreen_y = getScreenGeometry("y");
+    m_screenWidth = getScreenGeometry("width");
+    m_screenHeight = getScreenGeometry("height");
+    qDebug() << "偏移的x坐标------HW------>" << m_nScreen_x;
+    qDebug() << "偏移的Y坐标------HW------>" << m_nScreen_y;
+    if (m_screenWidth == 0 || m_screenHeight == 0) {
+        qDebug() << "无dbus可用接口HW";
+        return false;
     } else {
-        m_nScreen_x = 0;
-        m_nScreen_y = 0;
+        qDebug() << "有dbus可用接口HW";
+        return true;
+    }
+}
+
+void adaptScreenInfo::initOsDbusScreen()
+{
+    if (QGuiApplication::primaryScreen()) {
+        m_nScreen_x = QGuiApplication::primaryScreen()->geometry().x();
+        m_nScreen_y = QGuiApplication::primaryScreen()->geometry().y();
+    } else {
+        QList<QScreen*> screen = QGuiApplication::screens();
+        int count = m_pDeskWgt->screenCount();
+        if (count > 1) {
+            m_nScreen_x = screen[0]->geometry().x();
+            m_nScreen_y = screen[0]->geometry().y();
+        } else {
+            m_nScreen_x = 0;
+            m_nScreen_y = 0;
+        }
     }
     qDebug() << "偏移的x坐标" << m_nScreen_x;
     qDebug() << "偏移的Y坐标" << m_nScreen_y;
+}
+
+int adaptScreenInfo::getScreenGeometry(QString methodName)
+{
+    int res = 0;
+    QDBusMessage message = QDBusMessage::createMethodCall(DBUS_NAME,
+                               DBUS_PATH,
+                               DBUS_INTERFACE,
+                               methodName);
+    QDBusMessage response = QDBusConnection::sessionBus().call(message);
+    if (response.type() == QDBusMessage::ReplyMessage) {
+        if(response.arguments().isEmpty() == false) {
+            int value = response.arguments().takeFirst().toInt();
+            res = value;
+            qDebug() << value;
+        }
+    } else {
+        qDebug()<<methodName<<"called failed";
+    }
+    return res;
 }
 
 //当改变屏幕分辨率时重新获取屏幕分辨率
@@ -96,4 +160,14 @@ void adaptScreenInfo::screenCountChangedSlots(int count)
     InitializeHomeScreenGeometry();
     initScreenSize();
     return;
+}
+
+/* get primary screen changed */
+void adaptScreenInfo::priScreenChanged(int x, int y, int width, int height)
+{
+    qDebug("primary screen  changed, geometry is  x=%d, y=%d, windth=%d, height=%d", x, y, width, height);
+    m_nScreen_x = x;
+    m_nScreen_y = y;
+    m_screenWidth = width;
+    m_screenHeight = height;
 }

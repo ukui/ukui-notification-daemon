@@ -25,6 +25,16 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QRect>
+#include <QDBusInterface>
+
+#define ENV_X11       "x11"
+#define ENV_WAYLAND   "wayland"
+#define ENV_XDG_SESSION_TYPE "XDG_SESSION_TYPE"
+
+#define DBUS_NAME       "org.ukui.SettingsDaemon"
+#define DBUS_PATH       "/org/ukui/SettingsDaemon/wayland"
+#define DBUS_INTERFACE  "org.ukui.SettingsDaemon.wayland"
+
 class adaptScreenInfo : public QObject
 {
     Q_OBJECT
@@ -41,16 +51,21 @@ public:
     int                          m_screenNum;                                   // 屏幕数量
     int                          m_nScreen_x;                                   // 主屏起始坐标X
     int                          m_nScreen_y;                                   // 主屏起始坐标Y
+    QDBusInterface              *m_pDbusXrandInter;                             // HW的dbus接口
 
 signals:
 
 private:
     void initScreenSize();
+    bool initHuaWeiDbus();
+    void initOsDbusScreen();
+    int getScreenGeometry(QString methodName);
 
 private slots:
     void primaryScreenChangedSlot();
     void onResolutionChanged(const QRect argc);
     void screenCountChangedSlots(int count);
+    void priScreenChanged(int x, int y, int width, int height);
 
 private:
     QList<QScreen *> m_pListScreen;
