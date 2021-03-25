@@ -43,6 +43,7 @@ public:
     void screenNumChange();
     void modifyMemberVariable();
     void InitializeHomeScreenGeometry();
+    void initHwDbusScreen();
 
 
     QDesktopWidget              *m_pDeskWgt;                                    // 桌面问题

@@ -1,3 +1,10 @@
+ukui-notification-daemon (1.0.1-1-0001) v101; urgency=medium
+
+  * 改动：
+    - 适配华为990双屏问题 
+
+ -- liushanwen <liushanwen@kylinos.cn>  Tue, 23 Mar 2021 16:52:48 +0800
+
 ukui-notification-daemon (1.0.1-1) unstable; urgency=medium
 
   * New upstream release.

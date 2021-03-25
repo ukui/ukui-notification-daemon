@@ -20,6 +20,10 @@
 adaptScreenInfo::adaptScreenInfo(QObject *parent) : QObject(parent)
 {
     m_pDeskWgt = QApplication::desktop();
+    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
+    if (ArchDiff == ENV_WAYLAND) {
+        initHwDbusScreen();
+    }
     InitializeHomeScreenGeometry();
     connect(QApplication::primaryScreen(), &QScreen::geometryChanged, this, &adaptScreenInfo::onResolutionChanged);
     connect(m_pDeskWgt, &QDesktopWidget::primaryScreenChanged, this, &adaptScreenInfo::primaryScreenChangedSlot);
@@ -71,8 +75,7 @@ void adaptScreenInfo::InitializeHomeScreenGeometry()
     return;
 }
 
-// 初始化华为990dbus接口
-bool adaptScreenInfo::initHuaWeiDbus()
+void adaptScreenInfo::initHwDbusScreen()
 {
     m_pDbusXrandInter = new QDBusInterface(DBUS_NAME,
                                          DBUS_PATH,
@@ -81,6 +84,11 @@ bool adaptScreenInfo::initHuaWeiDbus()
 
     connect(m_pDbusXrandInter, SIGNAL(screenPrimaryChanged(int,int,int,int)),
             this, SLOT(priScreenChanged(int,int,int,int)));
+}
+
+// 初始化华为990dbus接口
+bool adaptScreenInfo::initHuaWeiDbus()
+{
     m_nScreen_x = getScreenGeometry("x");
     m_nScreen_y = getScreenGeometry("y");
     m_screenWidth = getScreenGeometry("width");
