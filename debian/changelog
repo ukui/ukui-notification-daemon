@@ -1,3 +1,10 @@
+ukui-notification-daemon (1.0.1-1-0003) v101; urgency=medium
+
+  * 改动：
+    - 修改在缩放比200%下，通知中心显示在屏幕中间 
+
+ -- liushanwen <liushanwen@kylinos.cn>  Thu, 01 Apr 2021 11:31:09 +0800
+
 ukui-notification-daemon (1.0.1-1-0001) v101; urgency=medium
 
   * 改动：
