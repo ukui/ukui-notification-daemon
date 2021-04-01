@@ -46,12 +46,10 @@ int getScreenWidth() {
 
 int main(int argc, char *argv[])
 {
-    if (getScreenWidth() > 2560) {
-        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-        #endif
-    }
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    #endif
 
     QStringList homePath = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
     int fd = open(QString(homePath.at(0) + \
