@@ -186,29 +186,33 @@ void topTransparentWidget::initPanelSite()
 /* 设置任务栏的位置 */
 void topTransparentWidget::setNotifyPopWidgetSite()
 {
-    switch (m_ipanelPosition) {
-        case topTransparentWidget::PanelDown:
-            {
-                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
-            }
-            break;
-        case topTransparentWidget::PanelUp:
-            {
-                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5 + m_ipanelHeight);             // 获取任务栏高度
-            }
-            break;
-        case topTransparentWidget::PanelLeft:
-            {
-                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8, 5);
-            }
-            break;
-        case topTransparentWidget::PanelRight:
-            {
-                setWidgetPos(m_pSreenInfo->m_screenWidth - 372 - 8 - m_ipanelHeight, 5);
-            }
-            break;
-        default:
-            break;
+    QDBusInterface iface("org.ukui.panel",
+             "/panel/position",
+             "org.ukui.panel", QDBusConnection::sessionBus());
+    QDBusReply < QVariantList > reply =
+    iface.call("GetPrimaryScreenGeometry");
+    QVariantList position_list = reply.value();
+    qDebug() << reply.value().at(4).toInt();
+
+    switch (reply.value().at(4).toInt()) {
+    case 1:
+        move(position_list.at(0).toInt() +
+             position_list.at(2).toInt() - this->width()/2 - 60 -
+             MARGIN,position_list.at(1).toInt( )+ 5);
+    break;
+    case 2:
+        move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
+             MARGIN,5);
+    break;
+    case 3:
+        move(position_list.at(2).toInt() - this->width()/2 - 60 -
+             MARGIN - position_list.at(1).toInt() ,5);
+    break;
+    default:
+        move(position_list.at(0).toInt() +
+             position_list.at(2).toInt() - this->width()/2 - 60 -
+             MARGIN,5);
+    break;
     }
     return;
 }
