@@ -171,7 +171,7 @@ void popupItemWidget::initLabelSizeInfo()
     /* 存放文本信息Label */
     m_pBodyLabelWidget = new QWidget();
     m_pBodyLabelWidget->setContentsMargins(0, 0, 0, 0);
-
+//    m_pBodyLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,0,0,1);}");
     m_pBodyLabelWidgetLayout = new QVBoxLayout();
     m_pBodyLabelWidgetLayout->setContentsMargins(0, 0, 0, 0);
     m_pBodyLabelWidgetLayout->setSpacing(0);
@@ -269,36 +269,37 @@ void popupItemWidget::setWidgetFontSpace()
             m_pTextBodyLabel->setFont(bodyFont);
         });
         m_pSummaryLabelWidget->setFixedHeight(34);
-        m_pSummaryLabel->setFixedHeight(18);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabel->setFixedHeight(22);
+
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12, QSizePolicy::Expanding));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
         m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }  else if (m_iStyleFontSize == 13) {
         m_pSummaryLabelWidget->setFixedHeight(36);
-        m_pSummaryLabel->setFixedHeight(20);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
-        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
-
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding));
-        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
-    } else if (m_iStyleFontSize == 14) {
-        m_pSummaryLabelWidget->setFixedHeight(38);
-        m_pSummaryLabel->setFixedHeight(22);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabel->setFixedHeight(24);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
         m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
+    } else if (m_iStyleFontSize == 14) {
+        m_pSummaryLabelWidget->setFixedHeight(38);
+        m_pSummaryLabel->setFixedHeight(26);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
+        m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
+
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 6, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     } else if (m_iStyleFontSize == 15 || m_iStyleFontSize == 16) {
         m_pSummaryLabelWidget->setFixedHeight(40);
-        m_pSummaryLabel->setFixedHeight(24);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 16));
+        m_pSummaryLabel->setFixedHeight(28);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
         m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(1, 6, QSizePolicy::Expanding));
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 6, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 2, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }
     return;
