@@ -302,6 +302,8 @@ void popupItemWidget::setWidgetFontSpace()
         m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 2, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }
+    delete m_pFontStyleGsetting;
+    m_pFontStyleGsetting = nullptr;
     return;
 }
 
