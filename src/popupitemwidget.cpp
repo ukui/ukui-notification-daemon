@@ -409,6 +409,21 @@ QString popupItemWidget::judgeBlankLine(QStringList list)
     return list.at(0);
 }
 
+/* 设置button字体长度，超出button时，设置... */
+QString popupItemWidget::setButtonStringBody(QString text, QPushButton *button)
+{
+    QFontMetrics fontMetrics(button->font());
+    int LableWidth = 150;
+    int fontSize = fontMetrics.width(text);
+    QString formatBody = text;
+    if(fontSize > (LableWidth - 10)) {
+        //说明只存在一行，在最后面加...就行
+        formatBody = fontMetrics.elidedText(formatBody, Qt::ElideRight, LableWidth - 10);
+        return formatBody;
+    }
+    return formatBody;
+}
+
 /* 判断当前子串位置，后面是否还有子串 */
 bool popupItemWidget::substringSposition(QString formatBody, QStringList list)
 {
@@ -509,10 +524,11 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
         if (i % 2 == 0) {
             id = list[i];
         } else {
-            QPushButton *button = new QPushButton(list[i]);
+            QString buttonText = list[i];
+            QPushButton *button = new QPushButton();
             m_pListButton->append(button);
 
-            button->setFixedHeight(34);
+            button->setFixedHeight(36);
 
             connect(button, &QPushButton::clicked, this, [=](){
                 emit actionButtonClicked(id);
@@ -520,6 +536,8 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
 
             m_pOperationButtonWidgetLayout->addWidget(button, Qt::AlignRight);
             m_pOperationButtonWidgetLayout->setSpacing(10);
+            QString formatBody = setButtonStringBody(buttonText, button);
+            button->setText(formatBody);
         }
     }
 }

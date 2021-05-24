@@ -67,6 +67,7 @@ private:
     void convertToImage(QString iconPath);                  // 将路径中的数据转换成图片
     QString SetFormatBody(QString text, QLabel *label);     // 超过label长度，则显示...
     QString judgeBlankLine(QStringList list);               // 判断第一行是否有空行
+    QString setButtonStringBody(QString text, QPushButton *button);     // 设置button字体...
 
     bool judgeSummaryExsit();                               // 判断消息的标题是否存在
     bool judgeBodyExsit();                                  // 判断消息体是否存在

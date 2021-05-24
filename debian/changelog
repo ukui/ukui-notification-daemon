@@ -1,3 +1,12 @@
+ukui-notification-daemon (1.0.2-2.0006) v101.hw; urgency=medium
+
+  * 改动:
+    - bug号:无
+    - 需求号：无
+    - 其他改动说明: 修改代码，在对于做处理的时候，内存泄露问题修复
+
+ -- liushanwen <liushanwen@kylinos.cn>  Mon, 24 May 2021 09:41:36 +0800
+
 ukui-notification-daemon (1.0.1-1-0003) v101; urgency=medium
 
   * 改动：
