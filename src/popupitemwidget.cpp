@@ -328,14 +328,26 @@ void popupItemWidget::convertToImage(QString iconPath)
     const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     QPixmap pixmap;
 
+    if (iconPath.startsWith("data:image/")) {
+        QStringList strs = iconPath.split("base64,");
+        if (strs.length() == 2) {
+            QByteArray data = QByteArray::fromBase64(strs.at(1).toLatin1());
+            pixmap.loadFromData(data);
+        }
+    }
+
     pixmap = QIcon::fromTheme(iconPath).pixmap(QSize(45, 45));
     if (pixmap.isNull()) {
         QString iconUrl;
         const QUrl url(iconPath);
         iconUrl = url.isLocalFile() ? url.toLocalFile() : url.url();
 
-        const QIcon &icon = QIcon::fromTheme(iconPath, QIcon::fromTheme("dialog-information"));
-        pixmap = icon.pixmap(QSize(45, 45));
+        if (iconPath.contains("file://")) {
+            int length = iconPath.length();
+            iconPath = iconPath.mid(7, length);
+        }
+        const QIcon &icon = QIcon::fromTheme(iconPath, QIcon::fromTheme("application-x-desktop"));
+        pixmap = icon.pixmap(width() * pixelRatio, height() * pixelRatio);
     }
 
     if (!pixmap.isNull()) {
@@ -344,6 +356,7 @@ void popupItemWidget::convertToImage(QString iconPath)
                                Qt::SmoothTransformation);
 
         pixmap.setDevicePixelRatio(pixelRatio);
+
     }
 
     m_pIconLabel->setPixmap(pixmap);
