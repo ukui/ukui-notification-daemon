@@ -20,6 +20,8 @@ isEmpty(PREFIX){
     PREFIX = /usr
 }
 
+QMAKE_CFLAGS += -D_FORTIFY_SOURCE=2 -O2
+
 #DBUS_ADAPTORS += ./src/org.freedesktop.Notifications.xml
 #DBUS_INTERFACES += ./src/org.freedesktop.Notifications.xml
 
