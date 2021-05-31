@@ -132,18 +132,18 @@ void popupItemWidget::initCloseButtonWidget()
     m_pCloseButtonWidget->setContentsMargins(0, 0, 0, 0);
     m_pCloseWidgetLayout = new QVBoxLayout();
     m_pCloseWidgetLayout->setSpacing(0);
-    m_pCloseWidgetLayout->setContentsMargins(0, 0, 12, 0);
+    m_pCloseWidgetLayout->setContentsMargins(0, 0, 16, 0);
 
     QIcon closeButtonIcon = QIcon::fromTheme("window-close-symbolic");
     m_pCloseButton->setIcon(closeButtonIcon);
-    m_pCloseButton->setIconSize(QSize(12, 12));
-    m_pCloseButton->setFixedSize(16, 16);
+    m_pCloseButton->setIconSize(QSize(16, 16));
+    m_pCloseButton->setFixedSize(24, 24);
     connect(m_pCloseButton, &QPushButton::clicked, this, &popupItemWidget::closeButtonSlots);
     m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 12));
     m_pCloseWidgetLayout->addWidget(m_pCloseButton);
     m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 110, QSizePolicy::Expanding));
     m_pCloseButtonWidget->setLayout(m_pCloseWidgetLayout);
-    m_pCloseButtonWidget->setFixedWidth(26);
+    m_pCloseButtonWidget->setFixedWidth(32);
 }
 
 void popupItemWidget::initLabelSizeInfo()

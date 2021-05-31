@@ -193,26 +193,25 @@ void topTransparentWidget::setNotifyPopWidgetSite()
     iface.call("GetPrimaryScreenGeometry");
     QVariantList position_list = reply.value();
     qDebug() << reply.value().at(4).toInt();
-
     switch (reply.value().at(4).toInt()) {
-    case 1:
-        move(position_list.at(0).toInt() +
-             position_list.at(2).toInt() - this->width()/2 - 60 -
-             MARGIN,position_list.at(1).toInt( )+ 5);
-    break;
-    case 2:
-        move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
-             MARGIN,5);
-    break;
-    case 3:
-        move(position_list.at(2).toInt() - this->width()/2 - 60 -
-             MARGIN - position_list.at(1).toInt() ,5);
-    break;
-    default:
-        move(position_list.at(0).toInt() +
-             position_list.at(2).toInt() - this->width()/2 - 60 -
-             MARGIN,5);
-    break;
+        case 1:
+            move(position_list.at(0).toInt() +
+                 position_list.at(2).toInt() - this->width()/2 - 60 -
+                 MARGIN,position_list.at(1).toInt( )+ 5);
+        break;
+        case 2:
+            move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
+                 MARGIN,position_list.at(1).toInt( )+ 5);
+        break;
+        case 3:
+            move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
+                 MARGIN, position_list.at(1).toInt( )+ 5);
+        break;
+        default:
+            move(position_list.at(0).toInt() +
+                 position_list.at(2).toInt() - this->width()/2 - 60 -
+                 MARGIN, position_list.at(1).toInt( )+ 5);
+        break;
     }
     return;
 }
