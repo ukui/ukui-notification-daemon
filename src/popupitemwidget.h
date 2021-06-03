@@ -40,6 +40,9 @@
 #include "notifyreceiveinfo.h"
 //#include "toptransparentwidget.h"
 
+#define UKUI_TRANSPARENCY_SETTING_PATH "org.ukui.control-center.personalise"
+#define UKUI_TRANSPARENCY_SETTING_KEY  "transparency"
+
 class popupItemWidget : public QWidget
 {
     Q_OBJECT
@@ -59,6 +62,7 @@ private:
     void initOperationButton();                             // 初始化操作区按钮
     void initCloseButtonWidget();                           // 初始化关闭按钮界面
     void initTimer();                                       // 初始化显示时长定时器
+    void initTransparencySetting();                         // 初始化控制面板gsetting值
     void setWidgetAttribute();                              // 设置窗口属性
     void initWidgetAnimations();                            // 初始化显示和消失动画
     void setWidgetFontSpace();
@@ -130,7 +134,9 @@ private:
     QString               m_pDefaultAction;
     QList<QPushButton *> *m_pListButton = nullptr;
     QGSettings           *m_pFontStyleGsetting;
+    QGSettings           *m_pTransparencyGsetting;
     int                   m_iStyleFontSize;
+    float                 m_fTransparencyValue;
 
 private slots:
     void ShowTimeoutSlots();

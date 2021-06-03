@@ -1,3 +1,21 @@
+ukui-notification-daemon (1.0.2-2.0005) v101; urgency=medium
+
+  * 改动:
+    - bug号: 57187
+    - 需求号：无
+    - 其他改动说明: 修改通知弹窗关闭图标大小，在缩放200%情况下，图标显示异常 
+
+ -- liushanwen <liushanwen@kylinos.cn>  Mon, 31 May 2021 10:36:44 +0800
+
+ukui-notification-daemon (1.0.2-2.0008hw1) v101.hw; urgency=medium
+
+  * 改动:
+    - bug号: 57353
+    - 需求号：无
+    - 其他改动说明: 通知弹窗在计算位置，未将y偏移坐标算入，导致显示位置异常
+
+ -- liushanwen <liushanwen@kylinos.cn>  Mon, 31 May 2021 10:36:44 +0800
+
 ukui-notification-daemon (1.0.2-2.0006) v101.hw; urgency=medium
 
   * 改动:

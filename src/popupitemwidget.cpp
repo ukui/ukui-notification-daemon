@@ -54,6 +54,9 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
     /* 初始化动画 */
     initWidgetAnimations();
 
+    /* 初始化控制面板透明度gsetting值 */
+    initTransparencySetting();
+
     /* 初始化信号连接 */
     connect(this, &popupItemWidget::actionButtonClicked, this, &popupItemWidget::onActionButtonClicked);
 }
@@ -129,28 +132,28 @@ void popupItemWidget::initInfoWidgetLayout()
 void popupItemWidget::initCloseButtonWidget()
 {
     m_pCloseButtonWidget = new QWidget();
+    m_pCloseButtonWidget->setFixedWidth(34);
     m_pCloseButtonWidget->setContentsMargins(0, 0, 0, 0);
     m_pCloseWidgetLayout = new QVBoxLayout();
     m_pCloseWidgetLayout->setSpacing(0);
-    m_pCloseWidgetLayout->setContentsMargins(0, 0, 16, 0);
+    m_pCloseWidgetLayout->setContentsMargins(0, 4, 4, 0);
 
     QIcon closeButtonIcon = QIcon::fromTheme("window-close-symbolic");
+    m_pCloseButton->setFlat(true);
     m_pCloseButton->setIcon(closeButtonIcon);
     m_pCloseButton->setIconSize(QSize(16, 16));
-    m_pCloseButton->setFixedSize(24, 24);
+    m_pCloseButton->setFixedSize(30, 30);
     connect(m_pCloseButton, &QPushButton::clicked, this, &popupItemWidget::closeButtonSlots);
-    m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 12));
+//    m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 12));
     m_pCloseWidgetLayout->addWidget(m_pCloseButton);
     m_pCloseWidgetLayout->addItem(new QSpacerItem(10, 110, QSizePolicy::Expanding));
     m_pCloseButtonWidget->setLayout(m_pCloseWidgetLayout);
-    m_pCloseButtonWidget->setFixedWidth(32);
 }
 
 void popupItemWidget::initLabelSizeInfo()
 {
     /* 存放标题Label */
     m_pSummaryLabelWidget = new QWidget();
-
     m_pSummaryLabelWidget->setContentsMargins(0, 0, 0, 0);
 //    m_pSummaryLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,0,0,1);}");
     m_pSummaryLabelWidgetLayout = new QVBoxLayout();
@@ -170,6 +173,7 @@ void popupItemWidget::initLabelSizeInfo()
 
     /* 存放文本信息Label */
     m_pBodyLabelWidget = new QWidget();
+    m_pBodyLabelWidget->adjustSize();
     m_pBodyLabelWidget->setContentsMargins(0, 0, 0, 0);
 //    m_pBodyLabelWidget->setStyleSheet("QWidget{border: 1px solid rgba(255,0,0,1);}");
     m_pBodyLabelWidgetLayout = new QVBoxLayout();
@@ -180,15 +184,17 @@ void popupItemWidget::initLabelSizeInfo()
 
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
     palette = m_pTextBodyLabel->palette();
-    color = palette.text().color();
-    color.setAlphaF(0.35);
-    palette.setBrush(QPalette::WindowText, color);
+    QColor font_di_bg(0, 0, 0, 76);
+//    color = palette.text().color();
+//    color.setAlphaF(0.35);
+    palette.setBrush(QPalette::WindowText, font_di_bg);
     m_pTextBodyLabel->setPalette(palette);
 
     // 根据字体大小来设置间距改变布局
     setWidgetFontSpace();
 
     m_pSummaryLabelWidget->setLayout(m_pSummaryLabelWidgetLayout);
+
     m_pBodyLabelWidget->setLayout(m_pBodyLabelWidgetLayout);
 }
 
@@ -215,6 +221,23 @@ void popupItemWidget::initTimer()
     m_quitTimer->setInterval(60 * 1000);
     m_quitTimer->setSingleShot(true);
     connect(m_quitTimer, &QTimer::timeout, this, &popupItemWidget::qiutAppTimerSlots);
+}
+
+void popupItemWidget::initTransparencySetting()
+{
+    QByteArray id(UKUI_TRANSPARENCY_SETTING_PATH);
+    if (QGSettings::isSchemaInstalled(id)) {
+        m_pTransparencyGsetting = new QGSettings(id);
+        if (m_pTransparencyGsetting->keys().contains(UKUI_TRANSPARENCY_SETTING_KEY)) {
+            m_fTransparencyValue = m_pTransparencyGsetting->get(UKUI_TRANSPARENCY_SETTING_KEY).toDouble();
+        }
+        connect(m_pTransparencyGsetting, &QGSettings::changed, this, [=](QString key) {
+           if (key == UKUI_TRANSPARENCY_SETTING_KEY) {
+               m_fTransparencyValue = m_pTransparencyGsetting->get(UKUI_TRANSPARENCY_SETTING_KEY).toDouble();
+           }
+        });
+    }
+    return;
 }
 
 /* 设置窗口属性， 无边框， 任务栏无图标 */
@@ -255,19 +278,13 @@ void popupItemWidget::setWidgetFontSpace()
         m_pFontStyleGsetting = new QGSettings(id);
         m_iStyleFontSize = m_pFontStyleGsetting->get("system-font-size").toInt();
     }
-
+    QTimer::singleShot(1, m_pSummaryLabel, [=]() {
+        QFont summaryFont = m_pSummaryLabel->font();
+        summaryFont.setPointSizeF(m_iStyleFontSize * (16.0/14.0));
+        summaryFont.setFamily("Noto Sans CJK SC");
+        m_pSummaryLabel->setFont(summaryFont);
+    });
     if (m_iStyleFontSize == 11 || m_iStyleFontSize == 12) {
-        QTimer::singleShot(1, m_pSummaryLabel, [=]() {
-            QFont summaryFont = m_pSummaryLabel->font();
-            summaryFont.setPixelSize(16);
-            summaryFont.setFamily("Noto Sans CJK SC");
-            m_pSummaryLabel->setFont(summaryFont);
-        });
-        QTimer::singleShot(1, m_pTextBodyLabel, [=]() {
-            QFont bodyFont = m_pTextBodyLabel->font();
-            bodyFont.setPixelSize(14);
-            m_pTextBodyLabel->setFont(bodyFont);
-        });
         m_pSummaryLabelWidget->setFixedHeight(34);
         m_pSummaryLabel->setFixedHeight(22);
 
@@ -282,7 +299,7 @@ void popupItemWidget::setWidgetFontSpace()
         m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     } else if (m_iStyleFontSize == 14) {
         m_pSummaryLabelWidget->setFixedHeight(38);
@@ -290,7 +307,7 @@ void popupItemWidget::setWidgetFontSpace()
         m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 6, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     } else if (m_iStyleFontSize == 15 || m_iStyleFontSize == 16) {
         m_pSummaryLabelWidget->setFixedHeight(40);
@@ -299,7 +316,7 @@ void popupItemWidget::setWidgetFontSpace()
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
         m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(1, 6, QSizePolicy::Expanding));
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 2, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }
     delete m_pFontStyleGsetting;
@@ -589,8 +606,7 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
      * 黑字体 --> 白字体
     */
     p.setBrush(opt.palette.color(QPalette::Base));
-//    p.setBrush(QBrush(QColor("#131314")));
-    p.setOpacity(0.7);
+    p.setOpacity(m_fTransparencyValue);
     p.setPen(Qt::NoPen);
     QPainterPath path;
     opt.rect.adjust(0,0,0,0);
