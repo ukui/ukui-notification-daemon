@@ -38,6 +38,7 @@ topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
     this->setFixedWidth(372);
     this->setLayout(m_pMainLayout);
     setWidgetFlag();
+    return;
 }
 
 void topTransparentWidget::setWidgetFlag()
@@ -158,6 +159,7 @@ void topTransparentWidget::consumeEntities()
     AddPopupItemWidget(m_currentNotify);
     if (!this->isVisible())
         this->show();
+    return;
 }
 
 // 初始化任务栏gsetting
@@ -181,36 +183,41 @@ void topTransparentWidget::initPanelSite()
             m_ipanelHeight = m_pPanelSetting->get("panelsize").toInt();
         }
     }
+    return;
 }
 
-/* 设置任务栏的位置 */
+/* 设置通知弹窗的位置 */
 void topTransparentWidget::setNotifyPopWidgetSite()
 {
     QDBusInterface iface("org.ukui.panel",
-             "/panel/position",
-             "org.ukui.panel", QDBusConnection::sessionBus());
-    QDBusReply < QVariantList > reply =
-    iface.call("GetPrimaryScreenGeometry");
+                         "/panel/position",
+                         "org.ukui.panel",
+                         QDBusConnection::sessionBus());
+    if (!iface.isValid()) {
+        qDebug() << "任务栏dbus接口有问题";
+        return;
+    }
+    QDBusReply < QVariantList > reply = iface.call("GetPrimaryScreenGeometry");
     QVariantList position_list = reply.value();
-    qDebug() << reply.value().at(4).toInt();
+
     switch (reply.value().at(4).toInt()) {
         case 1:
             move(position_list.at(0).toInt() +
                  position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN,position_list.at(1).toInt( )+ 5);
+                 MARGIN, position_list.at(1).toInt()+ 5);
         break;
         case 2:
             move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN,position_list.at(1).toInt( )+ 5);
+                 MARGIN, position_list.at(1).toInt()+ 5);
         break;
         case 3:
             move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN, position_list.at(1).toInt( )+ 5);
+                 MARGIN, position_list.at(1).toInt()+ 5);
         break;
         default:
             move(position_list.at(0).toInt() +
-                 position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN, position_list.at(1).toInt( )+ 5);
+                 position_list.at(2).toInt() - this->width()/2 - 60 - MARGIN,
+                 position_list.at(1).toInt()+ 5);
         break;
     }
     return;
@@ -228,6 +235,7 @@ void topTransparentWidget::deleteHashInsert(popupItemWidget* key, QListWidgetIte
         return;
     }
     deleteHash.insert(key, value);
+    return;
 }
 
 // hash表移除键值对

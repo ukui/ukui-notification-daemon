@@ -60,7 +60,7 @@ private:
     void initScreenSize();
     bool initHuaWeiDbus();
     void initOsDbusScreen();
-    int getScreenGeometry(QString methodName);
+    int  getScreenGeometry(QString methodName);
 
 private slots:
     void primaryScreenChangedSlot();

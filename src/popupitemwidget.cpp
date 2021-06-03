@@ -33,7 +33,7 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
     /* 初始化label信息 */
     initLabelSizeInfo();
 
-    /* 初始化操作去按钮 */
+    /* 初始化操作按钮 */
     initOperationButton();
 
     /* 初始化图标 */
