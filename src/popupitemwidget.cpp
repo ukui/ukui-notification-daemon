@@ -139,6 +139,8 @@ void popupItemWidget::initCloseButtonWidget()
     m_pCloseWidgetLayout->setContentsMargins(0, 4, 4, 0);
 
     QIcon closeButtonIcon = QIcon::fromTheme("window-close-symbolic");
+    m_pCloseButton->setProperty("isWindowButton", 0x2);
+    m_pCloseButton->setProperty("useIconHighlightEffect", 0x8);
     m_pCloseButton->setFlat(true);
     m_pCloseButton->setIcon(closeButtonIcon);
     m_pCloseButton->setIconSize(QSize(16, 16));
