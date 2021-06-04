@@ -40,8 +40,6 @@ class adaptScreenInfo : public QObject
     Q_OBJECT
 public:
     explicit adaptScreenInfo(QObject *parent = nullptr);
-    void screenNumChange();
-    void modifyMemberVariable();
     void InitializeHomeScreenGeometry();
     void initHwDbusScreen();
 

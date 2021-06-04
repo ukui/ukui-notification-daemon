@@ -193,31 +193,39 @@ void topTransparentWidget::setNotifyPopWidgetSite()
                          "/panel/position",
                          "org.ukui.panel",
                          QDBusConnection::sessionBus());
-    if (!iface.isValid()) {
+    if (iface.isValid()) {
+        QDBusReply < QVariantList > reply = iface.call("GetPrimaryScreenGeometry");
+        QVariantList position_list = reply.value();
+        m_iScreenXGeometry = position_list.at(0).toInt();
+        m_iScreenYGeometry = position_list.at(1).toInt();
+        m_iScreenWidth     = position_list.at(2).toInt();
+        m_iScreenHeight    = position_list.at(3).toInt();
+        m_ipanelPosition   = position_list.at(4).toInt();
+    } else {
         qDebug() << "任务栏dbus接口有问题";
-        return;
+        m_iScreenXGeometry = m_pSreenInfo->m_nScreen_x;
+        m_iScreenYGeometry = m_pSreenInfo->m_nScreen_y;
+        m_iScreenWidth     = m_pSreenInfo->m_screenWidth;
+        m_iScreenHeight    = m_pSreenInfo->m_screenHeight;
+        m_ipanelPosition   = 0;
     }
-    QDBusReply < QVariantList > reply = iface.call("GetPrimaryScreenGeometry");
-    QVariantList position_list = reply.value();
 
-    switch (reply.value().at(4).toInt()) {
+    switch (m_ipanelPosition) {
         case 1:
-            move(position_list.at(0).toInt() +
-                 position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN, position_list.at(1).toInt()+ 5);
+            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
+                 m_iScreenYGeometry+ 5);
         break;
         case 2:
-            move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN, position_list.at(1).toInt()+ 5);
+            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
+                 m_iScreenYGeometry + 5);
         break;
         case 3:
-            move(position_list.at(0).toInt() + position_list.at(2).toInt() - this->width()/2 - 60 -
-                 MARGIN, position_list.at(1).toInt()+ 5);
+            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
+                 m_iScreenYGeometry+ 5);
         break;
         default:
-            move(position_list.at(0).toInt() +
-                 position_list.at(2).toInt() - this->width()/2 - 60 - MARGIN,
-                 position_list.at(1).toInt()+ 5);
+            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
+                 m_iScreenYGeometry + 5);
         break;
     }
     return;

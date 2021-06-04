@@ -31,31 +31,15 @@ adaptScreenInfo::adaptScreenInfo(QObject *parent) : QObject(parent)
     m_pListScreen = QGuiApplication::screens();
 }
 
-/* 当屏幕数量发生改变时，重新赋值m_pListScreen */
-void adaptScreenInfo::screenNumChange()
-{
-    m_pListScreen = QGuiApplication::screens();
-}
-
-void adaptScreenInfo::modifyMemberVariable()
-{
-    foreach (QScreen *screen, QGuiApplication::screens()) {
-
-    }
-}
-
 /* 初始化屏幕高度， 宽度 */
 void adaptScreenInfo::initScreenSize()
 {
-    QList<QScreen*> screen = QGuiApplication::screens();
-    int count = m_pDeskWgt->screenCount();
-    if (count > 1) {
-        m_screenWidth  = screen[0]->geometry().width() + m_nScreen_x;
-        m_screenHeight = screen[0]->geometry().height() + m_nScreen_y;
-    } else {
-        m_screenWidth = m_pDeskWgt->width() + m_nScreen_x;
-        m_screenHeight = m_pDeskWgt->height() + m_nScreen_y;
-    }
+    QScreen* pScreen = QGuiApplication::primaryScreen();
+    QRect DeskSize = pScreen->availableGeometry();
+    m_screenWidth = DeskSize.width();                      //桌面分辨率的宽
+    m_screenHeight = DeskSize.height();                    //桌面分辨率的高
+    qDebug() << "主屏Width  --> " << m_screenWidth;
+    qDebug() << "主屏Height --> " << m_screenHeight;
     return;
 }
 
@@ -69,8 +53,8 @@ void adaptScreenInfo::InitializeHomeScreenGeometry()
             initScreenSize();
         }
     } else if (ArchDiff == ENV_X11) {
-        initOsDbusScreen(); // 初始化坐标
-        initScreenSize();   // 初始化屏幕宽度
+        initOsDbusScreen();         // 初始化坐标
+        initScreenSize();           // 初始化屏幕宽度
     }
     return;
 }

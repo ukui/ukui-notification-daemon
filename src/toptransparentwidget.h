@@ -76,6 +76,10 @@ public:
     QList<notifyReceiveInfo*>                   m_pWaitingQueue;
     int                                         m_ipanelPosition = 0;
     int                                         m_ipanelHeight = 46;
+    int                                         m_iScreenXGeometry = 0;
+    int                                         m_iScreenYGeometry = 0;
+    int                                         m_iScreenWidth = 0;
+    int                                         m_iScreenHeight = 0;
 
 protected:
     void paintEvent(QPaintEvent *event);
