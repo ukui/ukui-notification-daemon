@@ -1,3 +1,30 @@
+ukui-notification-daemon (1.0.2-2.0006) v101; urgency=medium
+
+  *改动:
+    - bug号: 无
+    - 需求号：6456
+    - 其他改动说明: 通知弹窗按照设计稿要求，修改标题字体大小、body字段字体颜色、关闭按钮样式；通知弹窗的位置在任务栏异常的情况下，增加使用qt接口获取主屏坐标，屏幕宽度,增加任	务栏dbus是否可用判断
+
+ -- liushanwen <liushanwen@kylinos.cn>  Fri, 04 Jun 2021 14:18:15 +0800
+
+ukui-notification-daemon (1.0.2-2.0009hw1) v101.hw; urgency=medium
+
+  * 改动:
+    - bug号: 44719,44461
+    - 需求号：6456
+    - 其他改动说明: 通知弹窗按照设计稿要求，修改标题字体大小、body字段字体颜色、关闭按钮样式；通知弹窗的位置在任务栏异常的情况下，增加使用qt接口获取主屏坐标，屏幕宽度,增加任   务栏dbus是否可用判断
+
+ -- liushanwen <liushanwen@kylinos.cn>  fri, 04 jun 2021 15:23:37 +0800
+
+ukui-notification-daemon (1.0.2-2.0005) v101; urgency=medium
+
+  *改动:
+    - bug号: 无
+    - 需求号：6456
+    - 其他改动说明: 通知弹窗按照设计稿要求，修改标题字体大小、body字段字体颜色、关闭按钮样式；通知弹窗的位置在任务栏异常的情况下，增加使用qt接口获取主屏坐标，屏幕宽度,增加任	务栏dbus是否可用判断
+
+ -- liushanwen <liushanwen@kylinos.cn>  Fri, 04 Jun 2021 14:18:15 +0800
+
 ukui-notification-daemon (1.0.2-2.0005) v101; urgency=medium
 
   * 改动:
