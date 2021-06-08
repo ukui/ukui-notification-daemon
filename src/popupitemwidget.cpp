@@ -186,12 +186,8 @@ void popupItemWidget::initLabelSizeInfo()
 
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
     palette = m_pTextBodyLabel->palette();
-    QColor font_di_bg(0, 0, 0, 76);
-//    color = palette.text().color();
-//    color.setAlphaF(0.35);
-    palette.setBrush(QPalette::WindowText, font_di_bg);
+    palette.setBrush(QPalette::WindowText, palette.color(QPalette::PlaceholderText));
     m_pTextBodyLabel->setPalette(palette);
-
     // 根据字体大小来设置间距改变布局
     setWidgetFontSpace();
 
