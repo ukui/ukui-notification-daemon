@@ -1,3 +1,12 @@
+ukui-notification-daemon (1.0.2-2.0007) v101; urgency=medium
+
+  * 改动:
+    - bug号: 60323
+    - 需求号：无
+    - 其他改动说明: 通知弹窗body字段未自适应主题，当切换到深色主题时，字体看不清楚；
+
+ -- liushanwen <liushanwen@kylinos.cn>  Tue, 08 Jun 2021 19:27:07 +0800
+
 ukui-notification-daemon (1.0.2-2.0006) v101; urgency=medium
 
   *改动:
