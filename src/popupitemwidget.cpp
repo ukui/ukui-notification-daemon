@@ -284,37 +284,35 @@ void popupItemWidget::setWidgetFontSpace()
     });
     if (m_iStyleFontSize == 11 || m_iStyleFontSize == 12) {
         m_pSummaryLabelWidget->setFixedHeight(34);
-        m_pSummaryLabel->setFixedHeight(22);
+        m_pSummaryLabel->setFixedHeight(26);
 
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12, QSizePolicy::Expanding));
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 12, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }  else if (m_iStyleFontSize == 13) {
         m_pSummaryLabelWidget->setFixedHeight(36);
-        m_pSummaryLabel->setFixedHeight(24);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
+        m_pSummaryLabel->setFixedHeight(28);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 8));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     } else if (m_iStyleFontSize == 14) {
         m_pSummaryLabelWidget->setFixedHeight(38);
-        m_pSummaryLabel->setFixedHeight(26);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
+        m_pSummaryLabel->setFixedHeight(30);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 8));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
 
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 6, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     } else if (m_iStyleFontSize == 15 || m_iStyleFontSize == 16) {
         m_pSummaryLabelWidget->setFixedHeight(40);
-        m_pSummaryLabel->setFixedHeight(28);
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 12));
+        m_pSummaryLabel->setFixedHeight(34);
+        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(10, 6));
         m_pSummaryLabelWidgetLayout->addWidget(m_pSummaryLabel);
-
-        m_pSummaryLabelWidgetLayout->addItem(new QSpacerItem(1, 6, QSizePolicy::Expanding));
-        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 8, QSizePolicy::Expanding));
+        m_pBodyLabelWidgetLayout->addItem(new QSpacerItem(10, 1, QSizePolicy::Expanding));
         m_pBodyLabelWidgetLayout->addWidget(m_pTextBodyLabel);
     }
     delete m_pFontStyleGsetting;
