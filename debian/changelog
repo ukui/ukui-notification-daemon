@@ -1,4 +1,13 @@
-ukui-notification-daemon (1.0.2-2.0007) v101; urgency=medium
+ukui-notification-daemon (1.0.2-2.0009) v101; urgency=medium
+
+  * 改动:
+    - bug号: 60515、61724、61606、61430、57187
+    - 需求号：无
+    - 其他改动说明: 进入使用模式或者首次安装系统时，计算通知弹窗透明窗口大小不准确，导致显示位置异常；
+
+ -- liushanwen <liushanwen@kylinos.cn>  Thu, 17 Jun 2021 20:38:54 +0800
+
+ukui-notification-daemon (1.0.2-2.1009) v101; urgency=medium
 
   * 改动:
     - bug号: 60323

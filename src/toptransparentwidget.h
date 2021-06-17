@@ -32,7 +32,7 @@
 #include "adaptscreeninfo.h"
 #include <QDBusReply>
 #include <QDebug>
-#define MARGIN 4
+#define MARGIN 5
 
 
 #define UKUI_PANEL_SETTING "org.ukui.panel.settings"

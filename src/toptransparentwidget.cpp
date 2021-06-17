@@ -56,6 +56,8 @@ void topTransparentWidget::setWidgetSize(int width, int heigh)
 
 void topTransparentWidget::setWidgetPos(int x, int y)
 {
+    qDebug() << "当前x位置：" << x;
+    qDebug() << "当前y位置：" << y;
     this->move(x, y);
     return;
 }
@@ -208,25 +210,28 @@ void topTransparentWidget::setNotifyPopWidgetSite()
         m_iScreenWidth     = m_pSreenInfo->m_screenWidth;
         m_iScreenHeight    = m_pSreenInfo->m_screenHeight;
         m_ipanelPosition   = 0;
+        qDebug() << "使用qt接口获取位置------->" << m_iScreenXGeometry << m_iScreenYGeometry << m_iScreenWidth << m_iScreenHeight;
     }
-
+        qDebug() << "通知弹窗x坐标位置:" << m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN <<
+                m_iScreenYGeometry + 5 << this->width()/2;
     switch (m_ipanelPosition) {
         case 1:
-            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
-                 m_iScreenYGeometry+ 5);
-        break;
+            move(m_iScreenXGeometry + m_iScreenWidth - 372 - MARGIN,
+                 m_iScreenYGeometry + MARGIN);
+            break;
         case 2:
-            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
-                 m_iScreenYGeometry + 5);
-        break;
+            move(m_iScreenXGeometry + m_iScreenWidth - 372 - MARGIN,
+                 m_iScreenYGeometry + MARGIN);
+            break;
         case 3:
-            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
-                 m_iScreenYGeometry+ 5);
-        break;
+            move(m_iScreenXGeometry + m_iScreenWidth - 372 - MARGIN,
+                 m_iScreenYGeometry + MARGIN);
+            break;
         default:
-            move(m_iScreenXGeometry + m_iScreenWidth - this->width()/2 - 60 - MARGIN,
-                 m_iScreenYGeometry + 5);
-        break;
+            move(m_iScreenXGeometry + m_iScreenWidth - 372 - MARGIN,
+                 m_iScreenYGeometry + MARGIN);
+            qDebug() << "---------->" << m_iScreenXGeometry + m_iScreenWidth - 372 - MARGIN;
+            break;
     }
     return;
 }
