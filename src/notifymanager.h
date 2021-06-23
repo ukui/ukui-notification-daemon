@@ -43,6 +43,13 @@
 #define UKUI_NOTIFICATION_DEMO_GSETTING_ID          "org.ukui.notification.demo"
 #define KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY      "popupwindowmode"
 
+#define CONTROL_CENTER_GSETTING_NOTIFY_MAIN_SWITCH  "org.ukui.control-center.notice"
+#define CONTROL_GSETTING_NOTIFY_MAIN_KEY     "enableNotice"
+
+#define CONTROL_CENTER_GSETTING_PATH                "org.ukui.control-center.noticeorigin"
+#define CONTROL_CERTER_DYNAMIC_GSETTING_PATH        "/org/ukui/control-center/noticeorigin/"
+#define CONTROL_CENTER_GSETTING_NOTIFYCATION        "messages"
+
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
 
@@ -79,13 +86,17 @@ public:
     topTransparentWidget         *m_pTopWidget = nullptr;
     QGSettings                   *m_pCloseNotifyGsetting = nullptr;
     QGSettings                   *m_pPopupWidgetModeGsetting = nullptr;
+    QGSettings                   *m_pcontrolNotifyMainGsetting = nullptr;
+    QGSettings                   *m_pControlCenterGseting = nullptr;
     bool                         m_bPopupWidgetModeStatus;
     bool                         m_bNodisturbMode = false;
+    bool                         m_bNotifyMainSwitch = true;
 
 private:
     void registerAsService();
     void nextShowAction();
     void initGsettingValue();
+    bool getControlCentorAppNotify(QString appName);
 
 private:
     QString m_model;

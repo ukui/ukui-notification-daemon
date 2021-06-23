@@ -77,9 +77,24 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
              << "appIcon:" + appIcon << "summary:" + summary << "body:" + body
              << "actions:" << actions << "hints:" << hints << "expireTimeout:" << expireTimeout;
 #endif
+    qDebug() << "appname: " << appName;
 
+    // 免打扰模式判断
     if (m_bNodisturbMode) {
         qDebug() << "免打扰模式，直接f返回";
+        return 0;
+    }
+
+    // 控制面板通知总开关
+    if (!m_bNotifyMainSwitch) {
+        qDebug() << "控制面板通知总开关关闭，不弹窗" << m_bNotifyMainSwitch;
+        return 0;
+    }
+
+    // 对应应用通知是否弹窗
+    bool enable = getControlCentorAppNotify(appName);
+    if (!enable) {
+        qDebug() << "存在白名单中，不进行弹窗";
         return 0;
     }
     notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString(), appIcon,
@@ -152,7 +167,40 @@ void notifyManager::initGsettingValue()
     if (m_pPopupWidgetModeGsetting != nullptr && m_pPopupWidgetModeGsetting->keys().contains(KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY))
         m_bPopupWidgetModeStatus = m_pPopupWidgetModeGsetting->get(KYLIN_NOTIFICATION_DEMO_CLOSE_MODE_KEY).toBool();
 
+    // 控制面板对于通知弹窗总开关
+    const QByteArray id_3(CONTROL_CENTER_GSETTING_NOTIFY_MAIN_SWITCH);
+    if (QGSettings::isSchemaInstalled(id_3)) {
+        m_pcontrolNotifyMainGsetting = new QGSettings(id_3);
+        if (m_pcontrolNotifyMainGsetting != nullptr &&
+                m_pcontrolNotifyMainGsetting->keys().contains(CONTROL_GSETTING_NOTIFY_MAIN_KEY)) {
+            m_bNotifyMainSwitch = m_pcontrolNotifyMainGsetting->get(CONTROL_GSETTING_NOTIFY_MAIN_KEY).toBool();
+            connect(m_pcontrolNotifyMainGsetting, &QGSettings::changed,
+                    this, [=](QString key) {
+                    if (key == CONTROL_GSETTING_NOTIFY_MAIN_KEY) {
+                         m_bNotifyMainSwitch = m_pcontrolNotifyMainGsetting->get(CONTROL_GSETTING_NOTIFY_MAIN_KEY).toBool();
+                    }
+            });
+        }
+    }
     return;
+}
+
+bool notifyManager::getControlCentorAppNotify(QString appName)
+{
+    // 初始化控制面板对于通知开关读取
+    const QByteArray id_3(CONTROL_CENTER_GSETTING_PATH);
+    if (QGSettings::isSchemaInstalled(id_3)) {
+        QString dynamicPath = QString("%1%2/")
+                                .arg(CONTROL_CERTER_DYNAMIC_GSETTING_PATH)
+                                .arg(QString(appName));
+        const QByteArray id_4(dynamicPath.toLatin1().data());
+        m_pControlCenterGseting = new QGSettings(id_3, id_4, this);
+        bool status = m_pControlCenterGseting->get(CONTROL_CENTER_GSETTING_NOTIFYCATION).toBool();
+        qDebug() << "应用状态是否弹窗---->" << status;
+        return status;
+    } else {
+        return false;
+    }
 }
 
 void notifyManager::popupItemWidgetDismissed(int Id)
