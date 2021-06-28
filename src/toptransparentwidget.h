@@ -84,7 +84,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
-signals:
+Q_SIGNALS:
     void dismissed(int);
     void closePopupWidget(int Id);
     void actionInvoked(uint, QString);

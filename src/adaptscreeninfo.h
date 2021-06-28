@@ -52,7 +52,7 @@ public:
     int                          m_nScreen_y;                                   // 主屏起始坐标Y
     QDBusInterface              *m_pDbusXrandInter;                             // HW的dbus接口
 
-signals:
+Q_SIGNALS:
 
 private:
     void initScreenSize();

@@ -77,7 +77,6 @@ private:
     QString m_ctime;
     QString m_replacesId;
     QString m_timeout;
-signals:
 
 };
 

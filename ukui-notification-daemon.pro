@@ -9,7 +9,9 @@ CONFIG  += c++11 link_pkgconfig
 DEFINES += QT_DEPRECATED_WARNINGS
 LIBS += -lX11 -lgio-2.0 -lgobject-2.0 -lglib-2.0
 
-PKGCONFIG  += gsettings-qt
+PKGCONFIG  += gsettings-qt \
+            dconf \
+            libcanberra
 
 SOURCES += \
         src/main.cpp

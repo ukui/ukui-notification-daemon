@@ -104,7 +104,8 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
                                                               QString::number(expireTimeout),
                                                               this);
     m_psqlInfoData->addOne(notifyInfo);
-
+    // 加入弹窗声音
+    appNotifySound();
     // 单弹窗模式 多弹窗模式
     qDebug() << "弹窗模式" << m_bPopupWidgetModeStatus;
     if (m_bPopupWidgetModeStatus) {
@@ -183,6 +184,61 @@ void notifyManager::initGsettingValue()
         }
     }
     return;
+}
+
+QList<char *> notifyManager::listExistsPath()
+{
+    char ** childs;
+    int len;
+
+    DConfClient * client = dconf_client_new();
+    childs = dconf_client_list (client, KEYBINDINGS_CUSTOM_DIR, &len);
+    g_object_unref (client);
+
+    QList<char *> vals;
+
+    for (int i = 0; childs[i] != NULL; i++) {
+        if (dconf_is_rel_dir (childs[i], NULL)) {
+            char * val = g_strdup (childs[i]);
+            vals.append(val);
+        }
+    }
+    g_strfreev (childs);
+    return vals;
+}
+
+void notifyManager::appNotifySound()
+{
+    ca_context_create(&m_pCaContext);
+
+    gint retval;
+    const gchar *desc = "alert sound";
+    QString filenameStr;
+    QList<char *> existsPath = this->listExistsPath();
+    for (char * path : existsPath) {
+        char * prepath = QString(KEYBINDINGS_CUSTOM_DIR).toLatin1().data();
+        char * allpath = strcat(prepath, path);
+        const QByteArray ba(KEYBINDINGS_CUSTOM_SCHEMA);
+        const QByteArray bba(allpath);
+        if (QGSettings::isSchemaInstalled(ba)) {
+            QGSettings * settings = new QGSettings(ba, bba);
+            filenameStr = settings->get(FILENAME_KEY).toString();
+            QString nameStr = settings->get(NAME_KEY).toString();
+            qDebug() << filenameStr  << nameStr;
+            if (nameStr == "alert-sound") {
+                break;
+            }
+        }
+    }
+    const QByteArray text = filenameStr.toLocal8Bit();
+    const gchar *id = text.data();
+    const gchar *eventId =id;
+    if (desc) {
+        retval = ca_context_play (m_pCaContext, 0,
+                                  CA_PROP_EVENT_ID, eventId,
+                                  CA_PROP_EVENT_DESCRIPTION, desc, NULL);
+        qDebug() << desc << id << retval;
+    }
 }
 
 bool notifyManager::getControlCentorAppNotify(QString appName)

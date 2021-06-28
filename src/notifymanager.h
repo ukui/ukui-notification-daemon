@@ -18,6 +18,16 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#ifdef signals
+#undef signals
+#endif
+
+extern "C" {
+#include <dconf/dconf.h>
+#include <canberra.h>
+#include <gio/gio.h>
+}
+
 #include <QWidget>
 #include <QObject>
 #include <QDBusConnection>
@@ -30,10 +40,14 @@
 #include <QStandardPaths>
 #include <QFile>
 #include <QGSettings>
+
 #include "notifyreceiveinfo.h"
 #include "popupitemwidget.h"
 #include "toptransparentwidget.h"
 #include "sqlinfodata.h"
+
+
+
 
 #define  MODEL_SINGLE "single\n"
 
@@ -49,6 +63,12 @@
 #define CONTROL_CENTER_GSETTING_PATH                "org.ukui.control-center.noticeorigin"
 #define CONTROL_CERTER_DYNAMIC_GSETTING_PATH        "/org/ukui/control-center/noticeorigin/"
 #define CONTROL_CENTER_GSETTING_NOTIFYCATION        "messages"
+
+#define KEYBINDINGS_CUSTOM_SCHEMA "org.ukui.media.sound"
+#define KEYBINDINGS_CUSTOM_DIR "/org/ukui/sound/keybindings/"
+
+#define FILENAME_KEY "filename"
+#define NAME_KEY "name"
 
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
@@ -88,6 +108,7 @@ public:
     QGSettings                   *m_pPopupWidgetModeGsetting = nullptr;
     QGSettings                   *m_pcontrolNotifyMainGsetting = nullptr;
     QGSettings                   *m_pControlCenterGseting = nullptr;
+    ca_context                   *m_pCaContext;
     bool                         m_bPopupWidgetModeStatus;
     bool                         m_bNodisturbMode = false;
     bool                         m_bNotifyMainSwitch = true;
@@ -96,6 +117,8 @@ private:
     void registerAsService();
     void nextShowAction();
     void initGsettingValue();
+    QList<char *> listExistsPath();
+    void appNotifySound();
     bool getControlCentorAppNotify(QString appName);
 
 private:

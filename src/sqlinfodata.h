@@ -26,6 +26,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include "notifyreceiveinfo.h"
+
 class sqlInfoData : public QObject
 {
     Q_OBJECT
@@ -44,7 +45,7 @@ public:
     // If rowcount is - 1, it is obtained from offset + 1 to the last.
     QString getFrom(int rowCount, const QString &offsetId);
 
-signals:
+Q_SIGNALS:
     void RecordAdded(notifyReceiveInfo *entify);
 
 private:
