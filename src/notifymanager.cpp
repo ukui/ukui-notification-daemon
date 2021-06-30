@@ -249,10 +249,9 @@ bool notifyManager::getControlCentorAppNotify(QString appName)
         QString dynamicPath = QString("%1%2/")
                                 .arg(CONTROL_CERTER_DYNAMIC_GSETTING_PATH)
                                 .arg(QString(appName));
-        const QByteArray id_4(dynamicPath.toLatin1().data());
+        const QByteArray id_4(dynamicPath.toUtf8().data());
         m_pControlCenterGseting = new QGSettings(id_3, id_4, this);
         bool status = m_pControlCenterGseting->get(CONTROL_CENTER_GSETTING_NOTIFYCATION).toBool();
-        qDebug() << "应用状态是否弹窗---->" << status;
         return status;
     } else {
         return false;
