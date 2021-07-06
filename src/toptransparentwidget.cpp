@@ -75,10 +75,16 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
         m_ListWidgetHeight = 0;
     }
 
-    if (entryInfo->actions().count() != 0) {
-        popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1) + 7*1000);
+    //判断是否设置定时，若设置定时，走独立定时分支。若不设置定时，累加定时器
+    if (entryInfo->timeout().toInt() == -1) {
+        if (entryInfo->actions().count() != 0) {
+               popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1) + 7*1000);
+            } else {
+               popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1));
+            }
+
     } else {
-        popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1));
+        popw->m_poutTimer->setInterval(entryInfo->timeout().toInt()*1000);
     }
 
     connect(popw, &popupItemWidget::timeout, this, &topTransparentWidget::moveAllpopWidgetSite);
