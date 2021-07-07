@@ -73,6 +73,7 @@ void popupItemWidget::setEntryData(notifyReceiveInfo *entryInfo)
     setWidgetDate();
     convertToImage(m_pentryInfo->appIcon());
     judgeBodyExsit();
+    judgeDefaultActionExsit();
     judgeActionExsit();
     m_poutTimer->start();
     return;
@@ -512,19 +513,32 @@ bool popupItemWidget::judgeActionExsit()
     }
 }
 
+/*判断默认DefaultAction是否存在*/
+bool popupItemWidget::judgeDefaultActionExsit()
+{
+    if (!m_pentryInfo->defAction().isEmpty()) {
+        m_pDefaultAction = m_pentryInfo->defAction();
+        return false;
+    } else {
+        m_pDefaultAction = nullptr;
+        return true;
+    }
+}
+
 /* 解析动作字符串链表，添加动作按钮 */
 void popupItemWidget::processActions()
 {
     clearAllActionButton();
     QStringList list = m_pentryInfo->actions();
     // the "default" is identifier for the default action
-    if (list.contains("default")) {
-        const int index  = list.indexOf("default"); // For the default action
-        m_pDefaultAction = list[index];
-        // Default action does not need to be displayed, removed from the list
-        list.removeAt(index + 1);
-        list.removeAt(index);
-    }
+//    if (list.contains("default")) {
+//        const int index  = list.indexOf("default"); // For the default action
+//        m_pDefaultAction = list[index];
+//        qDebug()<<">>>>>>>>>>>>>>>>>m_pDefaultAction:"<<m_pDefaultAction;
+//        // Default action does not need to be displayed, removed from the list
+//        list.removeAt(index + 1);
+//        list.removeAt(index);
+//    }
     if (list.size() == 0) {
         m_pOperationWidget->setVisible(false);
         this->setFixedSize(372, 88);
@@ -616,14 +630,27 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
+//    if (!m_pDefaultAction.isEmpty()) {
+//        emit actionInvokedMissed(this, m_pentryInfo->id(), m_pDefaultAction);
+//        m_pDefaultAction.clear();
+//    } else {
+//        this->hide();
+//        emit mouseMissed(this, m_pentryInfo->id());
+//    }
+    qDebug()<<">>>>>>>>>mousePressEvent";
     if (!m_pDefaultAction.isEmpty()) {
-        emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), m_pDefaultAction);
-        m_pDefaultAction.clear();
-    } else {
-        this->hide();
-        emit mouseMissed(this, m_pentryInfo->id().toInt());
+        if (QProcess::startDetached(m_pDefaultAction)) {
+            qDebug() << ">>>>>>>>>>>>m_pDefaultAction 执行成功";
+            this->hide();
+            emit mouseMissed(this, m_pentryInfo->id());
+        } else {
+            qDebug() << "m_pDefaultAction 执行失败";
+        }
     }
-
+    else{
+        this->hide();
+        emit mouseMissed(this, m_pentryInfo->id());
+    }
     m_poutTimer->stop();
     QWidget::mousePressEvent(event);
     return;
@@ -670,7 +697,7 @@ void popupItemWidget::closeButtonSlots()
 {
     qDebug() << "点击关闭槽函数";
     this->hide();
-    emit clickedMissed(this, m_pentryInfo->id().toInt());
+    emit clickedMissed(this, m_pentryInfo->id());
     m_poutTimer->stop();
     return;
 }
@@ -678,7 +705,7 @@ void popupItemWidget::closeButtonSlots()
 void popupItemWidget::OutAnimationFinishSlots()
 {
     this->hide();
-    emit timeOutMissed(this, m_pentryInfo->id().toInt());
+    emit timeOutMissed(this, m_pentryInfo->id());
     return;
 }
 
@@ -703,5 +730,5 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
         ++i;
     }
     m_poutTimer->stop();
-    emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), actionId);
+    emit actionInvokedMissed(this, m_pentryInfo->id(), actionId);
 }

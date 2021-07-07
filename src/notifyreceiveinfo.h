@@ -29,8 +29,9 @@ public:
 public:
     notifyReceiveInfo(const QString &appName, const QString &id,
                        const QString &appIcon, const QString &summary,
-                       const QString &body, const QStringList &actions,
-                       const QVariantMap hints, const QString &ctime,
+                       const QString &body, const QString &defAction,
+                       const QStringList &actions, const QVariantMap hints,
+                       const QString &ctime,
                        const QString &replacesId, const QString &timeout,
                        QObject *parent=0);
 
@@ -52,6 +53,9 @@ public:
     QString body() const;
     void setBody(const QString &body);
 
+    QString defAction() const;
+    void setDefAction(const QString &defAction);
+
     QStringList actions() const;
     void setActions(const QStringList &actions);
 
@@ -72,6 +76,7 @@ private:
     QString m_appIcon;
     QString m_summary;
     QString m_body;
+    QString m_defAction;
     QStringList m_actions;
     QVariantMap m_hints;
     QString m_ctime;
