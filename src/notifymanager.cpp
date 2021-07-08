@@ -228,12 +228,21 @@ void notifyManager::appNotifySound()
             if (nameStr == "alert-sound") {
                 break;
             }
+            delete settings;
+            settings = nullptr;
         }
+    }
+
+    bool b_soundSwitchStatus = true;
+    const QByteArray soundSwitch(CONTROL_PATH_SOUNDS_SCHEMA);
+    if (QGSettings::isSchemaInstalled(soundSwitch)) {
+        QGSettings * soundSwitchSetting = new QGSettings(soundSwitch);
+        b_soundSwitchStatus = soundSwitchSetting->get(CONTROL_EVENT_SOUNDS_KEY).toBool();
     }
     const QByteArray text = filenameStr.toLocal8Bit();
     const gchar *id = text.data();
     const gchar *eventId =id;
-    if (desc) {
+    if (desc && b_soundSwitchStatus) {
         retval = ca_context_play (m_pCaContext, 0,
                                   CA_PROP_EVENT_ID, eventId,
                                   CA_PROP_EVENT_DESCRIPTION, desc, NULL);

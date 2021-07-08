@@ -1,9 +1,9 @@
-ukui-notification-daemon (1.0.2-2.0011) v101; urgency=medium
+ukui-notification-daemon (1.0.2-2.0010) v101; urgency=medium
 
   * 改动:
     - bug号: 无
     - 需求号：6908、7034
-    - 其他改动说明: 通知弹窗加入通知拦截功能，通知提示音功能
+    - 其他改动说明: 通知弹窗加入通知拦截功能，通知提示音功能，加入提示音依赖库
 
  -- liushanwen <liushanwen@kylinos.cn>  Wed, 30 Jun 2021 15:04:51 +0800
 

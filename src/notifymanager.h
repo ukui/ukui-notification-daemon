@@ -60,6 +60,9 @@ extern "C" {
 #define CONTROL_CENTER_GSETTING_NOTIFY_MAIN_SWITCH  "org.ukui.control-center.notice"
 #define CONTROL_GSETTING_NOTIFY_MAIN_KEY     "enableNotice"
 
+#define CONTROL_PATH_SOUNDS_SCHEMA   "org.ukui.sound"
+#define CONTROL_EVENT_SOUNDS_KEY     "event-sounds"
+
 #define CONTROL_CENTER_GSETTING_PATH                "org.ukui.control-center.noticeorigin"
 #define CONTROL_CERTER_DYNAMIC_GSETTING_PATH        "/org/ukui/control-center/noticeorigin/"
 #define CONTROL_CENTER_GSETTING_NOTIFYCATION        "messages"
