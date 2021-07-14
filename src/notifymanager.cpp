@@ -97,7 +97,8 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
         qDebug() << "存在白名单中，不进行弹窗";
         return 0;
     }
-    notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString(), appIcon,
+    counter++;
+    notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString::number(counter), appIcon,
                                                               summary, removeHTML(body), actions, hints,
                                                               QString::number(QDateTime::currentMSecsSinceEpoch()),
                                                               QString::number(replacesId),
@@ -107,6 +108,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     // 加入弹窗声音
     appNotifySound();
     // 单弹窗模式 多弹窗模式
+
     qDebug() << "弹窗模式" << m_bPopupWidgetModeStatus;
     if (m_bPopupWidgetModeStatus) {
         m_pTopWidget->addEntryInfo(notifyInfo);
@@ -117,7 +119,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
         if (!m_pTopWidget->isVisible())
             m_pTopWidget->show();
     }
-    return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
+    return replacesId == 0 ? counter : replacesId;
 }
 
 void notifyManager::registerAsService()

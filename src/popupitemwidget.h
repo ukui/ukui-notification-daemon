@@ -43,6 +43,9 @@
 #define UKUI_TRANSPARENCY_SETTING_PATH "org.ukui.control-center.personalise"
 #define UKUI_TRANSPARENCY_SETTING_KEY  "transparency"
 
+#define DEFAULT_ACTION "default"
+#define URLS_ACTION    "x-kde-urls"
+
 class popupItemWidget : public QWidget
 {
     Q_OBJECT
@@ -52,6 +55,7 @@ public:
     notifyReceiveInfo    *m_pentryInfo = nullptr;
     QPropertyAnimation   *m_pOutAnimation = nullptr;
     QTimer               *m_poutTimer = nullptr;
+    QTimer               *m_quitTimer = nullptr;
     bool                  m_bActionSignals = true;
 
 private:
@@ -80,6 +84,7 @@ private:
 
     void processActions();                                  // 解析动作字符串链表，添加动作按钮
     void actionMapParsingJump(QStringList list);            // 通过动作字符串解析Map表，赋予按钮跳转指令
+    void processHints();                                    // 解析Map表,绑定弹窗跳转动作
     void clearAllActionButton();                            // 删除掉所有动作按钮
     bool substringSposition(QString formatBody, QStringList list);
 
@@ -123,7 +128,7 @@ private:
 
     QPropertyAnimation   *m_pMoveAnimation = nullptr;
 
-    QTimer               *m_quitTimer = nullptr;
+
     QWidget              *m_pIconWidget = nullptr;
     QWidget              *m_pInfoAreaWidget = nullptr;
     QWidget              *m_pCloseButtonWidget = nullptr;

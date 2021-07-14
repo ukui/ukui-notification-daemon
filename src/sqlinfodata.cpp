@@ -95,7 +95,7 @@ void sqlInfoData::addOne(notifyReceiveInfo *entity)
         return;
     } else {
         m_query.next();
-        entity->setId(m_query.value(0).toString());
+        //entity->setId(m_query.value(0).toString());
 #ifdef QT_DEBUG
         qDebug() << "get entity's id done:" << entity->id();
 #endif

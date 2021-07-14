@@ -104,6 +104,7 @@ public Q_SLOTS:
     // new notify will be received by this slot
     uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
 
+
 public:
     popupItemWidget              *m_pEntryWidget = nullptr;
     topTransparentWidget         *m_pTopWidget = nullptr;
@@ -127,6 +128,7 @@ private:
 private:
     QString m_model;
     sqlInfoData *m_psqlInfoData;
+    uint counter = 1;
 
 private slots:
     void popupItemWidgetDismissed(int Id);

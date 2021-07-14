@@ -59,6 +59,7 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
 
     /* 初始化信号连接 */
     connect(this, &popupItemWidget::actionButtonClicked, this, &popupItemWidget::onActionButtonClicked);
+
 }
 
 /* 设置显示一行数据 */
@@ -502,6 +503,7 @@ bool popupItemWidget::judgeIconExsit()
 bool popupItemWidget::judgeActionExsit()
 {
     if (m_pentryInfo->actions().isEmpty()) {
+        processHints();
         m_pOperationWidget->setVisible(false);
         this->setFixedSize(372, 82);
         return false;
@@ -564,6 +566,33 @@ void popupItemWidget::actionMapParsingJump(QStringList list)
             m_pOperationButtonWidgetLayout->setSpacing(10);
             QString formatBody = setButtonStringBody(buttonText, button);
             button->setText(formatBody);
+        }
+    }
+}
+
+/* 解析Map表,绑定弹窗跳转动作 */
+void popupItemWidget::processHints()
+{
+    QMap<QString, QVariant> hints = m_pentryInfo->hints();
+    QMap<QString, QVariant>::iterator iter = hints.begin();
+    for(iter; iter!=hints.end(); iter++){
+        if(iter.key() == DEFAULT_ACTION){  //执行默认动作
+            QString cmd = iter.value().toString();
+            connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
+                if (QProcess::startDetached(cmd)) {
+                    qDebug() << "默认动作 执行成功!";
+                } else {
+                    qDebug() << "默认动作 执行失败!";
+                }
+            });
+        }
+        else if(iter.key() == URLS_ACTION){  //打开对应 URl 链接
+            QString urlPath = iter.value().toString();
+            connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
+                QString cmd = QString("xdg-open ") + urlPath; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+                system(cmd.toStdString().c_str());
+
+            });
         }
     }
 }
