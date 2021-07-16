@@ -40,6 +40,7 @@ public:
 
     QString getAll();
     QString getById(const QString &id);
+    bool idExist(const QString &id);
 
     // the result starts with offset + 1
     // If rowcount is - 1, it is obtained from offset + 1 to the last.

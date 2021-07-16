@@ -75,6 +75,9 @@ extern "C" {
 
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
+static const QString SidebarNotifyDBusService = "org.ukui.Sidebar";
+static const QString SidebarNotifyDBusPath = "/org/ukui/Sidebar";
+static const QString SidebarNotifyDBusInterface = "org.ukui.Sidebar.notify";
 
 class notifyManager : public QObject
 {
@@ -93,16 +96,17 @@ public:
 
 Q_SIGNALS:
     // Standard Notifications dbus implementation
-    void ActionInvoked(uint, const QString &);
-    void NotificationClosed(uint, uint);
+    void ActionInvoked(QString, const QString &);
+    void NotificationClosed(QString, uint);
 
 public Q_SLOTS:
     // Standard Notifications dbus implementation
-    void CloseNotification(uint id);
+    void CloseNotification(QString id);
     QStringList GetCapabilities();
     QString GetServerInformation(QString &name, QString &vendor, QString &version);
     // new notify will be received by this slot
-    uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
+    QString Notify(const QString &, const QString &, const QString &, const QString &, const QString &, const QString &,
+                const QString &, const QStringList &, const QVariantMap, int);
 
 
 public:
@@ -131,7 +135,7 @@ private:
     uint counter = 1;
 
 private slots:
-    void popupItemWidgetDismissed(int Id);
-    void popupItemWidgetActionInvoked(uint Id, QString reason);
+    void popupItemWidgetDismissed(QString Id);
+    void popupItemWidgetActionInvoked(QString Id, QString reason);
 };
 #endif // WIDGET_H

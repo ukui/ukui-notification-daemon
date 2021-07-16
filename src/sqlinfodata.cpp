@@ -220,6 +220,13 @@ QString sqlInfoData::getById(const QString &id)
     return QJsonDocument(array).toJson();
 }
 
+bool sqlInfoData::idExist(const QString &id)
+{
+    bool isExist = m_query.prepare(QString("SELECT %1 FROM %7 WHERE ID = (:id)")
+                                   .arg(ColumnId, TableName_v2));
+    return isExist;
+}
+
 QString sqlInfoData::getFrom(int rowCount, const QString &offsetId)
 {
     // gets the line number of the specified offset

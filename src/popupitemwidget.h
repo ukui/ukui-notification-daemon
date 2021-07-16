@@ -81,6 +81,7 @@ private:
     bool judgeBodyExsit();                                  // 判断消息体是否存在
     bool judgeIconExsit();                                  // 判断图标是否存在
     bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
+    bool judgeDefaultActionExsit();                         //判断默认DefaultAction是否存在
 
     void processBody();                                     // 解析正文字段的
     void processActions();                                  // 解析动作字符串链表，添加动作按钮
@@ -92,12 +93,12 @@ private:
 
 
 Q_SIGNALS:
-    void mouseMissed(QWidget *w, int id);
-    void timeOutMissed(QWidget *w, int id);
-    void clickedMissed(QWidget *w, int id);
-    void actionInvokedMissed(QWidget *w, int id, QString actionId);
-    void actionButtonClicked(QString id);
-    void timeout(QWidget *w);
+    void mouseMissed(QWidget *w, QString id);                   //鼠标点击消息体
+    void timeOutMissed(QWidget *w, QString id);                 //动画完成信号
+    void clickedMissed(QWidget *w, QString id);                 //鼠标点击右上角退出按钮
+    void actionInvokedMissed(QWidget *w, QString id, QString actionId); //点击消息体/按钮,主窗口绑定该信号
+    void actionButtonClicked(QString id);                   //点击动作按钮信号
+    void timeout(QWidget *w);                               //鼠标在消息体上悬停超时
     void animationAction(const QVariant &value, QWidget *w);
 
 public Q_SLOTS:
@@ -137,7 +138,7 @@ private:
     QWidget              *m_pSummaryLabelWidget = nullptr;
     QWidget              *m_pBodyLabelWidget = nullptr;
 
-    QString               m_pDefaultAction;
+    QString               m_pDefaultAction = nullptr;
     QList<QPushButton *> *m_pListButton = nullptr;
     QGSettings           *m_pFontStyleGsetting;
     QGSettings           *m_pTransparencyGsetting;

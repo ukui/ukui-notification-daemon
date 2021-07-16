@@ -74,6 +74,7 @@ public:
     QPointer<notifyReceiveInfo>                 m_currentNotify;
     QQueue<notifyReceiveInfo *>                 m_entities;                       //用来存放当前数据，保存到队列中去，当有多条消息时，一条一条数据显示
     QList<notifyReceiveInfo*>                   m_pWaitingQueue;
+    uint                                        m_fixNotifyNum = 0;
     int                                         m_ipanelPosition = 0;
     int                                         m_ipanelHeight = 46;
     int                                         m_iScreenXGeometry = 0;
@@ -85,21 +86,21 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 Q_SIGNALS:
-    void dismissed(int);
-    void closePopupWidget(int Id);
-    void actionInvoked(uint, QString);
+    void dismissed(QString);
+    void closePopupWidget(QString Id);
+    void actionInvoked(QString, QString);
 
 private:
     QVBoxLayout                 *m_pMainLayout;
     QGSettings                  *m_pPanelSetting = nullptr;
 
 private slots:
-    void mouseMissedSlots(QWidget *w, int id);
-    void timeOutMissedSlots(QWidget *w, int id);
-    void clickedMissedSlots(QWidget *w, int id);
-    void actionInvokedMissedSlots(QWidget *w, int id, QString actionId);
+    void mouseMissedSlots(QWidget *w, QString id);
+    void timeOutMissedSlots(QWidget *w, QString id);
+    void clickedMissedSlots(QWidget *w, QString id);
+    void actionInvokedMissedSlots(QWidget *w, QString id, QString actionId);
     void moveAllpopWidgetSite(QWidget *w);
-    void moveAllpopWidgetSiteAccordId(int Id);
+    void moveAllpopWidgetSiteAccordId(QString Id);
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
     void addWaittingPopupWidgetSlots();
     void panelSiteSlots(QString key);

@@ -302,29 +302,32 @@ void topTransparentWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void topTransparentWidget::mouseMissedSlots(QWidget *w, int id)
+void topTransparentWidget::mouseMissedSlots(QWidget *w, QString id)
+{
+    --m_fixNotifyNum;
+    exitPopupWidget(w);
+    emit dismissed(id);
+    return;
+}
+
+void topTransparentWidget::timeOutMissedSlots(QWidget *w, QString id)
 {
     exitPopupWidget(w);
     emit dismissed(id);
     return;
 }
 
-void topTransparentWidget::timeOutMissedSlots(QWidget *w, int id)
+void topTransparentWidget::clickedMissedSlots(QWidget *w, QString id)
 {
+    --m_fixNotifyNum;
     exitPopupWidget(w);
     emit dismissed(id);
     return;
 }
 
-void topTransparentWidget::clickedMissedSlots(QWidget *w, int id)
+void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, QString id, QString actionId)
 {
-    exitPopupWidget(w);
-    emit dismissed(id);
-    return;
-}
-
-void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, int id, QString actionId)
-{
+    --m_fixNotifyNum;
     w->hide();
     exitPopupWidget(w);
     emit actionInvoked(id, actionId);
@@ -351,7 +354,7 @@ void topTransparentWidget::moveAllpopWidgetSite(QWidget* w)
 }
 
 /* 通过id关闭对应的弹窗窗口 */
-void topTransparentWidget::moveAllpopWidgetSiteAccordId(int Id)
+void topTransparentWidget::moveAllpopWidgetSiteAccordId(QString Id)
 {
     int siteHeight = m_ListWidgetHeight;
     for (int i = 0; i < popWidgetqueue.count(); i++) {
