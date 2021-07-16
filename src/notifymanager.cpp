@@ -16,6 +16,8 @@
  */
 
 #include "notifymanager.h"
+#include <QUuid>
+
 static QString removeHTML(const QString &source)
 {
     QXmlStreamReader xml(source);
@@ -44,7 +46,7 @@ notifyManager::~notifyManager()
 
 }
 
-void notifyManager::CloseNotification(uint id)
+void notifyManager::CloseNotification(QString id)
 {
     emit m_pTopWidget->closePopupWidget(id);
     emit NotificationClosed(id, notifyManager::Closed);
@@ -67,13 +69,14 @@ QString notifyManager::GetServerInformation(QString &name, QString &vendor, QStr
     return QString("1.0");
 }
 
-uint notifyManager::Notify(const QString &appName, uint replacesId,
-                           const QString &appIcon, const QString &summary,
-                           const QString &body, const QStringList &actions,
+QString notifyManager::Notify(const QString &appName, const QString &replacesId,
+                           const QString &appIcon, const QString &status,
+                           const QString &summary, const QString &body,
+                           const QString &defAction, const QStringList &actions,
                            const QVariantMap hints, int expireTimeout)
 {
 #ifdef QT_DEBUG
-    qDebug() << "a new Notify1:" << "appName2:" + appName << "replaceID3:" + QString::number(replacesId)
+    qDebug() << "a new Notify1:" << "appName2:" + appName << "replaceID3:" + replacesId
              << "appIcon:" + appIcon << "summary:" + summary << "body:" + body
              << "actions:" << actions << "hints:" << hints << "expireTimeout:" << expireTimeout;
 #endif
@@ -97,8 +100,9 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
         qDebug() << "存在白名单中，不进行弹窗";
         return 0;
     }
-    notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString(), appIcon,
-                                                              summary, removeHTML(body), actions, hints,
+    counter++;
+    notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString::number(counter), appIcon,
+                                                              summary, body, actions, hints,
                                                               QString::number(QDateTime::currentMSecsSinceEpoch()),
                                                               QString::number(replacesId),
                                                               QString::number(expireTimeout),
@@ -107,6 +111,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     // 加入弹窗声音
     appNotifySound();
     // 单弹窗模式 多弹窗模式
+
     qDebug() << "弹窗模式" << m_bPopupWidgetModeStatus;
     if (m_bPopupWidgetModeStatus) {
         m_pTopWidget->addEntryInfo(notifyInfo);
@@ -117,16 +122,18 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
         if (!m_pTopWidget->isVisible())
             m_pTopWidget->show();
     }
-    return replacesId == 0 ? notifyInfo->id().toUInt() : replacesId;
+    return replacesId == 0 ? counter : replacesId;
 }
 
 void notifyManager::registerAsService()
 {
+
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.interface()->registerService(NotificationsDBusService,
                                                   QDBusConnectionInterface::ReplaceExistingService,
                                                   QDBusConnectionInterface::AllowReplacement);
     connection.registerObject(NotificationsDBusPath, this);
+
 }
 
 void notifyManager::nextShowAction()
@@ -267,14 +274,14 @@ bool notifyManager::getControlCentorAppNotify(QString appName)
     }
 }
 
-void notifyManager::popupItemWidgetDismissed(int Id)
+void notifyManager::popupItemWidgetDismissed(QString Id)
 {
     emit NotificationClosed(Id, notifyManager::Dismissed);
     nextShowAction();
     return;
 }
 
-void notifyManager::popupItemWidgetActionInvoked(uint Id, QString reason)
+void notifyManager::popupItemWidgetActionInvoked(QString Id, QString reason)
 {
     emit ActionInvoked(Id, reason);
     emit NotificationClosed(Id, notifyManager::Closed);

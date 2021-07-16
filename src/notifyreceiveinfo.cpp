@@ -21,8 +21,9 @@
 #include <QDebug>
 notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
                                        const QString &appIcon, const QString &summary,
-                                       const QString &body, const QStringList &actions,
-                                       const QVariantMap hints, const QString &ctime,
+                                       const QString &body, const QString &defAction,
+                                       const QStringList &actions, const QVariantMap hints,
+                                       const QString &ctime,
                                        const QString &replacesId, const QString &timeout,
                                        QObject *parent) :
     QObject(parent),
@@ -31,6 +32,7 @@ notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
     m_appIcon(appIcon),
     m_summary(summary),
     m_body(body),
+    m_defAction(defAction),
     m_actions(actions),
     m_hints(hints),
     m_ctime(ctime),
@@ -41,7 +43,7 @@ notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
 
 notifyReceiveInfo::notifyReceiveInfo(const notifyReceiveInfo &notify) :
     notifyReceiveInfo(notify.appName(), notify.id(), notify.appIcon(), notify.summary(),
-                       notify.body(), notify.actions(), notify.hints(), notify.ctime(),
+                       notify.body(), notify.defAction(), notify.actions(), notify.hints(), notify.ctime(),
                        notify.replacesId(), notify.timeout())
 {
 
@@ -101,6 +103,16 @@ QString notifyReceiveInfo::body() const
 void notifyReceiveInfo::setBody(const QString &body)
 {
     m_body = body;
+}
+
+QString notifyReceiveInfo::defAction() const
+{
+    return m_defAction;
+}
+
+void notifyReceiveInfo::setDefAction(const QString &defAction)
+{
+    m_defAction = defAction;
 }
 
 QStringList notifyReceiveInfo::actions() const

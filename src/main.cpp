@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "notifymanager.h""
+#include "notifymanager.h"
 #include "notifications_adaptor.h"
 
 #include <QApplication>

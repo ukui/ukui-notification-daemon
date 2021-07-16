@@ -95,7 +95,7 @@ void sqlInfoData::addOne(notifyReceiveInfo *entity)
         return;
     } else {
         m_query.next();
-        entity->setId(m_query.value(0).toString());
+        //entity->setId(m_query.value(0).toString());
 #ifdef QT_DEBUG
         qDebug() << "get entity's id done:" << entity->id();
 #endif
@@ -218,6 +218,13 @@ QString sqlInfoData::getById(const QString &id)
     }
 
     return QJsonDocument(array).toJson();
+}
+
+bool sqlInfoData::idExist(const QString &id)
+{
+    bool isExist = m_query.prepare(QString("SELECT %1 FROM %7 WHERE ID = (:id)")
+                                   .arg(ColumnId, TableName_v2));
+    return isExist;
 }
 
 QString sqlInfoData::getFrom(int rowCount, const QString &offsetId)

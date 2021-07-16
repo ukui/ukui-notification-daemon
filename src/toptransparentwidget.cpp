@@ -29,8 +29,7 @@ topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 
     m_pSreenInfo = new adaptScreenInfo();
 
-    connect(this, &topTransparentWidget::closePopupWidget, \
-            this, &topTransparentWidget::moveAllpopWidgetSiteAccordId);
+    connect(this, &topTransparentWidget::closePopupWidget,this, &topTransparentWidget::moveAllpopWidgetSiteAccordId);
 
     initPanelSite();
     setNotifyPopWidgetSite();
@@ -69,7 +68,7 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
         qDebug() << "构造数据有误";
         return;
     }
-    popupItemWidget *popw = new popupItemWidget();
+    popupItemWidget *popw = new popupItemWidget(this,entryInfo);
 
     if (popWidgetqueue.count() == 0) {
         m_ListWidgetHeight = 0;
@@ -82,9 +81,14 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
             } else {
                popw->m_poutTimer->setInterval(3000 * (popWidgetqueue.count() + 1));
             }
+    }
+    else if(entryInfo->timeout().toInt() == 0){  //弹窗常驻
+        popw->m_poutTimer->blockSignals(true);
+        popw->m_quitTimer->blockSignals(true);
 
-    } else {
-        popw->m_poutTimer->setInterval(entryInfo->timeout().toInt()*1000);
+    }
+    else {
+        popw->m_poutTimer->setInterval(entryInfo->timeout().toInt()*1);
     }
 
     connect(popw, &popupItemWidget::timeout, this, &topTransparentWidget::moveAllpopWidgetSite);
@@ -298,29 +302,32 @@ void topTransparentWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void topTransparentWidget::mouseMissedSlots(QWidget *w, int id)
+void topTransparentWidget::mouseMissedSlots(QWidget *w, QString id)
+{
+    --m_fixNotifyNum;
+    exitPopupWidget(w);
+    emit dismissed(id);
+    return;
+}
+
+void topTransparentWidget::timeOutMissedSlots(QWidget *w, QString id)
 {
     exitPopupWidget(w);
     emit dismissed(id);
     return;
 }
 
-void topTransparentWidget::timeOutMissedSlots(QWidget *w, int id)
+void topTransparentWidget::clickedMissedSlots(QWidget *w, QString id)
 {
+    --m_fixNotifyNum;
     exitPopupWidget(w);
     emit dismissed(id);
     return;
 }
 
-void topTransparentWidget::clickedMissedSlots(QWidget *w, int id)
+void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, QString id, QString actionId)
 {
-    exitPopupWidget(w);
-    emit dismissed(id);
-    return;
-}
-
-void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, int id, QString actionId)
-{
+    --m_fixNotifyNum;
     w->hide();
     exitPopupWidget(w);
     emit actionInvoked(id, actionId);
@@ -347,19 +354,29 @@ void topTransparentWidget::moveAllpopWidgetSite(QWidget* w)
 }
 
 /* 通过id关闭对应的弹窗窗口 */
-void topTransparentWidget::moveAllpopWidgetSiteAccordId(int Id)
+void topTransparentWidget::moveAllpopWidgetSiteAccordId(QString Id)
 {
     int siteHeight = m_ListWidgetHeight;
     for (int i = 0; i < popWidgetqueue.count(); i++) {
-        popWidgetqueue.at(i)->setGeometry(0, siteHeight - popWidgetqueue.at(i)->height(), \
-                                          popWidgetqueue.at(i)->width(), popWidgetqueue.at(i)->height());
-
-        siteHeight = siteHeight - popWidgetqueue.at(i)->height() - 5;
-        if (Id == popWidgetqueue.at(i)->m_pentryInfo->replacesId().toInt()) {
-            popWidgetqueue.at(i)->m_pOutAnimation->setStartValue(popWidgetqueue[i]->geometry());
-            popWidgetqueue.at(i)->m_pOutAnimation->setEndValue(QRect(this->width() + 10, popWidgetqueue[i]->geometry().y(), this->width(), 88));
-            popWidgetqueue.at(i)->m_pOutAnimation->start();
+        popupItemWidget* popupWidget = popWidgetqueue.at(i);
+        qDebug()<<"popupWidget->m_pentryInfo->id():"<<popupWidget->m_pentryInfo->id().toUInt();
+        if(popupWidget->m_pentryInfo->id().toUInt() == Id){
+            popupWidget->hide();
+            exitPopupWidget(popupWidget);
+            popWidgetqueue.removeAt(i);
+            i--;
+            continue;
         }
+
+
+//        popWidgetqueue.at(i)->setGeometry(0, siteHeight - popWidgetqueue.at(i)->height(),
+//                                            popWidgetqueue.at(i)->width(), popWidgetqueue.at(i)->height());
+//        siteHeight = siteHeight - popWidgetqueue.at(i)->height() - 5;
+//        if (Id == popWidgetqueue.at(i)->m_pentryInfo->replacesId().toInt()) {
+//            popWidgetqueue.at(i)->m_pOutAnimation->setStartValue(popWidgetqueue[i]->geometry());
+//            popWidgetqueue.at(i)->m_pOutAnimation->setEndValue(QRect(this->width() + 10, popWidgetqueue[i]->geometry().y(), this->width(), 88));
+//            popWidgetqueue.at(i)->m_pOutAnimation->start();
+//        }
     }
     return;
 }
