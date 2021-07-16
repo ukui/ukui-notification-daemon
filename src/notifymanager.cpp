@@ -99,7 +99,7 @@ uint notifyManager::Notify(const QString &appName, uint replacesId,
     }
     counter++;
     notifyReceiveInfo *notifyInfo = new notifyReceiveInfo(appName, QString::number(counter), appIcon,
-                                                              summary, removeHTML(body), actions, hints,
+                                                              summary, body, actions, hints,
                                                               QString::number(QDateTime::currentMSecsSinceEpoch()),
                                                               QString::number(replacesId),
                                                               QString::number(expireTimeout),

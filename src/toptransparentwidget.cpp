@@ -88,7 +88,7 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
 
     }
     else {
-        popw->m_poutTimer->setInterval(entryInfo->timeout().toInt()*1000);
+        popw->m_poutTimer->setInterval(entryInfo->timeout().toInt()*1);
     }
 
     connect(popw, &popupItemWidget::timeout, this, &topTransparentWidget::moveAllpopWidgetSite);

@@ -82,6 +82,7 @@ private:
     bool judgeIconExsit();                                  // 判断图标是否存在
     bool judgeActionExsit();                                // 判断action是否存在，存在则显示按钮
 
+    void processBody();                                     // 解析正文字段的
     void processActions();                                  // 解析动作字符串链表，添加动作按钮
     void actionMapParsingJump(QStringList list);            // 通过动作字符串解析Map表，赋予按钮跳转指令
     void processHints();                                    // 解析Map表,绑定弹窗跳转动作
