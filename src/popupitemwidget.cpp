@@ -513,7 +513,7 @@ bool popupItemWidget::judgeIconExsit()
 bool popupItemWidget::judgeActionExsit()
 {
     if (m_pentryInfo->actions().isEmpty()) {
-        //processHints();
+        processHints();
         m_pOperationWidget->setVisible(false);
         this->setFixedSize(372, 82);
         return false;
@@ -653,17 +653,7 @@ void popupItemWidget::processHints()
     QMap<QString, QVariant> hints = m_pentryInfo->hints();
     QMap<QString, QVariant>::iterator iter = hints.begin();
     for(iter; iter!=hints.end(); iter++){
-        if(iter.key() == DEFAULT_ACTION){  //执行默认动作
-//            QString cmd = iter.value().toString();
-//            connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
-//                if (QProcess::startDetached(cmd)) {
-//                    qDebug() << "默认动作 执行成功!";
-//                } else {
-//                    qDebug() << "默认动作 执行失败!";
-//                }
-//            });
-        }
-        else if(iter.key() == URLS_ACTION){  //打开对应 URl 链接
+        if(iter.key() == URLS_ACTION){  //暂时为了兼容屏幕截图应用添加的代码，绑定URl链接，完成跳转
             QString urlPath = iter.value().toString();
             connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
                 QString cmd = QString("xdg-open ") + urlPath; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
