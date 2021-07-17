@@ -583,33 +583,36 @@ void popupItemWidget::processBody()
 
     }
 
-
-
 }
 
 /* 解析动作字符串链表，添加动作按钮 */
 void popupItemWidget::processActions()
 {
     clearAllActionButton();
-    QStringList list = m_pentryInfo->actions();
-    // the "default" is identifier for the default action
-    if (list.contains("default")) {
-        const int index  = list.indexOf("default"); // For the default action
-        m_pDefaultAction = list[index];
-        qDebug()<<">>>>>>>>>>>>>>>>>m_pDefaultAction:"<<m_pDefaultAction;
-        // Default action does not need to be displayed, removed from the list
-        list.removeAt(index + 1);
-        list.removeAt(index);
-    }
-    if (list.size() == 0) {
-        m_pOperationWidget->setVisible(false);
-        this->setFixedSize(372, 88);
-    } else {
-        m_pOperationWidget->setVisible(true);
-        this->setFixedSize(372, 134);
-        actionMapParsingJump(list);
-    }
-    return;
+        QStringList list = m_pentryInfo->actions();
+        // the "default" is identifier for the default action
+        if (list.contains("default")) {
+            const int index  = list.indexOf("default"); // For the default action
+            m_pDefaultAction = list[index-1];
+            //有默认动作，绑定信号槽，点击弹窗触发
+            connect(this, &popupItemWidget::actionInvokedMissed, this, [=](QWidget *w, int id){
+                QProcess *process = new QProcess();
+                process->start(m_pDefaultAction);
+
+            });
+            // Default action does not need to be displayed, removed from the list
+            list.removeAt(index + 1);
+            list.removeAt(index);
+        }
+        if (list.size() == 0) {
+            m_pOperationWidget->setVisible(false);
+            this->setFixedSize(372, 88);
+        } else {
+            m_pOperationWidget->setVisible(true);
+            this->setFixedSize(372, 134);
+            actionMapParsingJump(list);
+        }
+        return;
 }
 
 /* 通过动作标识ID解析Map表， 通过Map表赋予按钮动作，执行跳转命令 */
@@ -719,24 +722,10 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
-//    if (!m_pDefaultAction.isEmpty()) {
-//        emit actionInvokedMissed(this, m_pentryInfo->id(), m_pDefaultAction);
-//        m_pDefaultAction.clear();
-//    } else {
-//        this->hide();
-//        emit mouseMissed(this, m_pentryInfo->id());
-//    }
-    qDebug()<<">>>>>>>>>mousePressEvent";
     if (!m_pDefaultAction.isEmpty()) {
-        if (QProcess::startDetached(m_pDefaultAction)) {
-            qDebug() << ">>>>>>>>>>>>m_pDefaultAction 执行成功";
-            this->hide();
-            emit mouseMissed(this, m_pentryInfo->id().toInt());
-        } else {
-            qDebug() << "m_pDefaultAction 执行失败";
-        }
-    }
-    else{
+        emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), m_pDefaultAction);
+        m_pDefaultAction.clear();
+    } else {
         this->hide();
         emit mouseMissed(this, m_pentryInfo->id().toInt());
     }
