@@ -40,10 +40,10 @@ NotificationsAdaptor::~NotificationsAdaptor()
     // destructor
 }
 
-void NotificationsAdaptor::CloseNotification(QString id)
+void NotificationsAdaptor::CloseNotification(uint id)
 {
     // handle method call org.freedesktop.Notifications.CloseNotification
-    QMetaObject::invokeMethod(parent(), "CloseNotification", Q_ARG(QString, id));
+    QMetaObject::invokeMethod(parent(), "CloseNotification", Q_ARG(uint, id));
 }
 
 QStringList NotificationsAdaptor::GetCapabilities()
@@ -60,10 +60,10 @@ QString NotificationsAdaptor::GetServerInformation(QString &name, QString &vendo
     return static_cast<notifyManager *>(parent())->GetServerInformation(name, vendor, version);
 }
 
-QString NotificationsAdaptor::Notify(const QString &in0, const QString &replacesId, const QString &in2, const QString &in3, const QString &in4, const QString &in5, const QString &in6, const QStringList &in7, const QVariantMap &in8, int in9)
+uint NotificationsAdaptor::Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7)
 {
     // handle method call org.freedesktop.Notifications.Notify
-    QString out0;
-    QMetaObject::invokeMethod(parent(), "Notify", Q_RETURN_ARG(QString, out0), Q_ARG(QString, in0), Q_ARG(QString, replacesId), Q_ARG(QString, in2), Q_ARG(QString, in3), Q_ARG(QString, in4), Q_ARG(QString, in5), Q_ARG(QString, in6), Q_ARG(QStringList, in7), Q_ARG(QVariantMap, in8), Q_ARG(int, in9));
+    uint out0;
+    QMetaObject::invokeMethod(parent(), "Notify", Q_RETURN_ARG(uint, out0), Q_ARG(QString, in0), Q_ARG(uint, replacesId), Q_ARG(QString, in2), Q_ARG(QString, in3), Q_ARG(QString, in4), Q_ARG(QStringList, in5), Q_ARG(QVariantMap, in6), Q_ARG(int, in7));
     return out0;
 }

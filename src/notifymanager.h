@@ -96,17 +96,17 @@ public:
 
 Q_SIGNALS:
     // Standard Notifications dbus implementation
-    void ActionInvoked(QString, const QString &);
-    void NotificationClosed(QString, uint);
+    void ActionInvoked(uint, const QString &);
+        void NotificationClosed(uint, uint);
 
 public Q_SLOTS:
     // Standard Notifications dbus implementation
-    void CloseNotification(QString id);
+    void CloseNotification(uint id);
     QStringList GetCapabilities();
     QString GetServerInformation(QString &name, QString &vendor, QString &version);
     // new notify will be received by this slot
-    QString Notify(const QString &, const QString &, const QString &, const QString &, const QString &, const QString &,
-                const QString &, const QStringList &, const QVariantMap, int);
+    uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &,
+                const QStringList &, const QVariantMap, int);
 
 
 public:
@@ -135,7 +135,7 @@ private:
     uint counter = 1;
 
 private slots:
-    void popupItemWidgetDismissed(QString Id);
-    void popupItemWidgetActionInvoked(QString Id, QString reason);
+    void popupItemWidgetDismissed(int Id);
+    void popupItemWidgetActionInvoked(uint Id, QString reason);
 };
 #endif // WIDGET_H

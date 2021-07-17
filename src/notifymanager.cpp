@@ -16,7 +16,6 @@
  */
 
 #include "notifymanager.h"
-#include <QUuid>
 
 static QString removeHTML(const QString &source)
 {
@@ -46,7 +45,7 @@ notifyManager::~notifyManager()
 
 }
 
-void notifyManager::CloseNotification(QString id)
+void notifyManager::CloseNotification(uint id)
 {
     emit m_pTopWidget->closePopupWidget(id);
     emit NotificationClosed(id, notifyManager::Closed);
@@ -68,15 +67,13 @@ QString notifyManager::GetServerInformation(QString &name, QString &vendor, QStr
     version = QString("1.0");
     return QString("1.0");
 }
-
-QString notifyManager::Notify(const QString &appName, const QString &replacesId,
-                           const QString &appIcon, const QString &status,
-                           const QString &summary, const QString &body,
-                           const QString &defAction, const QStringList &actions,
+uint notifyManager::Notify(const QString &appName, uint replacesId,
+                           const QString &appIcon, const QString &summary,
+                           const QString &body, const QStringList &actions,
                            const QVariantMap hints, int expireTimeout)
 {
 #ifdef QT_DEBUG
-    qDebug() << "a new Notify1:" << "appName2:" + appName << "replaceID3:" + replacesId
+    qDebug() << "a new Notify1:" << "appName2:" + appName << "replaceID3:" + QString::number(replacesId)
              << "appIcon:" + appIcon << "summary:" + summary << "body:" + body
              << "actions:" << actions << "hints:" << hints << "expireTimeout:" << expireTimeout;
 #endif
@@ -273,15 +270,14 @@ bool notifyManager::getControlCentorAppNotify(QString appName)
         return false;
     }
 }
-
-void notifyManager::popupItemWidgetDismissed(QString Id)
+void notifyManager::popupItemWidgetDismissed(int Id)
 {
     emit NotificationClosed(Id, notifyManager::Dismissed);
     nextShowAction();
     return;
 }
 
-void notifyManager::popupItemWidgetActionInvoked(QString Id, QString reason)
+void notifyManager::popupItemWidgetActionInvoked(uint Id, QString reason)
 {
     emit ActionInvoked(Id, reason);
     emit NotificationClosed(Id, notifyManager::Closed);

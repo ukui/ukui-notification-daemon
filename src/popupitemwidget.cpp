@@ -533,7 +533,6 @@ void popupItemWidget::processBody()
     QString msgBody = m_pentryInfo->body();
     if(msgBody.contains("href")){  //带有超链接的消息体单独处理，绑定信号槽
         if(msgBody.contains("wx.qq.com")){ //网页微信发来的消息不太符合freedesktop通知协议,暂时单独分离出来
-            qDebug()<<"--------------------";
             QXmlStreamReader xml(msgBody);
             while (!xml.atEnd()) {
                 if (xml.tokenType() == QXmlStreamReader::StartElement){
@@ -549,7 +548,6 @@ void popupItemWidget::processBody()
             //处理微信消息字段  <a href="https://wx.qq.com/">wx.qq.com</a> 111
             QStringList strList = msgBody.split("</a>");
             QString msg = strList.at(1);
-            qDebug()<<"-----------msg:"<<msg;
             msg.remove(" ");
             msg.remove("\n");
             msg.remove("\r");
@@ -574,6 +572,11 @@ void popupItemWidget::processBody()
                 xml.readNext();
             }
         }
+        connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
+            QString cmd = QString("xdg-open ") + urlPath; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+            system(cmd.toStdString().c_str());
+
+        });
 
     }
     else{ //普通消息暂时不做处理
@@ -581,11 +584,7 @@ void popupItemWidget::processBody()
     }
 
 
-    connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
-        QString cmd = QString("xdg-open ") + urlPath; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
-        system(cmd.toStdString().c_str());
 
-    });
 }
 
 /* 解析动作字符串链表，添加动作按钮 */
@@ -594,14 +593,14 @@ void popupItemWidget::processActions()
     clearAllActionButton();
     QStringList list = m_pentryInfo->actions();
     // the "default" is identifier for the default action
-//    if (list.contains("default")) {
-//        const int index  = list.indexOf("default"); // For the default action
-//        m_pDefaultAction = list[index];
-//        qDebug()<<">>>>>>>>>>>>>>>>>m_pDefaultAction:"<<m_pDefaultAction;
-//        // Default action does not need to be displayed, removed from the list
-//        list.removeAt(index + 1);
-//        list.removeAt(index);
-//    }
+    if (list.contains("default")) {
+        const int index  = list.indexOf("default"); // For the default action
+        m_pDefaultAction = list[index];
+        qDebug()<<">>>>>>>>>>>>>>>>>m_pDefaultAction:"<<m_pDefaultAction;
+        // Default action does not need to be displayed, removed from the list
+        list.removeAt(index + 1);
+        list.removeAt(index);
+    }
     if (list.size() == 0) {
         m_pOperationWidget->setVisible(false);
         this->setFixedSize(372, 88);
@@ -652,14 +651,14 @@ void popupItemWidget::processHints()
     QMap<QString, QVariant>::iterator iter = hints.begin();
     for(iter; iter!=hints.end(); iter++){
         if(iter.key() == DEFAULT_ACTION){  //执行默认动作
-            QString cmd = iter.value().toString();
-            connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
-                if (QProcess::startDetached(cmd)) {
-                    qDebug() << "默认动作 执行成功!";
-                } else {
-                    qDebug() << "默认动作 执行失败!";
-                }
-            });
+//            QString cmd = iter.value().toString();
+//            connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
+//                if (QProcess::startDetached(cmd)) {
+//                    qDebug() << "默认动作 执行成功!";
+//                } else {
+//                    qDebug() << "默认动作 执行失败!";
+//                }
+//            });
         }
         else if(iter.key() == URLS_ACTION){  //打开对应 URl 链接
             QString urlPath = iter.value().toString();
@@ -732,14 +731,14 @@ void popupItemWidget::mousePressEvent(QMouseEvent *event)
         if (QProcess::startDetached(m_pDefaultAction)) {
             qDebug() << ">>>>>>>>>>>>m_pDefaultAction 执行成功";
             this->hide();
-            emit mouseMissed(this, m_pentryInfo->id());
+            emit mouseMissed(this, m_pentryInfo->id().toInt());
         } else {
             qDebug() << "m_pDefaultAction 执行失败";
         }
     }
     else{
         this->hide();
-        emit mouseMissed(this, m_pentryInfo->id());
+        emit mouseMissed(this, m_pentryInfo->id().toInt());
     }
     m_poutTimer->stop();
     QWidget::mousePressEvent(event);
@@ -787,7 +786,7 @@ void popupItemWidget::closeButtonSlots()
 {
     qDebug() << "点击关闭槽函数";
     this->hide();
-    emit clickedMissed(this, m_pentryInfo->id());
+    emit clickedMissed(this, m_pentryInfo->id().toInt());
     m_poutTimer->stop();
     return;
 }
@@ -795,7 +794,7 @@ void popupItemWidget::closeButtonSlots()
 void popupItemWidget::OutAnimationFinishSlots()
 {
     this->hide();
-    emit timeOutMissed(this, m_pentryInfo->id());
+    emit timeOutMissed(this, m_pentryInfo->id().toInt());
     return;
 }
 
@@ -820,5 +819,5 @@ void popupItemWidget::onActionButtonClicked(const QString &actionId)
         ++i;
     }
     m_poutTimer->stop();
-    emit actionInvokedMissed(this, m_pentryInfo->id(), actionId);
+    emit actionInvokedMissed(this, m_pentryInfo->id().toInt(), actionId);
 }

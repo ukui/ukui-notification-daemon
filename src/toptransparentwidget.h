@@ -86,21 +86,21 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 Q_SIGNALS:
-    void dismissed(QString);
-    void closePopupWidget(QString Id);
-    void actionInvoked(QString, QString);
+    void dismissed(int);
+    void closePopupWidget(int Id);
+    void actionInvoked(uint, QString);
 
 private:
     QVBoxLayout                 *m_pMainLayout;
     QGSettings                  *m_pPanelSetting = nullptr;
 
 private slots:
-    void mouseMissedSlots(QWidget *w, QString id);
-    void timeOutMissedSlots(QWidget *w, QString id);
-    void clickedMissedSlots(QWidget *w, QString id);
-    void actionInvokedMissedSlots(QWidget *w, QString id, QString actionId);
+    void mouseMissedSlots(QWidget *w, int id);
+    void timeOutMissedSlots(QWidget *w, int id);
+    void clickedMissedSlots(QWidget *w, int id);
+    void actionInvokedMissedSlots(QWidget *w, int id, QString actionId);
     void moveAllpopWidgetSite(QWidget *w);
-    void moveAllpopWidgetSiteAccordId(QString Id);
+    void moveAllpopWidgetSiteAccordId(int Id);
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
     void addWaittingPopupWidgetSlots();
     void panelSiteSlots(QString key);

@@ -72,14 +72,14 @@ public:
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
-    void CloseNotification(QString id);
+    void CloseNotification(uint id);
     QStringList GetCapabilities();
     QString GetServerInformation(QString &name, QString &vendor, QString &version);
-    QString Notify(const QString &in0, const QString &replacesId, const QString &in2, const QString &in3, const QString &in4, const QString &in5, const QString &in6, const QStringList &in7, const QVariantMap &in8, int in9);
+    uint Notify(const QString &in0, uint replacesId, const QString &in2, const QString &in3, const QString &in4, const QStringList &in5, const QVariantMap &in6, int in7);
 
 Q_SIGNALS: // SIGNALS
     void ActionInvoked(uint in0, const QString &in1);
-    void NotificationClosed(QString in0, uint in1);
+    void NotificationClosed(uint in0, uint in1);
 };
 
 #endif

@@ -51,7 +51,7 @@ public:
 
 public Q_SLOTS: // METHODS
 
-    inline QDBusPendingReply<> CloseNotification(QString id)
+    inline QDBusPendingReply<> CloseNotification(uint id)
     {
         QList<QVariant> argumentList;
         argumentList << QVariant::fromValue(id);
