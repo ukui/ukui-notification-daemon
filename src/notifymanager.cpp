@@ -252,6 +252,9 @@ void notifyManager::appNotifySound()
 
 bool notifyManager::getControlCentorAppNotify(QString appName)
 {
+    if (appName.size() == 0) {
+        return false;
+    }
     // 初始化控制面板对于通知开关读取
     const QByteArray id_3(CONTROL_CENTER_GSETTING_PATH);
     if (QGSettings::isSchemaInstalled(id_3)) {
