@@ -99,6 +99,7 @@ private slots:
     void timeOutMissedSlots(QWidget *w, int id);
     void clickedMissedSlots(QWidget *w, int id);
     void actionInvokedMissedSlots(QWidget *w, int id, QString actionId);
+    void actionButtonClickedSlots(QWidget *w, int id, QString actionId);
     void moveAllpopWidgetSite(QWidget *w);
     void moveAllpopWidgetSiteAccordId(int Id);
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);

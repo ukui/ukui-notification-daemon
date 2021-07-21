@@ -96,6 +96,7 @@ void topTransparentWidget::AddPopupItemWidget(notifyReceiveInfo *entryInfo)
     connect(popw, &popupItemWidget::timeOutMissed, this, &topTransparentWidget::timeOutMissedSlots);
     connect(popw, &popupItemWidget::clickedMissed, this, &topTransparentWidget::clickedMissedSlots);
     connect(popw, &popupItemWidget::actionInvokedMissed, this, &topTransparentWidget::actionInvokedMissedSlots);
+    connect(popw, &popupItemWidget::actionButtonClicked, this, &topTransparentWidget::actionInvokedMissedSlots);
     connect(popw, &popupItemWidget::animationAction, this, &topTransparentWidget::TransformGroundGlassAreaSlots);
     connect(popw->m_pOutAnimation, &QPropertyAnimation::finished, \
             this, &topTransparentWidget::addWaittingPopupWidgetSlots);
@@ -328,6 +329,14 @@ void topTransparentWidget::clickedMissedSlots(QWidget *w, int id)
 void topTransparentWidget::actionInvokedMissedSlots(QWidget *w, int id, QString actionId)
 {
     --m_fixNotifyNum;
+    w->hide();
+    exitPopupWidget(w);
+    emit actionInvoked(id, actionId);
+    return;
+}
+
+void topTransparentWidget::actionButtonClickedSlots(QWidget *w, int id, QString actionId)
+{
     w->hide();
     exitPopupWidget(w);
     emit actionInvoked(id, actionId);

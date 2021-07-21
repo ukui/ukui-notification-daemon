@@ -84,7 +84,7 @@ private:
 
     void processBody();                                     // 解析正文字段的
     void processActions();                                  // 解析动作字符串链表，添加动作按钮
-    void actionMapParsingJump(QStringList list);            // 通过动作字符串解析Map表，赋予按钮跳转指令
+    void actionParsingJump(QStringList list);            // 解析按钮动作命令，绑定信号槽
     void processHints();                                    // 解析Map表,绑定弹窗跳转动作
     void clearAllActionButton();                            // 删除掉所有动作按钮
     bool substringSposition(QString formatBody, QStringList list);
@@ -92,11 +92,12 @@ private:
 
 
 Q_SIGNALS:
-    void mouseMissed(QWidget *w, int id);                   //鼠标点击消息体
+    void mouseMissed(QWidget *w, int id);                   //鼠标点击消息体，body字段有链接则发出信号
     void timeOutMissed(QWidget *w, int id);                 //动画完成信号
     void clickedMissed(QWidget *w, int id);                 //鼠标点击右上角退出按钮
-    void actionInvokedMissed(QWidget *w, int id, QString actionId); //点击消息体/按钮,主窗口绑定该信号
-    void actionButtonClicked(QString id);                   //点击动作按钮信号
+    void actionInvokedMissed(QWidget *w, int id, QString actionId); //点击消息体,有默认动作发出该信号
+    void actionButtonClicked(QWidget *w, int id, QString actionId); //点击动作按钮,发出该信号
+    //void actionButtonClicked(QString id);                   //点击动作按钮信号
     void timeout(QWidget *w);                               //鼠标在消息体上悬停超时
     void animationAction(const QVariant &value, QWidget *w);
 

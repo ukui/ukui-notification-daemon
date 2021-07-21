@@ -60,7 +60,7 @@ popupItemWidget::popupItemWidget(QWidget *parent, notifyReceiveInfo *entryInfo)
     initTransparencySetting();
 
     /* 初始化信号连接 */
-    connect(this, &popupItemWidget::actionButtonClicked, this, &popupItemWidget::onActionButtonClicked);
+    //connect(this, &popupItemWidget::actionButtonClicked, this, &popupItemWidget::onActionButtonClicked);
 
 }
 
@@ -513,7 +513,7 @@ bool popupItemWidget::judgeIconExsit()
 bool popupItemWidget::judgeActionExsit()
 {
     if (m_pentryInfo->actions().isEmpty()) {
-        processHints();
+        processHints();  //为了兼容当下截图添加的兼容代码，等待截图改成标准协议，删掉即可！
         m_pOperationWidget->setVisible(false);
         this->setFixedSize(372, 82);
         return false;
@@ -575,7 +575,6 @@ void popupItemWidget::processBody()
         connect(this, &popupItemWidget::mouseMissed, this, [=](QWidget *w, int id){
             QString cmd = QString("xdg-open ") + urlPath; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
             system(cmd.toStdString().c_str());
-
         });
 
     }
@@ -598,11 +597,10 @@ void popupItemWidget::processActions()
             connect(this, &popupItemWidget::actionInvokedMissed, this, [=](QWidget *w, int id){
                 QProcess *process = new QProcess();
                 process->start(m_pDefaultAction);
-
             });
             // Default action does not need to be displayed, removed from the list
-            list.removeAt(index + 1);
             list.removeAt(index);
+            list.removeAt(index - 1);
         }
         if (list.size() == 0) {
             m_pOperationWidget->setVisible(false);
@@ -610,35 +608,38 @@ void popupItemWidget::processActions()
         } else {
             m_pOperationWidget->setVisible(true);
             this->setFixedSize(372, 134);
-            actionMapParsingJump(list);
+            actionParsingJump(list);
         }
         return;
 }
 
-/* 通过动作标识ID解析Map表， 通过Map表赋予按钮动作，执行跳转命令 */
-void popupItemWidget::actionMapParsingJump(QStringList list)
+/* 解析按钮动作，绑定信号槽 */
+void popupItemWidget::actionParsingJump(QStringList list)
 {
-    QString id;
-
     // Each even element in the list (starting at index 0) represents the
     // identifier for the action. Each odd element in the list is the
     // localized string that will be displayed to the user.
-    qDebug() << "当前字符串链表大小" << list.size();
-
+    //说白了，偶数是动作，奇数是要显示的名字
+    //default关键字已做处理，当前list中不存在default和其对应的动作
+    QString buttonAction;;
     for (int i = 0; i != list.size(); ++i) {
         if (i % 2 == 0) {
-            id = list[i];
+            buttonAction  = list[i];
         } else {
             QString buttonText = list[i];
             QPushButton *button = new QPushButton();
             m_pListButton->append(button);
-
             button->setFixedHeight(36);
-
             connect(button, &QPushButton::clicked, this, [=](){
-                emit actionButtonClicked(id);
-            });
+                if (QProcess::startDetached(buttonAction)) {
+                    qDebug() << "按钮动作 执行成功";
+                } else {
+                    qDebug() << "按钮动作 执行失败";
+                }
 
+                m_poutTimer->stop();
+                emit actionButtonClicked(this, m_pentryInfo->id().toInt(), buttonAction);
+            });
             m_pOperationButtonWidgetLayout->addWidget(button, Qt::AlignRight);
             m_pOperationButtonWidgetLayout->setSpacing(10);
             QString formatBody = setButtonStringBody(buttonText, button);
@@ -712,6 +713,7 @@ void popupItemWidget::paintEvent(QPaintEvent *event)
 
 void popupItemWidget::mousePressEvent(QMouseEvent *event)
 {
+    // 点击消息体时，有默认动作则执行默认动作，无默认动作执行body字段中的链接
     if (!m_pDefaultAction.isEmpty()) {
         emit actionInvokedMissed(this, m_pentryInfo->id().toUInt(), m_pDefaultAction);
         m_pDefaultAction.clear();
@@ -779,24 +781,24 @@ void popupItemWidget::OutAnimationFinishSlots()
 
 void popupItemWidget::onActionButtonClicked(const QString &actionId)
 {
-    QMap<QString, QVariant> hints = m_pentryInfo->hints();
-    QMap<QString, QVariant>::const_iterator i = hints.constBegin();
-    while (i != hints.constEnd()) {
-        QStringList args = i.value().toString().split(",");
-        if (!args.isEmpty()) {
-            QString cmd = args.first();
-            args.removeFirst();
-            if (i.key() == actionId) {
-                QProcess::startDetached(cmd, args);
-                if (QProcess::startDetached(cmd, args)) {
-                    qDebug() << "执行成功";
-                } else {
-                    qDebug() << "执行失败";
-                }
-            }
-        }
-        ++i;
-    }
-    m_poutTimer->stop();
-    emit actionInvokedMissed(this, m_pentryInfo->id().toInt(), actionId);
+//    QMap<QString, QVariant> hints = m_pentryInfo->hints();
+//    QMap<QString, QVariant>::const_iterator i = hints.constBegin();
+//    while (i != hints.constEnd()) {
+//        QStringList args = i.value().toString().split(",");
+//        if (!args.isEmpty()) {
+//            QString cmd = args.first();
+//            args.removeFirst();
+//            if (i.key() == actionId) {
+//                QProcess::startDetached(cmd, args);
+//                if (QProcess::startDetached(cmd, args)) {
+//                    qDebug() << "执行成功";
+//                } else {
+//                    qDebug() << "执行失败";
+//                }
+//            }
+//        }
+//        ++i;
+//    }
+//    m_poutTimer->stop();
+//    emit actionInvokedMissed(this, m_pentryInfo->id().toInt(), actionId);
 }
