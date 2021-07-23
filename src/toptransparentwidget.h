@@ -74,6 +74,7 @@ public:
     QPointer<notifyReceiveInfo>                 m_currentNotify;
     QQueue<notifyReceiveInfo *>                 m_entities;                       //用来存放当前数据，保存到队列中去，当有多条消息时，一条一条数据显示
     QList<notifyReceiveInfo*>                   m_pWaitingQueue;
+    uint                                        m_fixNotifyNum = 0;
     int                                         m_ipanelPosition = 0;
     int                                         m_ipanelHeight = 46;
     int                                         m_iScreenXGeometry = 0;
@@ -98,13 +99,13 @@ private slots:
     void timeOutMissedSlots(QWidget *w, int id);
     void clickedMissedSlots(QWidget *w, int id);
     void actionInvokedMissedSlots(QWidget *w, int id, QString actionId);
+    void actionButtonClickedSlots(QWidget *w, int id, QString actionId);
     void moveAllpopWidgetSite(QWidget *w);
     void moveAllpopWidgetSiteAccordId(int Id);
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
     void addWaittingPopupWidgetSlots();
     void panelSiteSlots(QString key);
     void updataPopWidgetSiteSlots(int screen);
-
 };
 
 #endif // TOPTRANSPARENTWIDGET_H
