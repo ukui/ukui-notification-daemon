@@ -103,6 +103,8 @@ private slots:
     void TransformGroundGlassAreaSlots(const QVariant &value, QWidget *w);
     void addWaittingPopupWidgetSlots();
     void panelSiteSlots(QString key);
+    void updataPopWidgetSiteSlots(int screen);
+
 };
 
 #endif // TOPTRANSPARENTWIDGET_H

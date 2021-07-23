@@ -34,6 +34,7 @@ topTransparentWidget::topTransparentWidget(QWidget *parent) : QWidget(parent)
 
     initPanelSite();
     setNotifyPopWidgetSite();
+    connect(QApplication::desktop(), &QDesktopWidget::resized, this, &topTransparentWidget::updataPopWidgetSiteSlots);
 
     this->setFixedWidth(372);
     this->setLayout(m_pMainLayout);
@@ -206,9 +207,12 @@ void topTransparentWidget::setNotifyPopWidgetSite()
         QVariantList position_list = reply.value();
         m_iScreenXGeometry = position_list.at(0).toInt();
         m_iScreenYGeometry = position_list.at(1).toInt();
-        m_iScreenWidth     = position_list.at(2).toInt();
-        m_iScreenHeight    = position_list.at(3).toInt();
+//        m_iScreenWidth     = position_list.at(2).toInt();
+//        m_iScreenHeight    = position_list.at(3).toInt();
         m_ipanelPosition   = position_list.at(4).toInt();
+
+        m_iScreenWidth = QGuiApplication::primaryScreen()->geometry().width();
+        m_iScreenHeight = QGuiApplication::primaryScreen()->geometry().height();
     } else {
         qDebug() << "任务栏dbus接口有问题";
         m_iScreenXGeometry = m_pSreenInfo->m_nScreen_x;
@@ -390,4 +394,9 @@ void topTransparentWidget::panelSiteSlots(QString key)
         setNotifyPopWidgetSite();
     }
     return;
+}
+
+void topTransparentWidget::updataPopWidgetSiteSlots(int screen)
+{
+    setNotifyPopWidgetSite();
 }
