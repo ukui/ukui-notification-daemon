@@ -20,11 +20,11 @@
 #include <QDateTime>
 #include <QDebug>
 notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
-                                       const QString &appIcon, const QString &summary,
-                                       const QString &body, const QStringList &actions,
-                                       const QVariantMap hints, const QString &ctime,
-                                       const QString &replacesId, const QString &timeout,
-                                       QObject *parent) :
+                                     const QString &appIcon, const QString &summary,
+                                     const QString &body, const QStringList &actions,
+                                     const QVariantMap hints, const QString &ctime,
+                                     const QString &replacesId, const QString &timeout,
+                                     QObject *parent) :
     QObject(parent),
     m_appName(appName),
     m_id(id),
@@ -41,8 +41,8 @@ notifyReceiveInfo::notifyReceiveInfo(const QString &appName, const QString &id,
 
 notifyReceiveInfo::notifyReceiveInfo(const notifyReceiveInfo &notify) :
     notifyReceiveInfo(notify.appName(), notify.id(), notify.appIcon(), notify.summary(),
-                       notify.body(), notify.actions(), notify.hints(), notify.ctime(),
-                       notify.replacesId(), notify.timeout())
+                      notify.body(), notify.actions(), notify.hints(), notify.ctime(),
+                      notify.replacesId(), notify.timeout())
 {
 
 }

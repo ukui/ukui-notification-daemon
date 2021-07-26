@@ -75,6 +75,9 @@ extern "C" {
 
 static const QString NotificationsDBusService = "org.freedesktop.Notifications";
 static const QString NotificationsDBusPath = "/org/freedesktop/Notifications";
+static const QString SidebarNotifyDBusService = "org.ukui.Sidebar";
+static const QString SidebarNotifyDBusPath = "/org/ukui/Sidebar";
+static const QString SidebarNotifyDBusInterface = "org.ukui.Sidebar.notify";
 
 class notifyManager : public QObject
 {
@@ -94,7 +97,7 @@ public:
 Q_SIGNALS:
     // Standard Notifications dbus implementation
     void ActionInvoked(uint, const QString &);
-    void NotificationClosed(uint, uint);
+        void NotificationClosed(uint, uint);
 
 public Q_SLOTS:
     // Standard Notifications dbus implementation
@@ -102,7 +105,9 @@ public Q_SLOTS:
     QStringList GetCapabilities();
     QString GetServerInformation(QString &name, QString &vendor, QString &version);
     // new notify will be received by this slot
-    uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &, const QStringList &, const QVariantMap, int);
+    uint Notify(const QString &, uint replacesId, const QString &, const QString &, const QString &,
+                const QStringList &, const QVariantMap, int);
+
 
 public:
     popupItemWidget              *m_pEntryWidget = nullptr;
@@ -127,6 +132,7 @@ private:
 private:
     QString m_model;
     sqlInfoData *m_psqlInfoData;
+    uint counter = 1;
 
 private slots:
     void popupItemWidgetDismissed(int Id);
