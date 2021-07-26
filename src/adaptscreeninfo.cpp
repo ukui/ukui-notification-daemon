@@ -20,10 +20,10 @@
 adaptScreenInfo::adaptScreenInfo(QObject *parent) : QObject(parent)
 {
     m_pDeskWgt = QApplication::desktop();
-    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
-    if (ArchDiff == ENV_WAYLAND) {
-        initHwDbusScreen();
-    }
+//    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
+//    if (ArchDiff == ENV_WAYLAND) {
+//        initHwDbusScreen();
+//    }
     InitializeHomeScreenGeometry();
     connect(QApplication::primaryScreen(), &QScreen::geometryChanged, this, &adaptScreenInfo::onResolutionChanged);
     connect(m_pDeskWgt, &QDesktopWidget::primaryScreenChanged, this, &adaptScreenInfo::primaryScreenChangedSlot);
@@ -46,16 +46,16 @@ void adaptScreenInfo::initScreenSize()
 /* 初始化主屏坐标 */
 void adaptScreenInfo::InitializeHomeScreenGeometry()
 {
-    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
-    if (ArchDiff == ENV_WAYLAND) {
-        if (!initHuaWeiDbus()) {
-            initOsDbusScreen();     // 当dbus有延迟时，会获取到的信息为0，则重新从系统上获取
-            initScreenSize();
-        }
-    } else if (ArchDiff == ENV_X11) {
-        initOsDbusScreen();         // 初始化坐标
-        initScreenSize();           // 初始化屏幕宽度
-    }
+//    QString ArchDiff = qgetenv(ENV_XDG_SESSION_TYPE);
+//    if (ArchDiff == ENV_WAYLAND) {
+//        if (!initHuaWeiDbus()) {
+//            initOsDbusScreen();     // 当dbus有延迟时，会获取到的信息为0，则重新从系统上获取
+//            initScreenSize();
+//        }
+//    } else if (ArchDiff == ENV_X11) {
+    initOsDbusScreen();         // 初始化坐标
+    initScreenSize();           // 初始化屏幕宽度
+//    }
     return;
 }
 
