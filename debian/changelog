@@ -1,3 +1,12 @@
+ukui-notification-daemon (1.0.2-2.0011) v101; urgency=medium
+
+  * 改动:
+    - bug号: 68510
+    - 需求号：无
+    - 其他改动说明: 当应用传过来的appName为空时，则会出现core文件Bug修复
+
+ -- liushanwen <liushanwen@kylinos.cn>  Wed, 21 Jul 2021 21:38:29 +0800
+
 ukui-notification-daemon (1.0.2-2.0010) v101; urgency=medium
 
   * 改动:
