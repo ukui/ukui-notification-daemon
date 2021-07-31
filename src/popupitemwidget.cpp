@@ -125,6 +125,7 @@ void popupItemWidget::initInfoWidgetLayout()
     m_pLeftVBoxLayout->setSpacing(0);
 
     m_pLeftVBoxLayout->addWidget(m_pSummaryLabelWidget);
+    m_pLeftVBoxLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum));
     m_pLeftVBoxLayout->addWidget(m_pBodyLabelWidget);
     m_pLeftVBoxLayout->addWidget(m_pOperationWidget);
     m_pLeftVBoxLayout->addItem(new QSpacerItem(10, 20, QSizePolicy::Expanding));
