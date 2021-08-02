@@ -172,7 +172,7 @@ void popupItemWidget::initLabelSizeInfo()
     color = palette.text().color();
     color.setAlphaF(0.91);
     palette.setBrush(QPalette::WindowText, color);
-    m_pSummaryLabel->setPalette(palette);
+    //m_pSummaryLabel->setPalette(palette);
     m_pSummaryLabel->setFixedWidth(300);
     m_pSummaryLabel->setAlignment(Qt::AlignVCenter);
 
@@ -189,9 +189,9 @@ void popupItemWidget::initLabelSizeInfo()
     m_pTextBodyLabel->setFixedWidth(300);
 
     m_pTextBodyLabel->setAlignment(Qt::AlignVCenter);
-    palette = m_pTextBodyLabel->palette();
-    palette.setBrush(QPalette::WindowText, palette.color(QPalette::PlaceholderText));
-    m_pTextBodyLabel->setPalette(palette);
+    //palette = m_pTextBodyLabel->palette();
+    //palette.setBrush(QPalette::WindowText, palette.color(QPalette::PlaceholderText));
+    //m_pTextBodyLabel->setPalette(palette);
     // 根据字体大小来设置间距改变布局
     setWidgetFontSpace();
 
